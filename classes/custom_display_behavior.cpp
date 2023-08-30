@@ -1,4 +1,5 @@
 #include "custom_display_behavior.hpp"
+#include <functional>
 
 CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
   : TM1637Display(pinClk, pinDIO) {}

@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef STATE_COUNTER_HPP
+#define STATE_COUNTER_HPP
 #include <cstdint>
 
 class StateCounter
@@ -17,3 +17,5 @@ public:
     void setState(uint8_t counterState);
     void resetState();
 };
+
+#endif

@@ -1,5 +1,6 @@
-#pragma once
-#include <cstdint>
+#ifndef FOURDIGITTIME_HPP
+#define FOURDIGITTIME_HPP
+
 
 class FourDigitTime {
     protected:
@@ -15,3 +16,5 @@ class FourDigitTime {
         void mutateMinutes(int minutes);
         void mutateOneDigit(int placement, int mutate);
 };
+
+#endif

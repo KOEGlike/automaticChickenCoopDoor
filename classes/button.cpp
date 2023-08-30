@@ -1,5 +1,6 @@
 #include "button.hpp"
 #include <Arduino.h>
+#include <functional>
 
 Button::Button(int pin, bool* globalPressed, std::function<void()> press, std::function<void()> longPress) {
     _pin = pin;

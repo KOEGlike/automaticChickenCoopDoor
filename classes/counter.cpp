@@ -1,4 +1,5 @@
 #include "counter.hpp"
+#include <cstdint>
 
 StateCounter::StateCounter(int amountOfStates)
 {

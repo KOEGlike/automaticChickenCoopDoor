@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CUSTOM_DISPLAY_BEHAVIOR_H
+#define CUSTOM_DISPLAY_BEHAVIOR_H
 
 #include "../modified_libraries/TM1637/TM1637Display.h"
 #include <functional>
@@ -23,3 +24,5 @@ public:
 
     void check();
 };
+
+#endif
