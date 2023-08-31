@@ -1,6 +1,10 @@
 #ifndef FOURDIGITTIME_HPP
 #define FOURDIGITTIME_HPP
 
+extern "C" {
+  #include <stdlib.h>
+  #include <inttypes.h>
+}
 
 class FourDigitTime {
     protected:

@@ -1,6 +1,9 @@
 #include "counter.hpp"
 #include <cstdint>
-
+extern "C" {
+  #include <stdlib.h>
+  #include <inttypes.h>
+}
 StateCounter::StateCounter(int amountOfStates)
 {
     state = amountOfStates;

@@ -1,6 +1,10 @@
 #include "custom_display_behavior.hpp"
 #include <functional>
-
+#include <Arduino.h>
+extern "C" {
+  #include <stdlib.h>
+  #include <inttypes.h>
+}
 CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
   : TM1637Display(pinClk, pinDIO) {}
 

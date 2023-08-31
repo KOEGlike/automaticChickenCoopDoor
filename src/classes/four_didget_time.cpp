@@ -1,5 +1,8 @@
 #include "four_didget_time.hpp"
-
+extern "C" {
+  #include <stdlib.h>
+  #include <inttypes.h>
+}
 
 void FourDigitTime::addMinutes(uint16_t minutes) {
     int hoursToAdd = minutes / 60;

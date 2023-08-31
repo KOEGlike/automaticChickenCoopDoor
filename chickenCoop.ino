@@ -5,10 +5,10 @@
 #include <Preferences.h>
 #include <math.h>
 
-#include "classes/button.hpp"
-#include "classes/custom_display_behavior.hpp"
-#include "classes/four_didget_time.hpp"
-#include "classes/counter.hpp"
+#include "src/classes/button.hpp"
+#include "src/classes/custom_display_behavior.hpp"
+#include "src/classes/four_didget_time.hpp"
+#include "src/classes/counter.hpp"
 
 #define _CLK 21
 #define _DIO 22

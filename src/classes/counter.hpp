@@ -1,6 +1,10 @@
 #ifndef STATE_COUNTER_HPP
 #define STATE_COUNTER_HPP
 #include <cstdint>
+extern "C" {
+  #include <stdlib.h>
+  #include <inttypes.h>
+}
 
 class StateCounter
 {

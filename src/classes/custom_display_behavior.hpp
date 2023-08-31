@@ -4,6 +4,10 @@
 #include "../modified_libraries/TM1637/TM1637Display.h"
 #include <functional>
 
+extern "C" {
+  #include <stdlib.h>
+  #include <inttypes.h>
+}
 class CustomDisplayBehavior : public TM1637Display {
 protected:
     unsigned long blinkStartInMillis, _offTime, _onTime, blinkEnd;
