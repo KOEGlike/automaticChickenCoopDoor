@@ -1,17 +1,24 @@
 #include "counter.hpp"
 #include <cstdint>
+#include <functional>
 extern "C" {
   #include <stdlib.h>
   #include <inttypes.h>
 }
-StateCounter::StateCounter(int amountOfStates)
+StateCounter::StateCounter(int amountOfStates, std::function<void()> onStepOver=[](){},std::function<void()> onStepDown=[](){})
 {
     state = amountOfStates;
     m_amountOfStates = amountOfStates;
+    m_onStepOver=onStepOver;
+    m_onStepDown=onStepDown;
 }
 
 void StateCounter::add(uint8_t amount)
 {
+    if(amount + state>=m_amountOfStates)
+    {
+        m_onStepOver();
+    }
     state = (amount + state) % m_amountOfStates;
 }
 
@@ -21,6 +28,7 @@ void StateCounter::subtract(uint8_t amount)
     if (state < 0)
     {
         state = m_amountOfStates + state;
+        m_onStepDown();
     }
 }
 

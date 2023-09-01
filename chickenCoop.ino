@@ -85,6 +85,7 @@ Button button1
       preferences.putUChar("closeTime",closeTime);
       display.blinkSegmentsContinuouslyOff();
       display.setBrightness(0);
+      display.clear();
     }
   });
 
