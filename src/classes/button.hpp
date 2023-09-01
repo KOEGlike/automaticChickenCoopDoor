@@ -4,9 +4,9 @@
 
 class Button {
 protected:
-    int _pin;
-    bool* _globalPressed;
-    std::function<void()> _longPress, _press;
+    int m_pin;
+    bool* m_globalPressed;
+    std::function<void()> m_longPress, m_press;
     bool pressed = false;
     unsigned long millisForLongPress = 300, debounceInMillis = 2, pressedForMillis = 0, pressStartInMillies;
 

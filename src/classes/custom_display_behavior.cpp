@@ -9,15 +9,15 @@ CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
   : TM1637Display(pinClk, pinDIO) {}
 
 void CustomDisplayBehavior::blinkCheck() {
-  if (millis() - blinkStartInMillis >= _offTime && isBlinking) {
+  if (millis() - blinkStartInMillis >= m_offTime && isBlinking) {
     isBlinking = false;
     setSegments(currentSegments);
     blinkEnd = millis();
     timesBlinked++;
   }
   
-  if (isContinuouslyBlinking && millis() - blinkEnd >= _onTime && !isBlinking) {
-    blinkSegments(segmentsThatBlink, _offTime);
+  if (isContinuouslyBlinking && millis() - blinkEnd >= m_onTime && !isBlinking) {
+    blinkSegments(segmentsThatBlink, m_offTime);
   }
   
   if (timesToBlink > 0 && timesBlinked == timesToBlink) {
@@ -52,7 +52,7 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
   }
   
   blinkStartInMillis = millis();
-  _offTime = offTime;
+  m_offTime = offTime;
   setSegments(segments);
   memcpy(currentSegments, beforeBlinkSegments, segmentsLength);
 }
@@ -60,7 +60,7 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
 void CustomDisplayBehavior::blinkSegmentsContinuouslyOn(uint8_t segmentsToBlink, unsigned long offTime, unsigned long onTime) {
   isContinuouslyBlinking = true;
   segmentsThatBlink = segmentsToBlink;
-  _onTime = onTime;
+  m_onTime = onTime;
   blinkSegments(segmentsThatBlink, offTime);
 }
 

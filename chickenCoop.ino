@@ -11,19 +11,18 @@
 #include "src/classes/four_didget_time.hpp"
 #include "src/classes/counter.hpp"
 
-#define _CLK 21
-#define _DIO 22
+#define CLK 21
+#define DIO 22
 #define BTN1 19
 #define BTN2 18
 
 A4988 lol(128, 2,3);
 
-lol.begin();
 
 unsigned char openTime=0, closeTime=0;
 bool globalPressed = false, isEditing=false;
 
-CustomDisplayBehavior display(_CLK, _DIO);
+CustomDisplayBehavior display(CLK, DIO);
 Preferences preferences;
 FourDigitTime digits;
 StateCounter currentSelectedSegment(4);

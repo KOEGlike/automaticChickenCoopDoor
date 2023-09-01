@@ -3,35 +3,35 @@
 #include <functional>
 
 Button::Button(int pin, bool* globalPressed, std::function<void()> press, std::function<void()> longPress) {
-    _pin = pin;
-    _globalPressed = globalPressed;
-    _longPress = longPress;
-    _press = press;
-    pinMode(_pin, INPUT_PULLUP);
+    m_pin = pin;
+    m_globalPressed = globalPressed;
+    m_longPress = longPress;
+    m_press = press;
+    pinMode(m_pin, INPUT_PULLUP);
 }
 
 void Button::check() {
-    if (digitalRead(_pin) == HIGH) {
+    if (digitalRead(m_pin) == HIGH) {
         if (pressed == true) {
             pressedForMillis = millis() - pressStartInMillies;
         }
         pressed = false;
-        *_globalPressed = false;
+        *m_globalPressed = false;
     } else {
         if (pressed == false) {
             pressStartInMillies = millis();
         }
-        if (*_globalPressed == false) {
+        if (*m_globalPressed == false) {
             pressed = true;
-            *_globalPressed = true;
+            *m_globalPressed = true;
         }
     }
 
-    if (pressed == false && *_globalPressed == false && pressedForMillis >= debounceInMillis) {
+    if (pressed == false && *m_globalPressed == false && pressedForMillis >= debounceInMillis) {
         if (pressedForMillis < millisForLongPress) {
-            _press();
+            m_press();
         } else {
-            _longPress();
+            m_longPress();
         }
     }
 

@@ -7,20 +7,20 @@ extern "C" {
 StateCounter::StateCounter(int amountOfStates)
 {
     state = amountOfStates;
-    _amountOfStates = amountOfStates;
+    m_amountOfStates = amountOfStates;
 }
 
 void StateCounter::add(uint8_t amount)
 {
-    state = (amount + state) % _amountOfStates;
+    state = (amount + state) % m_amountOfStates;
 }
 
 void StateCounter::subtract(uint8_t amount)
 {
-    state = (state - amount) % _amountOfStates;
+    state = (state - amount) % m_amountOfStates;
     if (state < 0)
     {
-        state = _amountOfStates + state;
+        state = m_amountOfStates + state;
     }
 }
 
@@ -31,12 +31,12 @@ uint8_t StateCounter::getState()
 
 uint8_t StateCounter::getStateInBitMask()
 {
-    return 1 << (_amountOfStates - 1 - state);
+    return 1 << (m_amountOfStates - 1 - state);
 }
 
 void StateCounter::setState(uint8_t counterState)
 {
-    if (counterState > _amountOfStates - 1)
+    if (counterState > m_amountOfStates - 1)
     {
         resetState();
         return;
@@ -46,5 +46,5 @@ void StateCounter::setState(uint8_t counterState)
 
 void StateCounter::resetState()
 {
-    state = _amountOfStates;
+    state = m_amountOfStates;
 }

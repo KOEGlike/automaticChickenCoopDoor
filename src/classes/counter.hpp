@@ -10,7 +10,7 @@ class StateCounter
 {
 private:
     int state;
-    int _amountOfStates;
+    int m_amountOfStates;
 
 public:
     StateCounter(int amountOfStates);

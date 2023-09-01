@@ -10,7 +10,7 @@ extern "C" {
 }
 class CustomDisplayBehavior : public TM1637Display {
 protected:
-    unsigned long blinkStartInMillis, _offTime, _onTime, blinkEnd;
+    unsigned long blinkStartInMillis, m_offTime, m_onTime, blinkEnd;
     int timesBlinked = 0, timesToBlink = -1;
     uint8_t segmentsThatBlink;
     bool isBlinking = false, isContinuouslyBlinking = false;
