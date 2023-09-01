@@ -4,6 +4,7 @@
 #include <functional>
 #include <Preferences.h>
 #include <math.h>
+#include<A4988.h>
 
 #include "src/classes/button.hpp"
 #include "src/classes/custom_display_behavior.hpp"
@@ -15,6 +16,9 @@
 #define BTN1 19
 #define BTN2 18
 
+A4988 lol(128, 2,3);
+
+lol.begin();
 
 unsigned char openTime=0, closeTime=0;
 bool globalPressed = false, isEditing=false;
@@ -59,7 +63,8 @@ void setTimeRouter(int didgets, int state)
   }
 }
 
-Button button1(
+Button button1
+(
   BTN1, &globalPressed, []() {   
     digits.mutateOneDigit(currentSelectedSegment.getState(), 1);
     defalutForShowNumber(digits.getDigits());
