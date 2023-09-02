@@ -7,6 +7,7 @@ extern "C" {
   #include <inttypes.h>
 }
 
+
 class StateCounter
 {
 private:

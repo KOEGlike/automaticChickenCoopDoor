@@ -22,7 +22,7 @@ class FourDigitTime {
         
       StateCounter H1{3,[&](int times){H1OnMutate(times);}};
       StateCounter H2{10,[&](int times){H2OnMutate(times);}};
-      StateCounter M1{7,[&](int times){M1OnMutate(times);}};
+      StateCounter M1{6,[&](int times){M1OnMutate(times);}};
       StateCounter M2{10,[&](int times){M2OnMutate(times);}};
         
       void addMinutes(uint16_t minutes);
