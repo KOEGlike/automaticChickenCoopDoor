@@ -6,107 +6,93 @@ extern "C" {
 #include <cmath>
 #include <functional>
 #include "counter.hpp"
+using namespace std::placeholders;
 
-void FourDigitTime::addMinutes(uint16_t minutes) {
-    uint16_t hoursToAdd = minutes / 60;
-    minutes -= hoursToAdd * 60;
-    minutes += fourDigit % 100;
 
-    if (minutes >= 60) {
-        hoursToAdd++;
-        minutes -= 60;
-    }
-
-    uint16_t hours = fourDigit / 100 + hoursToAdd;
-
-    if (hours >= 24) {
-        hours -= 24;
-    }
-
-    fourDigit = hours * 100 + minutes;
+void FourDigitTime::H1OnMutate(int amount)
+{
+    
 }
 
-void FourDigitTime::subtractMinutes(uint16_t minutes) {
-    uint16_t hoursToSubtract = minutes / 60;
-    minutes -= hoursToSubtract * 60;
-
-    minutes = fourDigit % 100 - minutes;
-
-    if (minutes < 0) {
-        hoursToSubtract++;
-        minutes += 60;
+void FourDigitTime::H2OnMutate(int amount)
+{
+    if (m_stepOver)
+    {
+        H1.mutate((H1.getState()+amount)/H1.getAmountOfStates());
+        if(H2.getState()>4&&H1.getAmountOfStates()!=2)
+        {
+            H1.setAmountOfStates(2);
+        }
+        else if(H2.getState()<=4&&H1.getAmountOfStates()!=3)
+        {
+            H1.setAmountOfStates(3);
+        }
     }
-
-    uint16_t hours = fourDigit / 100 - hoursToSubtract;
-
-    if (hours < 0) {
-        hours += 24;
-    }
-
-    fourDigit = hours * 100 + minutes; 
 }
+
+void FourDigitTime::M1OnMutate(int amount)
+{
+    if (m_stepOver)
+    {
+        H2.mutate((M1.getState()+amount)/M1.getAmountOfStates());
+    }
+}
+
+void FourDigitTime::M2OnMutate(int amount)
+{
+    if (m_stepOver)
+    {
+        M1.mutate((M2.getState()+amount)/M2.getAmountOfStates());
+    }
+}
+
 
 void FourDigitTime::setTime(int hours, int minutes) {
-    fourDigit = 100 * hours + minutes;
+    H1.setState(hours / 10);
+    H2.setState(hours % 10);
+    M1.setState(minutes / 10);
+    M2.setState(minutes % 10);
 }
 
 void FourDigitTime::setDigits(int digits) {
-    fourDigit = digits;
+    H1.setState(digits / 1000);
+    H2.setState(digits / 100 % 10);
+    M1.setState(digits / 10 % 10);
+    M2.setState(digits % 10);
 }
 
 int FourDigitTime::getDigits() {
-    return fourDigit;
+    return H1.getState() * 1000 + H2.getState() * 100 + M1.getState() * 10 + M2.getState();
 }
 
 void FourDigitTime::mutateMinutes(int minutes) {
     if (minutes < 0) {
-        subtractMinutes(-minutes);
-    } else {
-        addMinutes(minutes);
+    M2.subtract(-minutes);
+} else {
+        M2.add(minutes);
     }
 }
 
-void FourDigitTime::mutateOneDigit(int placement, int mutate,bool stepover=true) {
-     switch (placement) {
+void FourDigitTime::mutateOneDigit(int placement, int mutate,bool stepover) {
+     m_stepOver=stepover;
+    switch (placement)
+    {
     case 0:
-        mutateMinutes(mutate * 600);
+    H1.mutate(mutate);
         break;
     case 1:
-        mutateMinutes(mutate * 60);
+    H2.mutate(mutate);
         break;
     case 2:
-        mutateMinutes(mutate * 10);
+    M1.mutate(mutate);
         break;
     case 3:
-        mutateMinutes(mutate);
+    M2.mutate(mutate);
         break;
-}
+    }
+    m_stepOver=true;
 
 }
 
-void FourDigitTime::mutateMinutesWithoutStepover(uint16_t mutate, uint8_t placement){
-switch (placement) {
-    case 0:
-        uint16_t maxValue=(fourDigit/100)%10>4?1:2;
-        if(fourDigit/1000+mutate<0)
-        {
-            fourDigit=fourDigit-(fourDigit/1000)*1000+(maxValue+(fourDigit/1000+mutate)%(maxValue+1));
-            break;
-        }
-        fourDigit=fourDigit-(fourDigit/1000)*1000+(fourDigit/1000+mutate)%(maxValue+1);
-        break;
-    case 1:
-    case 3:
-        const int num=(int)(fourDigit % (int)(pow(10, placement + 1)))/(int)(pow(10, placement));
-        if (num+mutate> 9) 
-        {
-            fourDigit=fourDigit-num*(int)(pow(10, placement))+((num+mutate)%(9+1));
-        }
 
-        break;
-    case 2:
-
-        break;
-}
-}
 

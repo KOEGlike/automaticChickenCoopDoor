@@ -5,21 +5,17 @@ extern "C" {
   #include <stdlib.h>
   #include <inttypes.h>
 }
-StateCounter::StateCounter(int amountOfStates, std::function<void()> onStepOver=[](){},std::function<void()> onStepDown=[](){})
+StateCounter::StateCounter(int amountOfStates, std::function<void(uint8_t amount)> onMutate)
 {
     state = amountOfStates;
     m_amountOfStates = amountOfStates;
-    m_onStepOver=onStepOver;
-    m_onStepDown=onStepDown;
+    m_onMutate = onMutate;
 }
 
 void StateCounter::add(uint8_t amount)
 {
-    if(amount + state>=m_amountOfStates)
-    {
-        m_onStepOver();
-    }
     state = (amount + state) % m_amountOfStates;
+    
 }
 
 void StateCounter::subtract(uint8_t amount)
@@ -28,7 +24,19 @@ void StateCounter::subtract(uint8_t amount)
     if (state < 0)
     {
         state = m_amountOfStates + state;
-        m_onStepDown();
+    }
+}
+
+void StateCounter::mutate(uint8_t amount)
+{    
+    m_onMutate(amount);
+    if(amount<0)
+    {
+        subtract(-amount);
+    }
+    else
+    {
+        add(amount);
     }
 }
 
@@ -42,6 +50,11 @@ uint8_t StateCounter::getStateInBitMask()
     return 1 << (m_amountOfStates - 1 - state);
 }
 
+int StateCounter::getAmountOfStates()
+{
+    return m_amountOfStates;
+}
+
 void StateCounter::setState(uint8_t counterState)
 {
     if (counterState > m_amountOfStates - 1)
@@ -50,6 +63,15 @@ void StateCounter::setState(uint8_t counterState)
         return;
     }
     state = counterState;
+}
+
+void StateCounter::setAmountOfStates(int amountOfStates)
+{
+    m_amountOfStates = amountOfStates;
+    if(state>m_amountOfStates-1)
+    {
+        state = m_amountOfStates-1;
+    }
 }
 
 void StateCounter::resetState()

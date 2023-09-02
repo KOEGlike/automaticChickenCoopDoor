@@ -65,7 +65,7 @@ void setTimeRouter(int didgets, int state)
 Button button1
 (
   BTN1, &globalPressed, []() {   
-    digits.mutateOneDigit(currentSelectedSegment.getState(), 1);
+    digits.mutateOneDigit(currentSelectedSegment.getState(), 1,false);
     defalutForShowNumber(digits.getDigits());
   },
   []() {

@@ -8,33 +8,32 @@ extern "C" {
 #include <cmath>
 #include <functional>
 #include "counter.hpp"
+
 class FourDigitTime {
     protected:
-      std::function<void()> H1Up;
-      std::function<void()> H2Up;
-      std::function<void()> M1Up;
-      std::function<void()> M2Up;
+      bool m_stepOver=true;
+      
+      void H1OnMutate(int times);
+      void H2OnMutate(int times);
+      void M1OnMutate(int times);
+      void M2OnMutate(int times);
         
-      std::function<void()> H1Down;
-      std::function<void()> H2Down;
-      std::function<void()> M1Down;
-      std::function<void()> M2Down;
+      
         
-      StateCounter H1{3,H1Up,H1Down};
-      StateCounter H2{10,H2Up,H2Down};
-      StateCounter M1{7,M1Up,M1Down};
-      StateCounter M2{10, M2Up,M2Down};
+      StateCounter H1{3,[&](int times){H1OnMutate(times);}};
+      StateCounter H2{10,[&](int times){H2OnMutate(times);}};
+      StateCounter M1{7,[&](int times){M1OnMutate(times);}};
+      StateCounter M2{10,[&](int times){M2OnMutate(times);}};
         
       void addMinutes(uint16_t minutes);
       void subtractMinutes(uint16_t minutes);
-      void mutateMinutesWithoutStepover(uint16_t minutes, uint8_t placement);
 
     public:
         void setTime(int hours, int minutes);
         void setDigits(int digits);
         int getDigits();
         void mutateMinutes(int minutes);
-        void mutateOneDigit(int placement, int mutate,bool stepover=true);
+        void mutateOneDigit(int placement, int mutate,bool stepOver=true);
 };
 
 #endif
