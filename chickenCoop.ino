@@ -10,15 +10,19 @@
 #include "src/classes/custom_display_behavior.hpp"
 #include "src/classes/four_didget_time.hpp"
 #include "src/classes/counter.hpp"
+#include "src/classes/chickenDoor.hpp"
 
 #define CLK 21
 #define DIO 22
 #define BTN1 19
 #define BTN2 18
 
+ChickenDoor door(21, 22, 19, 18);
 
-
+void setup() {
+  Serial.begin(9600);
+}
 
 void loop() {
-  //checks();
+  door.checks();
 }
