@@ -1,5 +1,5 @@
 #ifndef CHICKEN_DOOR_HPP
-#define STATE_COUNTER_HPP
+#define CHICKEN_DOOR_HPP
 
 #include <TimeLib.h>
 #include <Arduino.h>

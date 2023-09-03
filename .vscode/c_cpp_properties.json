@@ -1,5 +1,4 @@
 {
-    
     "version": 4,
     "configurations": [
         {
@@ -26,7 +25,8 @@
                 "-fexceptions",
                 "-fno-rtti"
             ],
-            "intelliSenseMode": "windows-gcc-x64",
+            "intelliSenseMode": "gcc-x64",
+            "target":"./build/${workspaceFolderBasename}.elf",
             "includePath": [
                 "C:\\Users\\steamdeck\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.11\\tools\\sdk\\esp32\\include\\newlib\\platform_include",
                 "C:\\Users\\steamdeck\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.11\\tools\\sdk\\esp32\\include\\freertos\\include",
