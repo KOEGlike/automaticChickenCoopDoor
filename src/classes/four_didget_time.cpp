@@ -6,12 +6,26 @@ extern "C" {
 #include <cmath>
 #include <functional>
 #include "counter.hpp"
+#include "Arduino.h"
 using namespace std::placeholders;
 
 
 void FourDigitTime::H1OnMutate(int amount)
 {
-    
+    if (m_stepOver)
+    {
+        if(H2.getState()>4&&H1.getAmountOfStates()!=2)
+        {
+            H1.setAmountOfStates(2);
+            Serial.println("H1OnMutate");
+        }
+        else if(H2.getState()<=4&&H1.getAmountOfStates()!=3)
+        {
+            H1.setAmountOfStates(3);
+            Serial.println("H1OnMutttttate");
+
+        }
+    }
 }
 
 void FourDigitTime::H2OnMutate(int amount)

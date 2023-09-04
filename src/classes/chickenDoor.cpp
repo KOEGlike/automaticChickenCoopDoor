@@ -62,7 +62,7 @@ void ChickenDoor::addToCurrentSegment()
   defalutForShowNumber(digits.getDigits());
 }
 
-void ChickenDoor::ediitingTogle()
+void ChickenDoor::editingTogle()
 {
   if(isEditing){
     isEditing=false;

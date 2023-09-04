@@ -39,7 +39,7 @@ class ChickenDoor
 
   void addToCurrentSegment();;
   void moveCursorForward();
-  void ediitingTogle();
+  void editingTogle();
   void changeCurrentChangingTime();
 
   Button button1
@@ -48,7 +48,7 @@ class ChickenDoor
       addToCurrentSegment();
     },
     [&]() {
-      ediitingTogle();
+      editingTogle();
     }};
 
   Button button2{
