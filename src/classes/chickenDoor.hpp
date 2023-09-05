@@ -44,20 +44,20 @@ class ChickenDoor
 
   Button button1
   {
-    19, &globalPressed, [&]() {   
+    19, [&]() {   
       addToCurrentSegment();
     },
     [&]() {
       editingTogle();
-    }};
+    }, &globalPressed};
 
   Button button2{
-    18, &globalPressed, [&]() {
+    18, [&]() {
       moveCursorForward();
     },
     [&]() {
       changeCurrentChangingTime();
-    }};
+    }, &globalPressed};
 
 };
 

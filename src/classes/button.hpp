@@ -11,7 +11,7 @@ protected:
     unsigned long millisForLongPress = 300, debounceInMillis = 2, pressedForMillis = 0, pressStartInMillies;
 
 public:
-    Button(int pin, bool* globalPressed, std::function<void()> press = []() {}, std::function<void()> longPress = []() {});
+    Button(int pin, std::function<void()> press = []() {}, std::function<void()> longPress = []() {}, bool* globalPressed);
     void check();
 
 };
