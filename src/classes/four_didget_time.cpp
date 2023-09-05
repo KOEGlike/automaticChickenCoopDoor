@@ -12,35 +12,33 @@ using namespace std::placeholders;
 
 void FourDigitTime::H1OnMutate(int amount)
 {
-    if (m_stepOver)
+    
+    if(H2.getState()>4&&H1.getAmountOfStates()>2)
     {
-        if(H2.getState()>4&&H1.getAmountOfStates()!=2)
-        {
-            H1.setAmountOfStates(2);
-            Serial.println("H1OnMutate");
-        }
-        else if(H2.getState()<=4&&H1.getAmountOfStates()!=3)
-        {
-            H1.setAmountOfStates(3);
-            Serial.println("H1OnMutttttate");
-
-        }
+        H1.setAmountOfStates(2);
+        Serial.println("H1OnMutate");
     }
+     else if(H2.getState()<=4&&H1.getAmountOfStates()!=3)
+    {
+        H1.setAmountOfStates(3);
+        Serial.println("H1OnMutttttate");
+    }
+    
 }
 
 void FourDigitTime::H2OnMutate(int amount)
 {
+    if(H1.getState()>1&&H2.getAmountOfStates()>4)
+    {
+        H2.setAmountOfStates(4);
+    }
+     else if(H1.getState()<=1&&H2.getAmountOfStates()!=10)
+    {
+        H2.setAmountOfStates(10);
+    }
     if (m_stepOver)
     {
         H1.mutate((H1.getState()+amount)/H1.getAmountOfStates());
-        if(H2.getState()>4&&H1.getAmountOfStates()!=2)
-        {
-            H1.setAmountOfStates(2);
-        }
-        else if(H2.getState()<=4&&H1.getAmountOfStates()!=3)
-        {
-            H1.setAmountOfStates(3);
-        }
     }
 }
 
@@ -70,8 +68,8 @@ void FourDigitTime::setTime(int hours, int minutes) {
 
 void FourDigitTime::setDigits(int digits) {
     H1.setState(digits / 1000);
-    H2.setState(digits / 100 % 10);
-    M1.setState(digits / 10 % 10);
+    H2.setState((digits / 100) % 10);
+    M1.setState((digits / 10) % 10);
     M2.setState(digits % 10);
 }
 

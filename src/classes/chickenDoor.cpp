@@ -7,8 +7,8 @@ ChickenDoor::ChickenDoor(uint8_t clkPin,uint8_t dioPin, uint8_t btn1Pin, uint8_t
   btn1=btn1Pin;
   btn2=btn2Pin;
   preferences.begin("times", false); 
-  openTime=preferences.getUChar("openTime",0);
-  closeTime=preferences.getUChar("closeTime", 0);
+  openTime=preferences.getUInt("openTime",0);
+  closeTime=preferences.getUInt("closeTime", 0);
 }
 
 void ChickenDoor::checks()
@@ -45,9 +45,11 @@ void ChickenDoor::setTimeRouter(int didgets, int state)
     break;
   case 1:
     openTime=didgets;
+    Serial.println(openTime);
     break;
   case 2:
     closeTime=didgets;
+    Serial.println(closeTime);
     break;
   }
 }
@@ -66,8 +68,12 @@ void ChickenDoor::editingTogle()
 {
   if(isEditing){
     isEditing=false;
-    preferences.putUChar("openTime",openTime);
-    preferences.putUChar("closeTime",closeTime);
+    currentChangingTime.setState(0);
+    currentSelectedSegment.setState(0);
+    Serial.println(openTime);
+    Serial.println(closeTime);
+    preferences.putUInt("openTime",openTime);
+    preferences.putUInt("closeTime",closeTime);
     display.blinkSegmentsContinuouslyOff();
     display.setBrightness(0);
     display.clear();
@@ -77,6 +83,8 @@ void ChickenDoor::editingTogle()
     display.setBrightness(7);
     currentSelectedSegment.add();
     currentChangingTime.add();
+    openTime=preferences.getUInt("openTime",0);
+    closeTime=preferences.getUInt("closeTime", 0);
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defalutForShowNumber(digits.getDigits());
     display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), 100, 100);

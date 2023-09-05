@@ -22,10 +22,10 @@ class ChickenDoor
     void checks() ;
   private:
   uint8_t btn1, btn2, clk, dio;
-  unsigned char openTime=0, closeTime=0;
+  unsigned int openTime=0, closeTime=0;
   bool globalPressed = false, isEditing=false;
 
-  CustomDisplayBehavior display{clk, dio};
+  CustomDisplayBehavior display{21, 22};
   Preferences preferences;
   FourDigitTime digits;
   StateCounter currentSelectedSegment{4};
@@ -44,7 +44,7 @@ class ChickenDoor
 
   Button button1
   {
-    btn1, &globalPressed, [&]() {   
+    19, &globalPressed, [&]() {   
       addToCurrentSegment();
     },
     [&]() {
@@ -52,7 +52,7 @@ class ChickenDoor
     }};
 
   Button button2{
-    btn2, &globalPressed, [&]() {
+    18, &globalPressed, [&]() {
       moveCursorForward();
     },
     [&]() {
