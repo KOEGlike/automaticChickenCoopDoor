@@ -45,11 +45,11 @@ void ChickenDoor::setTimeRouter(int didgets, int state)
     break;
   case 1:
     openTime=didgets;
-    Serial.println(openTime);
+    //Serial.println(openTime);
     break;
   case 2:
     closeTime=didgets;
-    Serial.println(closeTime);
+    //Serial.println(closeTime);
     break;
   }
 }
@@ -70,8 +70,8 @@ void ChickenDoor::editingTogle()
     isEditing=false;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-    Serial.println(openTime);
-    Serial.println(closeTime);
+    //Serial.println(openTime);
+    //Serial.println(closeTime);
     preferences.putUInt("openTime",openTime);
     preferences.putUInt("closeTime",closeTime);
     display.blinkSegmentsContinuouslyOff();

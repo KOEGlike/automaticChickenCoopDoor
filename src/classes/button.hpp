@@ -1,6 +1,7 @@
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
 #include <functional>
+#include "async_handler.hpp"
 
 class Button {
 protected:
@@ -11,7 +12,7 @@ protected:
     unsigned long millisForLongPress = 300, debounceInMillis = 2, pressedForMillis = 0, pressStartInMillies;
 
 public:
-    Button(int pin, std::function<void()> press = []() {}, std::function<void()> longPress = []() {}, bool* globalPressed);
+    Button(int pin, std::function<void()> press , std::function<void()> longPress , bool* globalPressed);
     void check();
 
 };

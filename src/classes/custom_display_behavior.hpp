@@ -3,6 +3,7 @@
 
 #include "../modified_libraries/TM1637/TM1637Display.h"
 #include <functional>
+#include "async_handler.hpp"
 
 extern "C" {
   #include <stdlib.h>

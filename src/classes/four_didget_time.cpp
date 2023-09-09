@@ -16,12 +16,12 @@ void FourDigitTime::H1OnMutate(int amount)
     if(H2.getState()>4&&H1.getAmountOfStates()>2)
     {
         H1.setAmountOfStates(2);
-        Serial.println("H1OnMutate");
+        //Serial.println("H1OnMutate");
     }
      else if(H2.getState()<=4&&H1.getAmountOfStates()!=3)
     {
         H1.setAmountOfStates(3);
-        Serial.println("H1OnMutttttate");
+        //Serial.println("H1OnMutttttate");
     }
     
 }

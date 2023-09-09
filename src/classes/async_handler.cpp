@@ -1,36 +1,50 @@
 #include "async_handler.hpp"
 
-void AsyncHandler::deleteCallback(uint32_t id)
+
+void AsyncHandler::deleteCallBack(uint32_t id)
 {
-    calllbacks.erase(id);
+    callbacks.erase(id);
 }
+
+callbackData::callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack){
+    delay=delayInMillis;
+    times=timesToRepeat;
+    callback=callBack;
+  }
 
 uint32_t AsyncHandler::registerCallback(unsigned long delay,uint32_t times, std::function<void()> callback)
 {
-  calllbacks[maxCurrentId]=callback_data{delay,times,callback};
+  callbackData cbd(delay,times,callback);
+  callbacks[maxCurrentId]=cbd;
   return maxCurrentId++;
 }
 
 
 void AsyncHandler::check()
 {
-  std::map<uint32_t,callback_data>::iterator it =calllbacks.begin();
-  while (it != calllbacks.end())
+  callbacks[maxCurrentId-1].callback();
+  if(callbacks.size()==0)
   {
-    if(it->second.timeToTillNextCall<=0)
-    {
-      it->second.callback();
-      it->second.timeToTillNextCall=it->second.delay;
-      it->second.timesCalled++;
+    return;
+  }
+  
+  for (const auto &ele :callbacks)
+  {
+   Serial.println(callbacks.size());
+   // Serial.println("xd");
+    if(ele.second.timesCalled>=ele.second.times)
+    {Serial.println("haha");
+      deleteCallBack(ele.first);
     }
-    if(it->second.times>0)
-    {
-      it->second.timesCalled++;
+    if(millis()-ele.second.lastCalled>=ele.second.delay)
+    {Serial.println("lololol");
+      ele.second.callback();
+      callbacks[ele.first].lastCalled=millis();
+      if(ele.second.times>0)
+      {
+        callbacks[ele.first].timesCalled++;
+      }    
     }
-    if(it->second.timesCalled>=it->second.times)
-    {
-      deleteCallback(it->first);
-    }
-    ++it;
+    
   }
 }
