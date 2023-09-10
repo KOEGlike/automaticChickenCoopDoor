@@ -17,7 +17,7 @@ struct callbackData
 
 class AsyncHandler{
   public:
-    uint32_t registerCallback(unsigned long delay,uint32_t times, std::function<void(void)> callback);
+    uint32_t registerCallback(unsigned long delay,uint32_t times, std::function<void(void)> callback,bool doDelayFirst=false);
     void deleteCallBack(uint32_t id);
     void check();
   private:

@@ -6,7 +6,9 @@ extern "C" {
   #include <inttypes.h>
 }
 CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
-  : TM1637Display(pinClk, pinDIO) {}
+  : TM1637Display(pinClk, pinDIO) {
+    Async.registerCallback(0,-1,[&](){blinkCheck();});
+  }
 
 void CustomDisplayBehavior::blinkCheck() {
   if (millis() - blinkStartInMillis >= m_offTime && isBlinking) {
@@ -75,6 +77,4 @@ void CustomDisplayBehavior::bilinkSegmentsAnAmount(uint8_t segmentsToBlink, unsi
   blinkSegmentsContinuouslyOn(segmentsToBlink, offTime, onTime);
 }
 
-void CustomDisplayBehavior::check() {
-  blinkCheck();
-}
+
