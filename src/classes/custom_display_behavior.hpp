@@ -16,7 +16,6 @@ protected:
     uint8_t segmentsThatBlink;
     bool isBlinking = false, isContinuouslyBlinking = false;
     std::function<void()> bilinkSegmentsAnAmountOnEndFunc = []() {};
-
     void blinkCheck();
 
 public:
@@ -26,8 +25,6 @@ public:
     void blinkSegmentsContinuouslyOn(uint8_t segmentsToBlink, unsigned long offTime = 50, unsigned long onTime = 50);
     void blinkSegmentsContinuouslyOff();
     void bilinkSegmentsAnAmount(uint8_t segmentsToBlink, unsigned int amount, unsigned long offTime = 50, unsigned long onTime = 50, std::function<void()> onEnd = []() {});
-
-    void check();
 };
 
 #endif

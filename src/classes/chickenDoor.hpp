@@ -18,48 +18,46 @@
 
 class ChickenDoor
 {
-  public:
-    ChickenDoor(uint8_t clkPin,uint8_t dioPin, uint8_t btn1Pin, uint8_t btn2Pin);
-    
-    void checks() ;
-  private:
-  uint8_t btn1, btn2, clk, dio;
-  unsigned int openTime=0, closeTime=0;
-  bool globalPressed = false, isEditing=false;
+  	public:
+    	ChickenDoor(uint8_t clkPin,uint8_t dioPin, uint8_t btn1Pin, uint8_t btn2Pin);
+  	private:
+		uint8_t btn1, btn2, clk, dio;
+		unsigned int openTime=0, closeTime=0;
+		bool globalPressed = false, isEditing=false;
 
-  CustomDisplayBehavior display{21, 22};
-  Preferences preferences;
-  FourDigitTime digits;
-  StateCounter currentSelectedSegment{4};
-  StateCounter currentChangingTime{3};
+		CustomDisplayBehavior display{21, 22};
+		Preferences preferences;
+		FourDigitTime digits;
+		StateCounter currentSelectedSegment{4};
+		StateCounter currentChangingTime{3};
 
-  void defalutForShowNumber(int num);
+		void defalutForShowNumber(int num);
+		
+		int  digitValueRouter(int state);
+		void setTimeRouter(int didgets, int state);
+		void dotTimeingRouter(int state);
 
-  int  digitValueRouter(int state);
+		void addToCurrentSegment();;
+		void moveCursorForward();
+		void editingTogle();
+		void changeCurrentChangingTime();
 
-  void setTimeRouter(int didgets, int state);
+		Button button1
+		{
+		19, [&]() {   
+			addToCurrentSegment();
+		},
+		[&]() {
+			editingTogle();
+		}, &globalPressed};
 
-  void addToCurrentSegment();;
-  void moveCursorForward();
-  void editingTogle();
-  void changeCurrentChangingTime();
-
-  Button button1
-  {
-    19, [&]() {   
-      addToCurrentSegment();
-    },
-    [&]() {
-      editingTogle();
-    }, &globalPressed};
-
-  Button button2{
-    18, [&]() {
-      moveCursorForward();
-    },
-    [&]() {
-      changeCurrentChangingTime();
-    }, &globalPressed};
+		Button button2{
+		18, [&]() {
+			moveCursorForward();
+		},
+		[&]() {
+			changeCurrentChangingTime();
+		}, &globalPressed};
 
 };
 

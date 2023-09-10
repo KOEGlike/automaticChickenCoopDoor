@@ -11,16 +11,9 @@ ChickenDoor::ChickenDoor(uint8_t clkPin,uint8_t dioPin, uint8_t btn1Pin, uint8_t
   closeTime=preferences.getUInt("closeTime", 0);
 }
 
-void ChickenDoor::checks()
-{
-  button1.check();
-  button2.check();
-  display.check();
-}
-
 void ChickenDoor::defalutForShowNumber(int num)
 {
-  display.showNumberDecEx(num, 0b11100000, true);
+  display.showNumberDecEx(num, 0b00000000, true);
 }
 
 int ChickenDoor::digitValueRouter(int state)
@@ -54,12 +47,30 @@ void ChickenDoor::setTimeRouter(int didgets, int state)
   }
 }
 
+void ChickenDoor::dotTimeingRouter(int state)
+{
+  unsigned long delayShort=200, delayLong=700, onTime=400;
+  uint8_t segments[4];
+  memcpy(segments, display.currentSegments, 4);
+  switch(state) {
+  case 0:
+    Async.registerCallback()
+    break;
+  case 1:
+    
+    break;
+  case 2:
+    
+   
+    break;
+  }
+}
+
 void ChickenDoor::addToCurrentSegment()
 {
   if(isEditing==false){
   return;
   }
-
   digits.mutateOneDigit(currentSelectedSegment.getState(), 1,false);
   defalutForShowNumber(digits.getDigits());
 }
@@ -88,6 +99,7 @@ void ChickenDoor::editingTogle()
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defalutForShowNumber(digits.getDigits());
     display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), 100, 100);
+    display.blinkSegmentsContinuouslyOn(currentChangingTime.getStateInBitMask(), 100, 100);
 }
 
 void ChickenDoor::moveCursorForward()
