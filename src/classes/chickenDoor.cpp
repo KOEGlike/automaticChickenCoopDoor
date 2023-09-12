@@ -50,20 +50,10 @@ void ChickenDoor::setTimeRouter(int didgets, int state)
 void ChickenDoor::dotTimeingRouter(int state)
 {
   unsigned long delayShort=200, delayLong=700, onTime=400;
+  uint32_t id;
   uint8_t segments[4];
   memcpy(segments, display.currentSegments, 4);
-  switch(state) {
-  case 0:
-    Async.registerCallback()
-    break;
-  case 1:
-    
-    break;
-  case 2:
-    
-   
-    break;
-  }
+  //dotTimeingAsyncId= Async.registerCallback(delayLong+(state+1)*(delayShort+onTime), -1, [&](){id=Async.registerCallback(delayShort+onTime, state+1, [&](){}, [&](){Async.deleteCallBack(id);});});
 }
 
 void ChickenDoor::addToCurrentSegment()
