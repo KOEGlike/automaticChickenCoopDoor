@@ -24,7 +24,6 @@ class ChickenDoor
 		uint8_t btn1, btn2, clk, dio;
 		unsigned int openTime=0, closeTime=0;
 		bool globalPressed = false, isEditing=false;
-		uint32_t dotTimeingAsyncId;
 
 		CustomDisplayBehavior display{21, 22};
 		Preferences preferences;
