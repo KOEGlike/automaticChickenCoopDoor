@@ -7,7 +7,6 @@ Button::Button(int pin, std::function<void()> press, std::function<void()> longP
     m_globalPressed = globalPressed;
     m_longPress = longPress;
     m_press = press;
-     Async.registerCallback(0,-1,[&](){check();}); 
     pinMode(m_pin, INPUT_PULLUP);
 }
 

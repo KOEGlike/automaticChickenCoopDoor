@@ -18,13 +18,21 @@
 #define BTN1 19
 #define BTN2 18
 
-ChickenDoor door(CLK, DIO, BTN1, BTN2);
+//ChickenDoor door(21, 22, 19, 18);
+
+
+
+//ChickenDoor door(CLK, DIO, BTN1, BTN2);
 
 void setup() {
   Serial.begin(115200);
-  while (Serial.available() > 0){
+  while (Serial.available() > 0)
+  {
+    /* code */
   }
   Serial.println("Starting");
+  Async.registerCallback(4000,10, [](){Serial.println("lol");});
+  
 }
 
 void loop() {

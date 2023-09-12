@@ -6,9 +6,26 @@ extern "C" {
   #include <inttypes.h>
 }
 CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
-  : TM1637Display(pinClk, pinDIO) {
-  }
+  : TM1637Display(pinClk, pinDIO) {}
 
+void CustomDisplayBehavior::blinkCheck() {
+  if (millis() - blinkStartInMillis >= m_offTime && isBlinking) {
+    isBlinking = false;
+    setSegments(currentSegments);
+    blinkEnd = millis();
+    timesBlinked++;
+  }
+  
+  if (isContinuouslyBlinking && millis() - blinkEnd >= m_onTime && !isBlinking) {
+    blinkSegments(segmentsThatBlink, m_offTime);
+  }
+  
+  if (timesToBlink > 0 && timesBlinked == timesToBlink) {
+    blinkSegmentsContinuouslyOff();
+    timesToBlink = -1;
+    bilinkSegmentsAnAmountOnEndFunc();
+  }
+}
 
 void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long offTime) {
   uint8_t beforeBlinkSegments[4];
@@ -43,18 +60,12 @@ void CustomDisplayBehavior::blinkSegmentsContinuouslyOff() {
 }
 
 void CustomDisplayBehavior::bilinkSegmentsAnAmount(uint8_t segmentsToBlink, unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
-  Async.registerCallback(offTime+onTime, amount, [&](){blinkSegments(segmentsToBlink, offTime);}, onEnd);
+  timesBlinked = 0;
+  timesToBlink = amount;
+  bilinkSegmentsAnAmountOnEndFunc = onEnd;
+  blinkSegmentsContinuouslyOn(segmentsToBlink, offTime, onTime);
 }
 
-void CustomDisplayBehavior::blinkDots(unsigned long offTime)
-{
-  if(dotBlink)
-  {
-    return;
-  }
-  dotBlink=true;
-  
-  
+void CustomDisplayBehavior::check() {
+  blinkCheck();
 }
-
-
