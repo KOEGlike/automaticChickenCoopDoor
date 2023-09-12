@@ -81,7 +81,6 @@ void TM1637Display::setBrightness(uint8_t brightness, bool on)
 void TM1637Display::setSegments(uint8_t segments[], uint8_t length, uint8_t pos)
 {
   memcpy(currentSegments, segments, length);
-  currentSegments[1]&=~0b10000000;
   segmentsLength=length;  
 
     // Write COMM1
