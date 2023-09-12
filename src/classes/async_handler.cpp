@@ -1,6 +1,7 @@
 #include "async_handler.hpp"
 
 
+
 void AsyncHandler::deleteCallBack(uint32_t id)
 {
     callbacks.erase(id);
@@ -33,6 +34,12 @@ void AsyncHandler::check()
     return;
   }
   
+  callbacks[maxCurrentId-1].callback();
+  if(callbacks.size()==0)
+  {
+    return;
+  }
+  
   for (const auto &ele :callbacks)
   {
     if(callbacks[ele.first].timesCalled>=callbacks[ele.first].times&&callbacks[ele.first].times>=0)
@@ -46,10 +53,12 @@ void AsyncHandler::check()
       
       callbacks[ele.first].lastCalled=millis();
       if(ele.second.times>0)
+      if(ele.second.times>0)
       {
         callbacks[ele.first].timesCalled++;
       }    
     }
+    
     
   }
 }
