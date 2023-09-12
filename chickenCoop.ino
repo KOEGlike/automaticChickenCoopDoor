@@ -18,7 +18,7 @@
 #define BTN1 19
 #define BTN2 18
 
-//ChickenDoor door(21, 22, 19, 18);
+ChickenDoor door(21, 22, 19, 18);
 
 
 
@@ -31,7 +31,7 @@ void setup() {
     /* code */
   }
   Serial.println("Starting");
-  Async.registerCallback(4000,10, [](){Serial.println("lol");});
+  
   
 }
 

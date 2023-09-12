@@ -13,6 +13,10 @@ CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
 void CustomDisplayBehavior::blinkCheck() {
   if (millis() - blinkStartInMillis >= m_offTime && isBlinking) {
     isBlinking = false;
+    if(dotIsBlinking)
+    {
+      currentSegments[1]&=~0b10000000;
+    }
     setSegments(currentSegments);
     blinkEnd = millis();
     timesBlinked++;
@@ -28,6 +32,22 @@ void CustomDisplayBehavior::blinkCheck() {
     bilinkSegmentsAnAmountOnEndFunc();
   }
 }
+
+void CustomDisplayBehavior::dotBlinkCheck() {
+
+if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
+    dotIsBlinking = false;
+    setSegments(currentSegments);
+    blinkEnd = millis();
+    timesBlinked++;
+  }
+  
+  if (dotIsContinuouslyBlinking && millis() - dotBlinkEnd >= m_dotOnTime && !dotIsBlinking) {
+    blinkDots(m_offTime);
+  }
+
+}
+
 
 void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long offTime) {
   if (isBlinking) {
@@ -77,6 +97,34 @@ void CustomDisplayBehavior::bilinkSegmentsAnAmount(uint8_t segmentsToBlink, unsi
   blinkSegmentsContinuouslyOn(segmentsToBlink, offTime, onTime);
 }
 
+void CustomDisplayBehavior::blinkDots(unsigned long offTime){
+
+  if (dotIsBlinking) {
+    return;
+  }
+  uint8_t beforeBlinkSegments[4];
+  memcpy(beforeBlinkSegments, currentSegments, segmentsLength);
+  uint8_t segments[4];
+  memcpy(segments, currentSegments, segmentsLength);
+  
+  dotIsBlinking = true;
+  segments[1]&=~0b10000000;
+  dotBlinkStartInMillis = millis();
+  setSegments(segments);
+  memcpy(currentSegments, beforeBlinkSegments, segmentsLength);
+}
+
+void CustomDisplayBehavior::blinkDotsContinuouslyOn( unsigned long offTime, unsigned long onTime) {
+  dotIsContinuouslyBlinking = true;
+  m_dotOnTime = onTime;
+  blinkSegments(segmentsThatBlink, offTime);
+}
+
+void CustomDisplayBehavior::blinkDotsContinuouslyOff() {
+  dotIsContinuouslyBlinking = false;
+}
+
 void CustomDisplayBehavior::check() {
   blinkCheck();
+  dotBlinkCheck();
 }

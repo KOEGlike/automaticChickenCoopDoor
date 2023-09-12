@@ -52,8 +52,8 @@ void AsyncHandler::check()
       callbacks[ele.first].callback();
       
       callbacks[ele.first].lastCalled=millis();
-      if(ele.second.times>0)
-      if(ele.second.times>0)
+      if(callbacks[ele.first].times>0)
+      if(callbacks[ele.first].times>0)
       {
         callbacks[ele.first].timesCalled++;
       }    
