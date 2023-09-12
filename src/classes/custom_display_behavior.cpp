@@ -36,16 +36,14 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
 }
 
 void CustomDisplayBehavior::blinkSegmentsContinuouslyOn(uint8_t segmentsToBlink, unsigned long offTime, unsigned long onTime) {
-  segmentsThatBlink = segmentsToBlink;
-  m_onTime = onTime;
-continouslyBlinkingAsyncId=Async.registerCallback(offTime+onTime, -1, [&](){blinkSegments(segmentsThatBlink, offTime);});
+continouslyBlinkingAsyncId=Async.registerCallback(offTime+onTime, -1, [&](){blinkSegments(segmentsToBlink, offTime);});
 }
 void CustomDisplayBehavior::blinkSegmentsContinuouslyOff() {
   Async.deleteCallBack(continouslyBlinkingAsyncId);
 }
 
 void CustomDisplayBehavior::bilinkSegmentsAnAmount(uint8_t segmentsToBlink, unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
-  Async.registerCallback(offTime+onTime, amount, [&](){blinkSegments(segmentsThatBlink, offTime);}, onEnd);
+  Async.registerCallback(offTime+onTime, amount, [&](){blinkSegments(segmentsToBlink, offTime);}, onEnd);
 }
 
 void CustomDisplayBehavior::blinkDots(unsigned long offTime)

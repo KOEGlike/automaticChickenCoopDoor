@@ -89,12 +89,13 @@ void ChickenDoor::editingTogle()
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defalutForShowNumber(digits.getDigits());
     display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), 100, 100);
-    display.blinkSegmentsContinuouslyOn(currentChangingTime.getStateInBitMask(), 100, 100);
+    
 }
 
 void ChickenDoor::moveCursorForward()
 {
   currentSelectedSegment.add();
+  display.blinkSegmentsContinuouslyOff();
   display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), 100, 100);
 }
 

@@ -13,8 +13,6 @@ class CustomDisplayBehavior : public TM1637Display {
 protected:
     unsigned long blinkStartInMillis, m_offTime, m_onTime, blinkEnd;
     bool dotBlink = false;
-    int timesBlinked = 0, timesToBlink = -1;
-    uint8_t segmentsThatBlink;
     uint32_t continouslyBlinkingAsyncId;
     std::function<void()> bilinkSegmentsAnAmountOnEndFunc = []() {};
     void blinkCheck();
