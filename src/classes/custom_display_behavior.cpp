@@ -15,10 +15,10 @@ void CustomDisplayBehavior::blinkCheck() {
     isBlinking = false;
     uint8_t segments[4];
     memcpy(segments, currentSegments, segmentsLength);
-    if(dotIsBlinking)
+    /*if(dotIsBlinking)
     {
       segments[1]&=~0b10000000;
-    }
+    }*/
     setSegments(segments);
     blinkEnd = millis();
     timesBlinked++;
@@ -39,6 +39,9 @@ void CustomDisplayBehavior::dotBlinkCheck() {
 
 if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
     dotIsBlinking = false;
+    uint8_t segments[4];
+    memcpy(segments, currentSegments, segmentsLength);
+    segments[1]|=0b10000000;
     setSegments(currentSegments);
     dotBlinkEnd = millis();
     Serial.println("dotBlinkCheck");

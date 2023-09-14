@@ -88,7 +88,7 @@ void ChickenDoor::editingTogle()
     closeTime=preferences.getUInt("closeTime", 0);
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defalutForShowNumber(digits.getDigits());
-    display.blinkDotsContinuouslyOn(100,100);
+    display.blinkDotsContinuouslyOn(200,300);
     display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), 100, 100);
     
 }
