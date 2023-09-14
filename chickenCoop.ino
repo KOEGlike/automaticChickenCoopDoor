@@ -26,13 +26,8 @@ ChickenDoor door(21, 22, 19, 18);
 
 void setup() {
   Serial.begin(115200);
-  while (Serial.available() > 0)
-  {
-    /* code */
-  }
+  while (Serial.available() > 0){}
   Serial.println("Starting");
-  
-  
 }
 
 void loop() {

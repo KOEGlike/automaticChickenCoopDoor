@@ -13,7 +13,7 @@ ChickenDoor::ChickenDoor(uint8_t clkPin,uint8_t dioPin, uint8_t btn1Pin, uint8_t
 
 void ChickenDoor::defalutForShowNumber(int num)
 {
-  display.showNumberDecEx(num, 0b00000000, true);
+  display.showNumberDecEx(num, 0b01000000, true);
 }
 
 int ChickenDoor::digitValueRouter(int state)
@@ -88,7 +88,7 @@ void ChickenDoor::editingTogle()
     closeTime=preferences.getUInt("closeTime", 0);
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defalutForShowNumber(digits.getDigits());
-   // display.blinkDotsContinuouslyOn(110,110);
+    display.blinkDotsContinuouslyOn(100,100);
     display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), 100, 100);
     
 }

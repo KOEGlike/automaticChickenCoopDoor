@@ -13,11 +13,13 @@ CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
 void CustomDisplayBehavior::blinkCheck() {
   if (millis() - blinkStartInMillis >= m_offTime && isBlinking) {
     isBlinking = false;
+    uint8_t segments[4];
+    memcpy(segments, currentSegments, segmentsLength);
     if(dotIsBlinking)
     {
-      currentSegments[1]&=~0b10000000;
+      segments[1]&=~0b10000000;
     }
-    setSegments(currentSegments);
+    setSegments(segments);
     blinkEnd = millis();
     timesBlinked++;
   }
@@ -38,16 +40,14 @@ void CustomDisplayBehavior::dotBlinkCheck() {
 if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
     dotIsBlinking = false;
     setSegments(currentSegments);
-    blinkEnd = millis();
-    timesBlinked++;
+    dotBlinkEnd = millis();
+    Serial.println("dotBlinkCheck");
   }
   
   if (dotIsContinuouslyBlinking && millis() - dotBlinkEnd >= m_dotOnTime && !dotIsBlinking) {
-    blinkDots(m_offTime);
+    blinkDots(m_dotOffTime);
   }
-
 }
-
 
 void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long offTime) {
   if (isBlinking) {
@@ -106,7 +106,7 @@ void CustomDisplayBehavior::blinkDots(unsigned long offTime){
   memcpy(beforeBlinkSegments, currentSegments, segmentsLength);
   uint8_t segments[4];
   memcpy(segments, currentSegments, segmentsLength);
-  
+  m_dotOffTime = offTime;
   dotIsBlinking = true;
   segments[1]&=~0b10000000;
   dotBlinkStartInMillis = millis();
@@ -117,7 +117,7 @@ void CustomDisplayBehavior::blinkDots(unsigned long offTime){
 void CustomDisplayBehavior::blinkDotsContinuouslyOn( unsigned long offTime, unsigned long onTime) {
   dotIsContinuouslyBlinking = true;
   m_dotOnTime = onTime;
-  blinkSegments(segmentsThatBlink, offTime);
+  blinkDots(offTime);
 }
 
 void CustomDisplayBehavior::blinkDotsContinuouslyOff() {
