@@ -21,6 +21,8 @@ class ChickenDoor
   	public:
     	ChickenDoor(uint8_t clkPin,uint8_t dioPin, uint8_t btn1Pin, uint8_t btn2Pin);
   	private:
+
+		uint32_t dotBlinkAsyncId;
 		uint8_t btn1, btn2, clk, dio;
 		unsigned int openTime=0, closeTime=0;
 		bool globalPressed = false, isEditing=false;

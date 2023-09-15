@@ -12,10 +12,10 @@ extern "C" {
 class CustomDisplayBehavior : public TM1637Display {
 protected:
     unsigned long blinkStartInMillis, m_offTime, m_onTime, blinkEnd,dotBlinkStartInMillis, m_dotOffTime, m_dotOnTime, dotBlinkEnd;
-    int timesBlinked = 0, timesToBlink = -1;
+    int timesBlinked = 0, timesToBlink = -1,timesDotBlinked = 0, timesDotToBlink = -1;
     uint8_t segmentsThatBlink;
-    bool isBlinking = false, isContinuouslyBlinking = false, dotIsBlinking=false,dotIsContinuouslyBlinking = false;
-    std::function<void()> bilinkSegmentsAnAmountOnEndFunc = []() {};
+    bool isBlinking = false, isContinuouslyBlinking = false, dotIsBlinking=false,dotIsContinuouslyBlinking = false, dotIsOn=false;
+    std::function<void()> bilinkSegmentsAnAmountOnEndFunc = []() {},bilinkDotsAnAmountOnEndFunc= []() {};
     void dotBlinkCheck();
     void blinkCheck();
 
@@ -30,6 +30,7 @@ public:
     void blinkDots(unsigned long offTime = 50);
     void blinkDotsContinuouslyOn(unsigned long offTime = 50, unsigned long onTime = 50);
     void blinkDotsContinuouslyOff();
+    void bilinkDotsAnAmount(unsigned int amount, unsigned long offTime = 50, unsigned long onTime = 50, std::function<void()> onEnd = []() {});
     };
 
 #endif

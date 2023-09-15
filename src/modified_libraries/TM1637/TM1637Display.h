@@ -140,7 +140,7 @@ public:
   //! @return A code representing the 7 segment image of the digit (LSB - segment A;
   //!         bit 6 - segment G; bit 7 - always zero)
   uint8_t encodeDigit(uint8_t digit);
-  uint8_t currentSegments[4];
+  
 protected:
   void bitDelay();
 
@@ -154,7 +154,7 @@ protected:
    
   void showNumberBaseEx(int8_t base, uint16_t num, uint8_t dots = 0, bool leading_zero = false, uint8_t length = 4, uint8_t pos = 0);
 
-  
+  uint8_t currentSegments[4];
   uint8_t segmentsLength;
 	uint8_t m_pinClk;
 	uint8_t m_pinDIO;
