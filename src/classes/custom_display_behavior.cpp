@@ -16,12 +16,11 @@ void CustomDisplayBehavior::blinkCheck() {
     isBlinking = false;
     uint8_t segments[4];
     memcpy(segments, currentSegments, segmentsLength);
-    Serial.println(dotIsBlinking);
     if(dotIsBlinking)
     {
       segments[1]&=~0b10000000;
     }
-    else
+    if(dotIsOn)
     {
       segments[1]|=0b10000000;
     }
@@ -47,7 +46,7 @@ if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
     dotIsBlinking = false;
     uint8_t segments[4];
     memcpy(segments, currentSegments, segmentsLength);
-    if(isBlinking&&(segmentsThatBlink & 0b0100))
+    if(isBlinking)
     {
       segments[1]=0;
     }
@@ -62,15 +61,16 @@ if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
     dotIsOn=false;
   }
 
-  if (timesDotToBlink > 0 && timesDotBlinked == timesDotToBlink) {
+  if (timesDotToBlink > 0 && timesDotBlinked >= timesDotToBlink) {
     blinkDotsContinuouslyOff();
     timesDotToBlink = -1;
     bilinkDotsAnAmountOnEndFunc();
   }
 
-  if(millis()-dotBlinkAnAmountLongDelayContinuosStart>=dotBlinkAnAmountLongDelayContinuos&&dotBlinkAnAmountLongDelayContinuos>=0&&isDotBlinkAnAmountLongDelayContinuos==true)
+  if(millis()-dotBlinkAnAmountLongDelayContinuosStart>=dotBlinkAnAmountLongDelayContinuos&&dotBlinkAnAmountLongDelayContinuosAmount>=0&&isDotBlinkAnAmountLongDelayContinuos==true)
   {
     isDotBlinkAnAmountLongDelayContinuos=false;
+    Serial.println(dotBlinkAnAmountLongDelayContinuosAmount);
     blinkDotsAnAmount(dotBlinkAnAmountLongDelayContinuosAmount, blinkDotsAnAmountThenDelayContinuouslyOffTime,blinkDotsAnAmountThenDelayContinuouslyOnTime, [&](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true;} );
   }
 }
@@ -79,7 +79,6 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
   if (isBlinking) {
     return;
   }
-  Serial.println("blinkSegments");
   isBlinking = true;
   uint8_t beforeBlinkSegments[4];
   memcpy(beforeBlinkSegments, currentSegments, segmentsLength);
@@ -102,6 +101,10 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
   if(dotIsOn)
   {
     segments[1]|=0b10000000;
+  }
+  if(dotIsBlinking)
+  {
+    segments[1]&=~0b10000000;
   }
   
   blinkStartInMillis = millis();
@@ -141,27 +144,31 @@ void CustomDisplayBehavior::blinkDots(unsigned long offTime){
   if (dotIsBlinking) {
     return;
   }
-  Serial.println("blinkDots");
+  Serial.println("haha");
   uint8_t beforeBlinkSegments[4];
   memcpy(beforeBlinkSegments, currentSegments, segmentsLength);
   uint8_t segments[4];
   memcpy(segments, currentSegments, segmentsLength);
   m_dotOffTime = offTime;
   dotIsBlinking = true;
+  dotIsOn=false;
   segments[1]&=~0b10000000;
   dotBlinkStartInMillis = millis();
   setSegments(segments);
   memcpy(currentSegments, beforeBlinkSegments, segmentsLength);
+  
 }
 
 void CustomDisplayBehavior::blinkDotsContinuouslyOn( unsigned long offTime, unsigned long onTime) {
   dotIsContinuouslyBlinking = true;
   m_dotOnTime = onTime;
+  Serial.println("lol");
   blinkDots(offTime);
 }
 
 void CustomDisplayBehavior::blinkDotsContinuouslyOff() {
   dotIsContinuouslyBlinking = false;
+  Serial.println("xd");
 }
 
 void CustomDisplayBehavior::blinkDotsAnAmount( unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
@@ -177,15 +184,16 @@ void CustomDisplayBehavior::blinkDotsAnAmountThenDelayContinuously(unsigned int 
   blinkDotsAnAmountThenDelayContinuouslyOnTime=onTime;
   blinkDotsAnAmountThenDelayContinuouslyOffTime=offTime;
   dotBlinkAnAmountLongDelayContinuosAmount=amount;
-  blinkDotsAnAmount(amount, offTime, onTime, [&](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true;});
+  blinkDotsAnAmount(amount, offTime, onTime, [&](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true; });
 }
 
 void CustomDisplayBehavior::blinkDotsAnAmountThenDelayContinuouslyChangeAmount(unsigned int amount)
 {
   dotBlinkAnAmountLongDelayContinuosAmount=amount;
+  Serial.println(dotBlinkAnAmountLongDelayContinuosAmount);
 }
 
 void CustomDisplayBehavior::check() {
-  blinkCheck();
   dotBlinkCheck();
+  blinkCheck();
 }

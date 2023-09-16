@@ -49,9 +49,7 @@ void ChickenDoor::setTimeRouter(int didgets, int state)
 
 void ChickenDoor::dotTimeingRouter(int state)
 {
-  unsigned long delayShort=200, delayLong=500, onTime=200;
-  Async.deleteCallBack(dotBlinkAsyncId);
-  dotBlinkAsyncId=Async.registerCallback(delayLong, -1, [&](){display.blinkDotsAnAmount(state+1, delayShort, onTime);});
+  display.blinkDotsAnAmountThenDelayContinuouslyChangeAmount(state+1);
 }
 
 void ChickenDoor::addToCurrentSegment()
@@ -80,22 +78,22 @@ void ChickenDoor::editingTogle()
     }
     isEditing=true;
     display.setBrightness(7);
-    currentSelectedSegment.add();
-    currentChangingTime.add();
+    currentChangingTime.setState(0);
+    currentSelectedSegment.setState(0);
     openTime=preferences.getUInt("openTime",0);
     closeTime=preferences.getUInt("closeTime", 0);
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defalutForShowNumber(digits.getDigits());
-    //dotTimeingRouter(currentChangingTime.getState()); 
-    display.blinkDotsAnAmountThenDelayContinuously(2, 600,200,200)  ; 
-    display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), 100, 100);
+    dotTimeingRouter(currentChangingTime.getState()); 
+    display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
+    display.blinkDotsAnAmountThenDelayContinuously(2, offTime*offLongMult,offTime*offShortMult,onTime*onTimeMult)  ; 
     
 }
 
 void ChickenDoor::moveCursorForward()
 {
   currentSelectedSegment.add();
-  display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), 100, 100);
+  display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
 }
 
 
@@ -107,9 +105,9 @@ void ChickenDoor::changeCurrentChangingTime()
 
   setTimeRouter(digits.getDigits(), currentChangingTime.getState());
   currentChangingTime.add();
-  //dotTimeingRouter(currentChangingTime.getState());    
+  dotTimeingRouter(currentChangingTime.getState());    
   currentSelectedSegment.setState(0);
   digits.setDigits(digitValueRouter(currentChangingTime.getState()));
   defalutForShowNumber(digits.getDigits());
-  display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), 100, 100);
+  display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
 }
