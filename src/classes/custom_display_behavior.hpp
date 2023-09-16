@@ -11,10 +11,10 @@ extern "C" {
 }
 class CustomDisplayBehavior : public TM1637Display {
 protected:
-    unsigned long blinkStartInMillis, m_offTime, m_onTime, blinkEnd,dotBlinkStartInMillis, m_dotOffTime, m_dotOnTime, dotBlinkEnd;
+    unsigned long blinkStartInMillis, m_offTime, m_onTime, blinkEnd,dotBlinkStartInMillis, m_dotOffTime, m_dotOnTime, dotBlinkEnd, dotBlinkAnAmountLongDelayContinuos=-1,dotBlinkAnAmountLongDelayContinuosStart, blinkDotsAnAmountThenDelayContinuouslyOffTime, blinkDotsAnAmountThenDelayContinuouslyOnTime,dotBlinkAnAmountLongDelayContinuosAmount ;
     int timesBlinked = 0, timesToBlink = -1,timesDotBlinked = 0, timesDotToBlink = -1;
     uint8_t segmentsThatBlink;
-    bool isBlinking = false, isContinuouslyBlinking = false, dotIsBlinking=false,dotIsContinuouslyBlinking = false, dotIsOn=false;
+    bool isBlinking = false, isContinuouslyBlinking = false, dotIsBlinking=false,dotIsContinuouslyBlinking = false, dotIsOn=false,isDotBlinkAnAmountLongDelayContinuos=false;
     std::function<void()> bilinkSegmentsAnAmountOnEndFunc = []() {},bilinkDotsAnAmountOnEndFunc= []() {};
     void dotBlinkCheck();
     void blinkCheck();
@@ -26,11 +26,14 @@ public:
     void blinkSegmentsContinuouslyOn(uint8_t segmentsToBlink, unsigned long offTime = 50, unsigned long onTime = 50);
     void blinkSegmentsContinuouslyOff();
     void bilinkSegmentsAnAmount(uint8_t segmentsToBlink, unsigned int amount, unsigned long offTime = 50, unsigned long onTime = 50, std::function<void()> onEnd = []() {});
+    void changeSegmentsContinuos(uint8_t segmentsToBlink, unsigned long offTime = 50, unsigned long onTime = 50);
     void check();
     void blinkDots(unsigned long offTime = 50);
     void blinkDotsContinuouslyOn(unsigned long offTime = 50, unsigned long onTime = 50);
     void blinkDotsContinuouslyOff();
-    void bilinkDotsAnAmount(unsigned int amount, unsigned long offTime = 50, unsigned long onTime = 50, std::function<void()> onEnd = []() {});
+    void blinkDotsAnAmount(unsigned int amount, unsigned long offTime = 50, unsigned long onTime = 50, std::function<void()> onEnd = []() {});
+    void blinkDotsAnAmountThenDelayContinuously(unsigned int amount, unsigned long longOffTime = 50,unsigned long offTime = 50, unsigned long onTime = 50);
+    void blinkDotsAnAmountThenDelayContinuouslyChangeAmount(unsigned int amount);
     };
 
 #endif

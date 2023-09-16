@@ -51,7 +51,7 @@ void ChickenDoor::dotTimeingRouter(int state)
 {
   unsigned long delayShort=200, delayLong=500, onTime=200;
   Async.deleteCallBack(dotBlinkAsyncId);
-  dotBlinkAsyncId=Async.registerCallback(delayLong, -1, [&](){display.bilinkDotsAnAmount(state+1, delayShort, onTime);});
+  dotBlinkAsyncId=Async.registerCallback(delayLong, -1, [&](){display.blinkDotsAnAmount(state+1, delayShort, onTime);});
 }
 
 void ChickenDoor::addToCurrentSegment()
@@ -87,7 +87,7 @@ void ChickenDoor::editingTogle()
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defalutForShowNumber(digits.getDigits());
     //dotTimeingRouter(currentChangingTime.getState()); 
-    display.blinkDotsContinuouslyOn(300, 110)  ; 
+    display.blinkDotsAnAmountThenDelayContinuously(2, 600,200,200)  ; 
     display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), 100, 100);
     
 }
@@ -95,7 +95,7 @@ void ChickenDoor::editingTogle()
 void ChickenDoor::moveCursorForward()
 {
   currentSelectedSegment.add();
-  display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), 100, 100);
+  display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), 100, 100);
 }
 
 
@@ -111,5 +111,5 @@ void ChickenDoor::changeCurrentChangingTime()
   currentSelectedSegment.setState(0);
   digits.setDigits(digitValueRouter(currentChangingTime.getState()));
   defalutForShowNumber(digits.getDigits());
-  display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), 100, 100);
+  display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), 100, 100);
 }

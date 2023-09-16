@@ -67,6 +67,12 @@ if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
     timesDotToBlink = -1;
     bilinkDotsAnAmountOnEndFunc();
   }
+
+  if(millis()-dotBlinkAnAmountLongDelayContinuosStart>=dotBlinkAnAmountLongDelayContinuos&&dotBlinkAnAmountLongDelayContinuos>=0&&isDotBlinkAnAmountLongDelayContinuos==true)
+  {
+    isDotBlinkAnAmountLongDelayContinuos=false;
+    blinkDotsAnAmount(dotBlinkAnAmountLongDelayContinuosAmount, blinkDotsAnAmountThenDelayContinuouslyOffTime,blinkDotsAnAmountThenDelayContinuouslyOnTime, [&](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true;} );
+  }
 }
 
 void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long offTime) {
@@ -93,10 +99,10 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
     segments[3] = 0;
   }
 
-  /*if(dotIsOn)
+  if(dotIsOn)
   {
     segments[1]|=0b10000000;
-  }*/
+  }
   
   blinkStartInMillis = millis();
   m_offTime = offTime;
@@ -114,6 +120,13 @@ void CustomDisplayBehavior::blinkSegmentsContinuouslyOn(uint8_t segmentsToBlink,
 
 void CustomDisplayBehavior::blinkSegmentsContinuouslyOff() {
   isContinuouslyBlinking = false;
+}
+
+void CustomDisplayBehavior::changeSegmentsContinuos(uint8_t segmentsToBlink, unsigned long offTime, unsigned long onTime)
+{
+  segmentsThatBlink=segmentsToBlink;
+  m_offTime=offTime;
+  m_onTime=onTime;
 }
 
 void CustomDisplayBehavior::bilinkSegmentsAnAmount(uint8_t segmentsToBlink, unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
@@ -151,11 +164,25 @@ void CustomDisplayBehavior::blinkDotsContinuouslyOff() {
   dotIsContinuouslyBlinking = false;
 }
 
-void CustomDisplayBehavior::bilinkDotsAnAmount( unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
+void CustomDisplayBehavior::blinkDotsAnAmount( unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
   timesDotBlinked = 0;
   timesDotToBlink = amount;
   bilinkDotsAnAmountOnEndFunc = onEnd;
   blinkDotsContinuouslyOn(offTime, onTime);
+}
+
+void CustomDisplayBehavior::blinkDotsAnAmountThenDelayContinuously(unsigned int amount, unsigned long longOffTime ,unsigned long offTime , unsigned long onTime)
+{
+  dotBlinkAnAmountLongDelayContinuos=longOffTime;
+  blinkDotsAnAmountThenDelayContinuouslyOnTime=onTime;
+  blinkDotsAnAmountThenDelayContinuouslyOffTime=offTime;
+  dotBlinkAnAmountLongDelayContinuosAmount=amount;
+  blinkDotsAnAmount(amount, offTime, onTime, [&](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true;});
+}
+
+void CustomDisplayBehavior::blinkDotsAnAmountThenDelayContinuouslyChangeAmount(unsigned int amount)
+{
+  dotBlinkAnAmountLongDelayContinuosAmount=amount;
 }
 
 void CustomDisplayBehavior::check() {
