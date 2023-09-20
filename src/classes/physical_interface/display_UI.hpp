@@ -5,32 +5,30 @@
 #include <Arduino.h>
 #include "driver/gpio.h"
 #include <functional>
-#include <Preferences.h>
+
 #include <math.h>
-#include<A4988.h>
+
 
 #include "button.hpp"
 #include "custom_display_behavior.hpp"
 #include "four_didget_time.hpp"
-#include "counter.hpp"
-#include "async_handler.hpp"
-
+#include "../counter.hpp"
+#include "../async_handler.hpp"
+#include "../UI_interfaces.hpp"
 
 class DisplayUI
 {
   public:
-    DisplayUI(std::function<void(unsigned int openTime, unsigned int closeTime)> onSetTime,uint8_t clkPin,uint8_t dioPin, uint8_t btn1Pin, uint8_t btn2Pin);
-  private:
+    DisplayUI(ChickenDoorInterface interfce, DisplayUiConfig config );
+  protected:
 		unsigned int offTime=100, onTime=100;
 		uint8_t offShortMult=4, offLongMult=15, onTimeMult=4;
 
-		std::function<void(unsigned int openTime, unsigned int closeTime)> m_onSetTime;
-
-		unsigned int openTime=0, closeTime=0;
-		tmElements_t currentTime;
+		ChickenDoorInterface m_interface;
+		DisplayUiConfig  m_config;
+		MoveTimes times;
 		bool globalPressed = false, isEditing=false;
 
-		Preferences preferences;
 		FourDigitTime digits;
 		StateCounter currentSelectedSegment{4};
 		StateCounter currentChangingTime{3};
@@ -47,10 +45,10 @@ class DisplayUI
 		void changeCurrentChangingTime();
 		
 		uint8_t btn1, btn2, clk, dio;
-		CustomDisplayBehavior display{21, 22};
+		CustomDisplayBehavior display{m_config.clkPin, m_config.dioPin};
 		Button button1
 		{
-		19, [&]() {   
+		m_config.btn1Pin, [&]() {   
 			addToCurrentSegment();
 		},
 		[&]() {
@@ -58,7 +56,7 @@ class DisplayUI
 		}, &globalPressed};
 
 		Button button2{
-		18, [&]() {
+		m_config.btn2Pin, [&]() {
 			moveCursorForward();
 		},
 		[&]() {

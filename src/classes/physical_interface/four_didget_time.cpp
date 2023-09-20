@@ -5,7 +5,7 @@ extern "C" {
 }
 #include <cmath>
 #include <functional>
-#include "counter.hpp"
+#include "../counter.hpp"
 #include "Arduino.h"
 using namespace std::placeholders;
 

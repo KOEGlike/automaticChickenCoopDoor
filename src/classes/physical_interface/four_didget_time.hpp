@@ -7,7 +7,7 @@ extern "C" {
 }
 #include <cmath>
 #include <functional>
-#include "counter.hpp"
+#include "../counter.hpp"
 
 class FourDigitTime {
     protected:

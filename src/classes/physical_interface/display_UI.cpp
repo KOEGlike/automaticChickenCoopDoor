@@ -1,14 +1,10 @@
 #include "display_UI.hpp"
 
-DisplayUI::DisplayUI(std::function<void(unsigned int openTime, unsigned int closeTime)>,uint8_t clkPin,uint8_t dioPin, uint8_t btn1Pin, uint8_t btn2Pin)
+DisplayUI::DisplayUI(ChickenDoorInterface interface,DisplayUiConfig config)
 {
-  clk=clkPin;
-  dio=dioPin;
-  btn1=btn1Pin;
-  btn2=btn2Pin;
-  preferences.begin("times", false); 
-  
-
+  m_config=config;
+  m_interface=interface;
+  //preferences.begin("times", false); 
 }
 
 void DisplayUI::defalutForShowNumber(int num)
@@ -22,9 +18,9 @@ int DisplayUI::digitValueRouter(int state)
   case 0:
     return hour(now())*100+minute(now());
   case 1:
-   return openTime;
+   return times.openTime.Hour*100+times.openTime.Minute;
   case 2:
-    return closeTime;
+    return times.closeTime.Hour*100+times.closeTime.Minute;
   default:
     return 0;
   }
@@ -34,17 +30,20 @@ void DisplayUI::setTimeRouter(int didgets, int state)
 {
   switch(state) {
   case 0:
+  tmElements_t currentTime;
     currentTime.Hour=didgets/100;
     currentTime.Minute=didgets%100;
-
+    m_interface.updateCurrentTime(currentTime);
     break;
   case 1:
-    openTime=didgets;
-    //Serial.println(openTime);
+    times.openTime.Minute=didgets%100;
+    times.openTime.Hour=didgets/100;
+    m_interface.update(times);
     break;
   case 2:
-    closeTime=didgets;
-    //Serial.println(closeTime);
+    times.closeTime.Minute=didgets%100;
+    times.closeTime.Hour=didgets/100;
+    m_interface.update(times);
     break;
   }
 }
@@ -69,10 +68,7 @@ void DisplayUI::editingTogle()
     isEditing=false;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-    //Serial.println(openTime);
-    //Serial.println(closeTime);
-    preferences.putUInt("openTime",openTime);
-    preferences.putUInt("closeTime",closeTime);
+    m_interface.update(times);
     display.blinkSegmentsContinuouslyOff();
     display.blinkDotsContinuouslyOff();
     display.setBrightness(0);
@@ -83,8 +79,7 @@ void DisplayUI::editingTogle()
     display.setBrightness(7);
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-    openTime=preferences.getUInt("openTime",0);
-    closeTime=preferences.getUInt("closeTime", 0);
+    times=m_interface.get();
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defalutForShowNumber(digits.getDigits());
     dotTimeingRouter(currentChangingTime.getState()); 
