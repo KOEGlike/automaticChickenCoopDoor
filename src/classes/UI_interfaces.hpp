@@ -10,23 +10,24 @@ struct MoveTimes
     openTime = openDoorTime;
     closeTime = closeDoorTime;
   }
+  MoveTimes()= default;
   tmElements_t  openTime, closeTime;
 };
 
 struct ChickenDoorInterface
 {
   ChickenDoorInterface(std::function<MoveTimes()> getFunc,
-  std::function<void(MoveTimes moveTimes)> updateFunc,
-  std::function<void(tmElements_t currentTime)> updateCurrentTimeFunc)
+  std::function<void(MoveTimes )> updateFunc,
+  std::function<void(tmElements_t)> updateCurrentTimeFunc)
   {
     get = getFunc;
     update = updateFunc;
     updateCurrentTime = updateCurrentTimeFunc;
   }
-  ChickenDoorInterface(){}
+  ChickenDoorInterface()= default;
   std::function<MoveTimes()> get;
-  std::function<void(MoveTimes moveTimes)> update;
-  std::function<void(tmElements_t currentTime)> updateCurrentTime;
+  std::function<void(MoveTimes )> update;
+  std::function<void(tmElements_t )> updateCurrentTime;
 };
 
 
@@ -39,6 +40,7 @@ struct DisplayUiConfig
     btn1Pin = btn1;
     btn2Pin = btn2;
   }
+  DisplayUiConfig()= default;
   uint8_t clkPin, dioPin,  btn1Pin,  btn2Pin;
 };
 
