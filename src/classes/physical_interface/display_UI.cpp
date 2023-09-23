@@ -9,7 +9,7 @@ DisplayUI::DisplayUI(ChickenDoorInterface interface,DisplayUiConfig config):
 {
   m_interface=interface;
   Serial.println("DisplayUi constructor");
-  delay(500);
+  //delay(500);
 }
 
 void DisplayUI::defalutForShowNumber(int num)

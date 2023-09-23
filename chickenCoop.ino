@@ -19,17 +19,22 @@
 #define BTN2 18
 
 
-
+bool i=false;
 
 void setup() {
   Serial.begin(115200);
   while (Serial.available() > 0){}
   Serial.println("Starting");
-  delay(500);
-  ChickenDoor door(1,2);
+  //delay(500);
+  //ChickenDoor door(1,2);
   Serial.println("Door");
 }
 
 void loop() {
+  if(i==false)
+  {
+    ChickenDoor door(1,2);
+    i=true;
+  }
 Async.check();
 }

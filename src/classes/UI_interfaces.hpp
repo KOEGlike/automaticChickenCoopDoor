@@ -10,9 +10,9 @@ struct MoveTimes
     openTime = openDoorTime;
     closeTime = closeDoorTime ;
     Serial.println("MoveTimes Constructor");
-    delay(500);
+    //delay(500);
   }
-  MoveTimes(){Serial.println("MoveTimes def Constructor");delay(500);};
+  //MoveTimes(){Serial.println("MoveTimes def Constructor");delay(500);};
   
   tmElements_t  openTime, closeTime;
 };
@@ -27,7 +27,7 @@ struct ChickenDoorInterface
     update = updateFunc;
     updateCurrentTime = updateCurrentTimeFunc;
     Serial.println("ChickenDoorInterface");
-    delay(500);
+    //delay(500);
   }
   ChickenDoorInterface(){Serial.println("ChickenDoorInterface def Constructor");delay(500);};
   std::function<MoveTimes()> get;
@@ -45,11 +45,11 @@ struct DisplayUiConfig
     btn1Pin = btn1;
     btn2Pin = btn2;
     Serial.println("DisplayUiConfig");
-    delay(500);
+    //delay(500);
   }
   DisplayUiConfig(){
     Serial.println("DisplayUiConfig def Constructor");
-    delay(500);
+    //delay(500);
   };
   uint8_t clkPin, dioPin,  btn1Pin,  btn2Pin;
 };
