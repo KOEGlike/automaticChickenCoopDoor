@@ -9,6 +9,13 @@ extern "C" {
 #include "Arduino.h"
 using namespace std::placeholders;
 
+FourDigitTime::FourDigitTime():H1(3,[&](int times){H1OnMutate(times);}),
+ H2(10,[&](int times){H2OnMutate(times);}), 
+ M1(6,[&](int times){M1OnMutate(times);}), 
+ M2(10,[&](int times){M2OnMutate(times);})
+{
+
+}
 
 void FourDigitTime::H1OnMutate(int amount)
 {

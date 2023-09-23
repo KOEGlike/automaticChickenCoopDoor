@@ -19,9 +19,6 @@
 #define BTN2 18
 
 
-
-
-
 ChickenDoor door();
 
 void setup() {

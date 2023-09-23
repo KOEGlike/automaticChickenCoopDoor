@@ -25,13 +25,12 @@ class DisplayUI
 		uint8_t offShortMult=4, offLongMult=15, onTimeMult=4;
 
 		ChickenDoorInterface m_interface;
-		DisplayUiConfig  m_config;
 		MoveTimes times;
 		bool globalPressed = false, isEditing=false;
 
 		FourDigitTime digits;
-		StateCounter currentSelectedSegment{4};
-		StateCounter currentChangingTime{3};
+		StateCounter currentSelectedSegment;
+		StateCounter currentChangingTime;
 
 		void defalutForShowNumber(int num);
 		
@@ -45,23 +44,10 @@ class DisplayUI
 		void changeCurrentChangingTime();
 		
 		uint8_t btn1, btn2, clk, dio;
-		CustomDisplayBehavior display{m_config.clkPin, m_config.dioPin};
-		Button button1
-		{
-		m_config.btn1Pin, [&]() {   
-			addToCurrentSegment();
-		},
-		[&]() {
-			editingTogle();
-		}, &globalPressed};
+		CustomDisplayBehavior display;
+		Button button1;
 
-		Button button2{
-		m_config.btn2Pin, [&]() {
-			moveCursorForward();
-		},
-		[&]() {
-			changeCurrentChangingTime();
-		}, &globalPressed};
+		Button button2;
 
 };
 

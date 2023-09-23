@@ -14,7 +14,7 @@ protected:
 public:
     Button(int pin, std::function<void()> press , std::function<void()> longPress , bool* globalPressed);
     void check();
-
+    Button()=default;
 };
 
 #endif

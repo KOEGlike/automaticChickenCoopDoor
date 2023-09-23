@@ -1,10 +1,13 @@
 #include "display_UI.hpp"
 
-DisplayUI::DisplayUI(ChickenDoorInterface interface,DisplayUiConfig config)
+DisplayUI::DisplayUI(ChickenDoorInterface interface,DisplayUiConfig config): 
+    button1(config.btn1Pin, [&]() {   addToCurrentSegment();},[&]() {editingTogle();}, &globalPressed),
+    button2 (config.btn2Pin, [&]() {moveCursorForward();},[&]() {changeCurrentChangingTime();}, &globalPressed), 
+    display(config.clkPin, config.dioPin),
+    currentSelectedSegment(4), 
+    currentChangingTime(3)
 {
-  m_config=config;
   m_interface=interface;
-  //preferences.begin("times", false); 
 }
 
 void DisplayUI::defalutForShowNumber(int num)
