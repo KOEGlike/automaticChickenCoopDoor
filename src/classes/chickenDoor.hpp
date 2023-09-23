@@ -5,6 +5,7 @@
 #include "UI_interfaces.hpp"
 #include <TimeLib.h>
 #include <functional>
+#include <Arduino.h>
 
 class ChickenDoor{
   public:
@@ -19,8 +20,6 @@ class ChickenDoor{
     std::function<MoveTimes()> get=[&](){return moveTimes; };
     std::function<void(MoveTimes )> update= [&](MoveTimes m_moveTimes){moveTimes=m_moveTimes; };
     std::function<void(tmElements_t )> updateCurrentTime=[&](tmElements_t time){setTime(makeTime(time));};
-
-
 };
 
 #endif

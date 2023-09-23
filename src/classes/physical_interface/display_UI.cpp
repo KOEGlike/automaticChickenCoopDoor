@@ -8,6 +8,7 @@ DisplayUI::DisplayUI(ChickenDoorInterface interface,DisplayUiConfig config):
     currentChangingTime(3)
 {
   m_interface=interface;
+  Serial.println("DisplayUi constructor");
 }
 
 void DisplayUI::defalutForShowNumber(int num)

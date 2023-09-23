@@ -8,9 +8,10 @@ struct MoveTimes
   MoveTimes(tmElements_t openDoorTime, tmElements_t closeDoorTime)
   {
     openTime = openDoorTime;
-    closeTime = closeDoorTime;
+    closeTime = closeDoorTime ;
+    Serial.println("MoveTimes Constructor");
   }
-  MoveTimes()= default;
+  MoveTimes(){Serial.println("MoveTimes def Constructor");};
   tmElements_t  openTime, closeTime;
 };
 
@@ -23,8 +24,9 @@ struct ChickenDoorInterface
     get = getFunc;
     update = updateFunc;
     updateCurrentTime = updateCurrentTimeFunc;
+    Serial.println("ChickenDoorInterface");
   }
-  ChickenDoorInterface()= default;
+  ChickenDoorInterface(){Serial.println("ChickenDoorInterface def Constructor");};
   std::function<MoveTimes()> get;
   std::function<void(MoveTimes )> update;
   std::function<void(tmElements_t )> updateCurrentTime;
@@ -39,8 +41,11 @@ struct DisplayUiConfig
     dioPin = dio;
     btn1Pin = btn1;
     btn2Pin = btn2;
+    Serial.println("DisplayUiConfig");
   }
-  DisplayUiConfig()= default;
+  DisplayUiConfig(){
+    Serial.println("DisplayUiConfig def Constructor");
+  };
   uint8_t clkPin, dioPin,  btn1Pin,  btn2Pin;
 };
 

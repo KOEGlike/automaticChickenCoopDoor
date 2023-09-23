@@ -10,6 +10,7 @@ StateCounter::StateCounter(int amountOfStates, std::function<void(uint8_t amount
     state = amountOfStates;
     m_amountOfStates = amountOfStates;
     m_onMutate = onMutate;
+    Serial.println("StateCounter created");
 }
 
 void StateCounter::add(uint8_t amount)

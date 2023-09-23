@@ -7,6 +7,7 @@ extern "C" {
 }
 CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
   : TM1637Display(pinClk, pinDIO) {
+    Serial.println("CustomDisplayBehavior constuct");
     Async.registerCallback(0,-1, [&](){check();});
   }
 

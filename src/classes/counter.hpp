@@ -7,7 +7,7 @@ extern "C" {
   #include <inttypes.h>
 }
 
-
+#include<Arduino.h>
 class StateCounter
 {
 private:

@@ -8,6 +8,7 @@ Button::Button(int pin, std::function<void()> press, std::function<void()> longP
     m_longPress = longPress;
     m_press = press;
     pinMode(m_pin, INPUT_PULLUP);
+    Serial.println("Button init");
     Async.registerCallback(0, -1, [&](){check();});
 }
 
