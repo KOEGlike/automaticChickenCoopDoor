@@ -9,7 +9,7 @@
 
 class ChickenDoor{
   public:
-    ChickenDoor();
+    ChickenDoor(int lol, int xd);
   protected:
     MoveTimes moveTimes;
     ChickenDoorInterface interface;

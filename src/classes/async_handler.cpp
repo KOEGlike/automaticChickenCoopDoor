@@ -28,13 +28,11 @@ uint32_t AsyncHandler::registerCallback(unsigned long delay,uint32_t times, std:
 
 void AsyncHandler::check()
 {
-  callbacks[maxCurrentId-1].callback();
   if(callbacks.size()==0)
   {
     return;
   }
-  
-  callbacks[maxCurrentId-1].callback();
+ 
   if(callbacks.size()==0)
   {
     return;
@@ -53,12 +51,9 @@ void AsyncHandler::check()
       
       callbacks[ele.first].lastCalled=millis();
       if(callbacks[ele.first].times>0)
-      if(callbacks[ele.first].times>0)
       {
         callbacks[ele.first].timesCalled++;
       }    
     }
-    
-    
   }
 }

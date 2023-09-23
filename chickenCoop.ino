@@ -19,12 +19,15 @@
 #define BTN2 18
 
 
-ChickenDoor door();
+
 
 void setup() {
   Serial.begin(115200);
   while (Serial.available() > 0){}
   Serial.println("Starting");
+  delay(500);
+  ChickenDoor door(1,2);
+  Serial.println("Door");
 }
 
 void loop() {

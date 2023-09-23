@@ -8,6 +8,7 @@ extern "C" {
 CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
   : TM1637Display(pinClk, pinDIO) {
     Serial.println("CustomDisplayBehavior constuct");
+    delay(500);
     Async.registerCallback(0,-1, [&](){check();});
   }
 
@@ -71,7 +72,6 @@ if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
   if(millis()-dotBlinkAnAmountLongDelayContinuosStart>=dotBlinkAnAmountLongDelayContinuos&&dotBlinkAnAmountLongDelayContinuosAmount>=0&&isDotBlinkAnAmountLongDelayContinuos==true)
   {
     isDotBlinkAnAmountLongDelayContinuos=false;
-    Serial.println(dotBlinkAnAmountLongDelayContinuosAmount);
     blinkDotsAnAmount(dotBlinkAnAmountLongDelayContinuosAmount, blinkDotsAnAmountThenDelayContinuouslyOffTime,blinkDotsAnAmountThenDelayContinuouslyOnTime, [&](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true;} );
   }
 }
@@ -163,13 +163,11 @@ void CustomDisplayBehavior::blinkDots(unsigned long offTime){
 void CustomDisplayBehavior::blinkDotsContinuouslyOn( unsigned long offTime, unsigned long onTime) {
   dotIsContinuouslyBlinking = true;
   m_dotOnTime = onTime;
-  Serial.println("lol");
   blinkDots(offTime);
 }
 
 void CustomDisplayBehavior::blinkDotsContinuouslyOff() {
   dotIsContinuouslyBlinking = false;
-  Serial.println("xd");
 }
 
 void CustomDisplayBehavior::blinkDotsAnAmount( unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
@@ -191,7 +189,6 @@ void CustomDisplayBehavior::blinkDotsAnAmountThenDelayContinuously(unsigned int 
 void CustomDisplayBehavior::blinkDotsAnAmountThenDelayContinuouslyChangeAmount(unsigned int amount)
 {
   dotBlinkAnAmountLongDelayContinuosAmount=amount;
-  Serial.println(dotBlinkAnAmountLongDelayContinuosAmount);
 }
 
 void CustomDisplayBehavior::check() {
