@@ -13,7 +13,7 @@ class ChickenDoor{
   protected:
     MoveTimes moveTimes;
     ChickenDoorInterface interface;
-
+    tmElements_t openTime, closeTime;
     DisplayUiConfig displayUiConfig;
     DisplayUI displayUI;
 
