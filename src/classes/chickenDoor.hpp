@@ -9,11 +9,10 @@
 
 class ChickenDoor{
   public:
-    ChickenDoor(int lol, int xd);
+    ChickenDoor();
   protected:
     MoveTimes moveTimes;
     ChickenDoorInterface interface;
-    tmElements_t openTime, closeTime;
     DisplayUiConfig displayUiConfig;
     DisplayUI displayUI;
 

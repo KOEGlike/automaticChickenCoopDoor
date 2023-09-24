@@ -9,8 +9,14 @@ struct MoveTimes
   {
     openTime = openDoorTime;
     closeTime = closeDoorTime ;
-    Serial.println("MoveTimes Constructor");
+    Serial.println("MoveTimes tmElements_t Constructor");
     //delay(500);
+  }
+  MoveTimes(uint8_t openHour, uint8_t openMin, uint8_t closeHour, uint8_t closeMin)
+  {
+    openTime.Hour = openHour; openTime.Minute = openMin; 
+    closeTime.Hour = closeHour; closeTime.Minute = closeMin;
+    Serial.println("MoveTimes uint8_t Constructor");
   }
   //MoveTimes(){Serial.println("MoveTimes def Constructor");delay(500);};
   
@@ -47,10 +53,6 @@ struct DisplayUiConfig
     Serial.println("DisplayUiConfig");
     //delay(500);
   }
-  DisplayUiConfig(){
-    Serial.println("DisplayUiConfig def Constructor");
-    //delay(500);
-  };
   uint8_t clkPin, dioPin,  btn1Pin,  btn2Pin;
 };
 

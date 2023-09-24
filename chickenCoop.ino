@@ -7,8 +7,6 @@
 #include<A4988.h>
 
 
-
-
 #include "src/classes/counter.hpp"
 #include "src/classes/chickenDoor.hpp"
 #include "src/classes/async_handler.hpp"
@@ -21,20 +19,22 @@
 
 bool i=false;
 
+
+
 void setup() {
   Serial.begin(115200);
   while (Serial.available() > 0){}
   Serial.println("Starting");
   //delay(500);
   //ChickenDoor door(1,2);
-  Serial.println("Door");
+  
 }
 
 void loop() {
   if(i==false)
   {
-    ChickenDoor door(1,2);
+    ChickenDoor door;
     i=true;
-  }
+  } 
 Async.check();
 }

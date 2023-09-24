@@ -1,13 +1,13 @@
 #include "ChickenDoor.hpp"
 
 
-ChickenDoor::ChickenDoor(int lol, int xd):interface(get, update, updateCurrentTime),
-displayUiConfig(21,22, 19,18 ), 
-displayUI(interface,displayUiConfig),
-moveTimes(openTime, closeTime)
+ChickenDoor::ChickenDoor():
+moveTimes{12,12,12,12},
+displayUiConfig(21,22, 19,18),
+interface{get, update, updateCurrentTime},
+displayUI{interface,displayUiConfig}
 {
-  Serial.println("ChickenDoor constructor"); delay(500);
-
+  Serial.println("ChickenDoor constructor"); //delay(500);
 }
 
 

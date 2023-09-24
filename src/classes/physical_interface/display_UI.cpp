@@ -5,7 +5,8 @@ DisplayUI::DisplayUI(ChickenDoorInterface interface,DisplayUiConfig config):
     button2 (config.btn2Pin, [&]() {moveCursorForward();},[&]() {changeCurrentChangingTime();}, &globalPressed), 
     display(config.clkPin, config.dioPin),
     currentSelectedSegment(4), 
-    currentChangingTime(3)
+    currentChangingTime(3),
+    times(interface.get())
 {
   m_interface=interface;
   Serial.println("DisplayUi constructor");
