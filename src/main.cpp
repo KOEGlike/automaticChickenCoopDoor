@@ -7,9 +7,9 @@
 #include<A4988.h>
 
 
-#include "src/classes/counter.hpp"
-#include "src/classes/chickenDoor.hpp"
-#include "src/classes/async_handler.hpp"
+#include "classes/counter.hpp"
+#include "classes/chickenDoor.hpp"
+#include "classes/async_handler.hpp"
 
 #define CLK 21
 #define DIO 22
@@ -18,7 +18,6 @@
 
 
 bool i=false;
-
 
 
 void setup() {
