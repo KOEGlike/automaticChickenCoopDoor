@@ -11,14 +11,16 @@ class ChickenDoor{
   public:
     ChickenDoor();
   protected:
+    std::function<MoveTimes()> get=[&](){return moveTimes; };
+    std::function<void(MoveTimes )> update= [&](MoveTimes m_moveTimes){moveTimes=m_moveTimes; };
+    std::function<void(tmElements_t )> updateCurrentTime=[&](tmElements_t time){setTime(makeTime(time));};
+    
     MoveTimes moveTimes;
     ChickenDoorInterface interface;
     DisplayUiConfig displayUiConfig;
     DisplayUI displayUI;
 
-    std::function<MoveTimes()> get=[&](){return moveTimes; };
-    std::function<void(MoveTimes )> update= [&](MoveTimes m_moveTimes){moveTimes=m_moveTimes; };
-    std::function<void(tmElements_t )> updateCurrentTime=[&](tmElements_t time){setTime(makeTime(time));};
+    
 };
 
 #endif
