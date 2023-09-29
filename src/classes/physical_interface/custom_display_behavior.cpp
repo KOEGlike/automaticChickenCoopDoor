@@ -13,6 +13,7 @@ CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
   }
 
 void CustomDisplayBehavior::blinkCheck() {
+  Serial.println("blinkCheck");
   if (millis() - blinkStartInMillis >= m_offTime && isBlinking) {
     blinkEnd = millis();
     isBlinking = false;
@@ -42,7 +43,7 @@ void CustomDisplayBehavior::blinkCheck() {
 }
 
 void CustomDisplayBehavior::dotBlinkCheck() {
-
+ Serial.println("dot blinkCheck");
 if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
     dotBlinkEnd = millis();
     dotIsBlinking = false;

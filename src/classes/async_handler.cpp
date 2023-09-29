@@ -12,6 +12,7 @@ callbackData::callbackData(long delayInMillis,uint32_t timesToRepeat, std::funct
     times=timesToRepeat;
     callback=callBack;
     onend=onEnd;
+    
   }
 
 uint32_t AsyncHandler::registerCallback(unsigned long delay,uint32_t times, std::function<void()> callback,std::function<void(void)> onEnd, bool doDelayFirst)
@@ -22,12 +23,14 @@ uint32_t AsyncHandler::registerCallback(unsigned long delay,uint32_t times, std:
     cbd.lastCalled=millis();
   }
   callbacks[maxCurrentId]=cbd;
+   Serial.println("registering callback");
   return maxCurrentId++;
 }
 
 
 void AsyncHandler::check()
 {
+   Serial.println("async check");
   if(callbacks.size()==0)
   {
     return;

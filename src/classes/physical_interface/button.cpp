@@ -34,8 +34,10 @@ void Button::check() {
     if (pressed == false && *m_globalPressed == false && pressedForMillis >= debounceInMillis) {
         if (pressedForMillis < millisForLongPress) {
             m_press();
+             Serial.println("m_press");
         } else {
             m_longPress();
+             Serial.println("m_longPress");
         }
     }
 
