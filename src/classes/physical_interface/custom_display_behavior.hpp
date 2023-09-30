@@ -1,7 +1,7 @@
 #ifndef CUSTOM_DISPLAY_BEHAVIOR_H
 #define CUSTOM_DISPLAY_BEHAVIOR_H
 
-#include "../../modified_libraries/TM1637/TM1637Display.h"
+#include <TM1637Display.h>
 #include <functional>
 #include "../async_handler.hpp"
 
@@ -14,7 +14,7 @@ protected:
     unsigned long blinkStartInMillis, m_offTime, m_onTime, blinkEnd,dotBlinkStartInMillis, m_dotOffTime, m_dotOnTime, dotBlinkEnd, dotBlinkAnAmountLongDelayContinuos=-1,dotBlinkAnAmountLongDelayContinuosStart, blinkDotsAnAmountThenDelayContinuouslyOffTime, blinkDotsAnAmountThenDelayContinuouslyOnTime,dotBlinkAnAmountLongDelayContinuosAmount ;
     int timesBlinked = 0, timesToBlink = -1,timesDotBlinked = 0, timesDotToBlink = -1;
     uint8_t segmentsThatBlink;
-    bool isBlinking = false, isContinuouslyBlinking = false, dotIsBlinking=false,dotIsContinuouslyBlinking = false, dotIsOn=false,isDotBlinkAnAmountLongDelayContinuos=false;
+    bool isBlinking = false, isContinuouslyBlinking = false, dotIsBlinking=0,dotIsContinuouslyBlinking = false, dotIsOn=false,isDotBlinkAnAmountLongDelayContinuos=false;
     std::function<void()> bilinkSegmentsAnAmountOnEndFunc = []() {},bilinkDotsAnAmountOnEndFunc= []() {};
     void dotBlinkCheck();
     void blinkCheck();

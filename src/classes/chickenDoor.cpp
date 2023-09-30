@@ -3,7 +3,7 @@
 
 ChickenDoor::ChickenDoor():
 moveTimes{12,12,12,12},
-displayUiConfig(21,22, 19,18),
+displayUiConfig(4,5,6,7),
 interface{get, update, updateCurrentTime},
 displayUI{interface,displayUiConfig}
 {

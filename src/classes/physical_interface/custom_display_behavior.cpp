@@ -14,7 +14,10 @@ CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
 
 void CustomDisplayBehavior::blinkCheck() {
   Serial.println("blinkCheck");
+  Serial.print("dot is binking: ");
+  Serial.println(dotIsBlinking);
   if (millis() - blinkStartInMillis >= m_offTime && isBlinking) {
+    Serial.println("blinkCheck 1");
     blinkEnd = millis();
     isBlinking = false;
     uint8_t segments[4];
@@ -32,39 +35,52 @@ void CustomDisplayBehavior::blinkCheck() {
   }
   
   if (isContinuouslyBlinking && millis() - blinkEnd >= m_onTime && !isBlinking) {
+    Serial.println("blinkCheck 2");
     blinkSegments(segmentsThatBlink, m_offTime);
   }
   
   if (timesToBlink > 0 && timesBlinked == timesToBlink) {
+    Serial.println("blinkCheck 3");
     blinkSegmentsContinuouslyOff();
     timesToBlink = -1;
     bilinkSegmentsAnAmountOnEndFunc();
   }
+   Serial.print("dot is binking: ");
+  Serial.println(dotIsBlinking);
 }
 
 void CustomDisplayBehavior::dotBlinkCheck() {
  Serial.println("dot blinkCheck");
-if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
+ Serial.print("dot is binking: ");
+  Serial.println(dotIsBlinking);
+  if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
+    Serial.println("dot blinkCheck 1");
     dotBlinkEnd = millis();
     dotIsBlinking = false;
     uint8_t segments[4];
     memcpy(segments, currentSegments, segmentsLength);
+    Serial.println("dot blinkCheck 1.1");
     if(isBlinking)
     {
       segments[1]=0;
     }
+    Serial.println("dot blinkCheck 1.2");
     dotIsOn=true;
     segments[1]|=0b10000000;
     setSegments(currentSegments);
+    Serial.println("dot blinkCheck 1.3");
     timesDotBlinked++;
+    Serial.println("dot blinkCheck 1.4");
   }
   
   if (dotIsContinuouslyBlinking && millis() - dotBlinkEnd >= m_dotOnTime && !dotIsBlinking) {
+    Serial.println("dot blinkCheck 2");
     blinkDots(m_dotOffTime);
     dotIsOn=false;
   }
 
   if (timesDotToBlink > 0 && timesDotBlinked >= timesDotToBlink) {
+    Serial.println("dot blinkCheck 3");
     blinkDotsContinuouslyOff();
     timesDotToBlink = -1;
     bilinkDotsAnAmountOnEndFunc();
@@ -72,6 +88,7 @@ if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
 
   if(millis()-dotBlinkAnAmountLongDelayContinuosStart>=dotBlinkAnAmountLongDelayContinuos&&dotBlinkAnAmountLongDelayContinuosAmount>=0&&isDotBlinkAnAmountLongDelayContinuos==true)
   {
+    Serial.println("dot blinkCheck 4");
     isDotBlinkAnAmountLongDelayContinuos=false;
     blinkDotsAnAmount(dotBlinkAnAmountLongDelayContinuosAmount, blinkDotsAnAmountThenDelayContinuouslyOffTime,blinkDotsAnAmountThenDelayContinuouslyOnTime, [&](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true;} );
   }

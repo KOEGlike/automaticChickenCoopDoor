@@ -21,7 +21,7 @@ extern "C" {
   #include <inttypes.h>
 }
 
-#include <TM1637Display.h>
+#include "TM1637Display.h"
 #include <Arduino.h>
 
 #define TM1637_I2C_COMM1    0x40
@@ -81,7 +81,6 @@ void TM1637Display::setBrightness(uint8_t brightness, bool on)
 void TM1637Display::setSegments(uint8_t segments[], uint8_t length, uint8_t pos)
 {
   memcpy(currentSegments, segments, length);
-  
   segmentsLength=length;  
 
     // Write COMM1

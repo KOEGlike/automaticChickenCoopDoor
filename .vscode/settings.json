@@ -51,5 +51,9 @@
     "cinttypes": "cpp",
     "typeinfo": "cpp"
   },
-  "idf.portWin": "COM9"
+  "idf.portWin": "COM12",
+  "idf.adapterTargetName": "esp32s3",
+  "idf.openOcdConfigs": [
+    "board/esp32s3-builtin.cfg"
+  ]
 }
