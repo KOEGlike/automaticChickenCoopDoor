@@ -13,15 +13,20 @@ CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
   }
 
 void CustomDisplayBehavior::blinkCheck() {
+  Serial.print("segments length: ");
+  Serial.println(segmentsLength);
   Serial.println("blinkCheck");
   Serial.print("dot is binking: ");
+  
   Serial.println(dotIsBlinking);
   if (millis() - blinkStartInMillis >= m_offTime && isBlinking) {
     Serial.println("blinkCheck 1");
     blinkEnd = millis();
     isBlinking = false;
     uint8_t segments[4];
-    memcpy(segments, currentSegments, segmentsLength);
+    Serial.print("segments length: ");
+ Serial.println(segmentsLength);
+memcpy(segments, currentSegments, segmentsLength);
     if(dotIsBlinking)
     {
       segments[1]&=~0b10000000;
@@ -53,6 +58,8 @@ void CustomDisplayBehavior::dotBlinkCheck() {
  Serial.println("dot blinkCheck");
  Serial.print("dot is binking: ");
   Serial.println(dotIsBlinking);
+  Serial.print("segments length: ");
+  Serial.println(segmentsLength);
   if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
     Serial.println("dot blinkCheck 1");
     dotBlinkEnd = millis();
@@ -98,11 +105,14 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
   if (isBlinking) {
     return;
   }
+  Serial.print("segments length: ");
+  Serial.println(segmentsLength);
   isBlinking = true;
   uint8_t beforeBlinkSegments[4];
   memcpy(beforeBlinkSegments, currentSegments, segmentsLength);
   uint8_t segments[4];
-  memcpy(segments, currentSegments, segmentsLength);
+  
+memcpy(segments, currentSegments, segmentsLength);
   
   if (segmentsToBlink & 0b1000) {
     segments[0] = 0;
@@ -163,11 +173,13 @@ void CustomDisplayBehavior::blinkDots(unsigned long offTime){
   if (dotIsBlinking) {
     return;
   }
-  Serial.println("haha");
+  Serial.print("segments length: ");
+  Serial.println(segmentsLength);
   uint8_t beforeBlinkSegments[4];
   memcpy(beforeBlinkSegments, currentSegments, segmentsLength);
   uint8_t segments[4];
-  memcpy(segments, currentSegments, segmentsLength);
+  
+memcpy(segments, currentSegments, segmentsLength);
   m_dotOffTime = offTime;
   dotIsBlinking = true;
   dotIsOn=false;
