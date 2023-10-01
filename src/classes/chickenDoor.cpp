@@ -7,7 +7,7 @@ displayUiConfig(4,5,6,7),
 interface{get, update, updateCurrentTime},
 displayUI{interface,displayUiConfig}
 {
-  Serial.println("ChickenDoor constructor"); //delay(500);
+  Serial.println("ChickenDoor constructor"); 
 }
 
 

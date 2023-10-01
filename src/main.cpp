@@ -16,24 +16,16 @@
 #define BTN1 19
 #define BTN2 18
 
-
-bool i=false;
-
+ChickenDoor *door= new ChickenDoor();
 
 void setup() {
   Serial.begin(115200);
-  while (Serial.available() > 0){}
+  
   Serial.println("Starting");
   //delay(500);
-  //ChickenDoor door(1,2);
-  
 }
 
 void loop() {
-  if(i==false)
-  {
-    ChickenDoor door;
-    i=true;
-  } 
+ 
 Async.check();
 }
