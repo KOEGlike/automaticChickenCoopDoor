@@ -19,10 +19,10 @@ void DisplayUI::defalutForShowNumber(int num)
 }
 
 int DisplayUI::digitValueRouter(int state)
-{
+{tmElements_t currrentTime= m_interface.getCurrentTime();
   switch(state) {
   case 0:
-     tmElements_t currrentTime= m_interface.getCurrentTime();
+     
     return currrentTime.Hour*100+currrentTime.Minute; 
   case 1:
    return times.openTime.Hour*100+times.openTime.Minute;
