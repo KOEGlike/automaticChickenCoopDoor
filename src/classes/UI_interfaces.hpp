@@ -27,7 +27,8 @@ struct ChickenDoorInterface
 {
   ChickenDoorInterface(std::function<MoveTimes()> getFunc,
   std::function<void(MoveTimes )> updateFunc,
-  std::function<void(tmElements_t)> updateCurrentTimeFunc)
+  std::function<void(tmElements_t)> updateCurrentTimeFunc,
+   std::function<tmElements_t()> getCurrentTimeFunc)
   {
     get = getFunc;
     update = updateFunc;
@@ -39,6 +40,7 @@ struct ChickenDoorInterface
   std::function<MoveTimes()> get;
   std::function<void(MoveTimes )> update;
   std::function<void(tmElements_t )> updateCurrentTime;
+  std::function<tmElements_t()> getCurrentTime;
 };
 
 

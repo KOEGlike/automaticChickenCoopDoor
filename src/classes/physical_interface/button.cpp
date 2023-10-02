@@ -14,7 +14,7 @@ Button::Button(int pin, std::function<void()> press, std::function<void()> longP
 }
 
 void Button::check() {
-    Serial.println("check");
+    //Serial.println("check");
     if (digitalRead(m_pin) == HIGH) {
         if (pressed == true) {
             pressedForMillis = millis() - pressStartInMillies;
