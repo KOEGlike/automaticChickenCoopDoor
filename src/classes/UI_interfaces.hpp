@@ -33,6 +33,7 @@ struct ChickenDoorInterface
     get = getFunc;
     update = updateFunc;
     updateCurrentTime = updateCurrentTimeFunc;
+    getCurrentTime = getCurrentTimeFunc;
     Serial.println("ChickenDoorInterface");
     //delay(500);
   }

@@ -71,6 +71,7 @@ void DisplayUI::addToCurrentSegment()
 
 void DisplayUI::editingTogle()
 {
+  Serial.println("editingToglewew");
   if(isEditing){
     isEditing=false;
     Serial.println("editingTogle");

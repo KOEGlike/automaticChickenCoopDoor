@@ -11,6 +11,9 @@ CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
     //delay(500);
     Async.registerCallback(0,-1, [&](){check();});
   }
+  CustomDisplayBehavior :: ~CustomDisplayBehavior() {
+  Async.deleteCallBack(asyncId);
+  }
 
 void CustomDisplayBehavior::blinkCheck() {
   //Serial.print("segments length: ");

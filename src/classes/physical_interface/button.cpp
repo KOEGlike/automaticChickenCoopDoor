@@ -10,7 +10,12 @@ Button::Button(int pin, std::function<void()> press, std::function<void()> longP
     pinMode(m_pin, INPUT_PULLUP);
     Serial.println("Button init");
     //delay(500);
-    Async.registerCallback(0, -1, [&](){check();});
+    std::function<void()> check = std::bind(&Button::check, this);
+   // asyncId=
+   Async.registerCallback(0, -1, check);
+}
+Button::~Button() {
+Async.deleteCallBack(asyncId);
 }
 
 void Button::check() {

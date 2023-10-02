@@ -18,16 +18,18 @@ protected:
     std::function<void()> bilinkSegmentsAnAmountOnEndFunc = []() {},bilinkDotsAnAmountOnEndFunc= []() {};
     void dotBlinkCheck();
     void blinkCheck();
-
+    uint32_t asyncId;
+     void check();
 public:
     CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO);
+    ~CustomDisplayBehavior() ;
     
     void blinkSegments(uint8_t segmentsToBlink, unsigned long offTime = 50);
     void blinkSegmentsContinuouslyOn(uint8_t segmentsToBlink, unsigned long offTime = 50, unsigned long onTime = 50);
     void blinkSegmentsContinuouslyOff();
     void bilinkSegmentsAnAmount(uint8_t segmentsToBlink, unsigned int amount, unsigned long offTime = 50, unsigned long onTime = 50, std::function<void()> onEnd = []() {});
     void changeSegmentsContinuos(uint8_t segmentsToBlink, unsigned long offTime = 50, unsigned long onTime = 50);
-    void check();
+   
     void blinkDots(unsigned long offTime = 50);
     void blinkDotsContinuouslyOn(unsigned long offTime = 50, unsigned long onTime = 50);
     void blinkDotsContinuouslyOff();
