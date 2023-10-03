@@ -20,6 +20,7 @@ class DisplayUI
 {
   public:
     DisplayUI(ChickenDoorInterface interfce, DisplayUiConfig config );
+		void begin();
   protected:
 		unsigned int offTime=100, onTime=100;
 		uint8_t offShortMult=4, offLongMult=15, onTimeMult=4;

@@ -7,7 +7,6 @@ Button::Button(int pin, std::function<void()> press, std::function<void()> longP
     m_globalPressed = globalPressed;
     m_longPress = longPress;
     m_press = press;
-    pinMode(m_pin, INPUT_PULLUP);
     Serial.println("Button init");
     //delay(500);
     std::function<void()> check = std::bind(&Button::check, this);
@@ -16,6 +15,10 @@ Button::Button(int pin, std::function<void()> press, std::function<void()> longP
 }
 Button::~Button() {
 Async.deleteCallBack(asyncId);
+}
+
+void Button::begin() {
+pinMode(m_pin, INPUT_PULLUP);
 }
 
 void Button::check() {

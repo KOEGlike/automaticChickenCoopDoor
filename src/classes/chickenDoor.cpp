@@ -11,3 +11,7 @@ displayUI{interface,displayUiConfig}
 }
 
 
+void ChickenDoor::begin()
+{
+  displayUI.begin();
+}

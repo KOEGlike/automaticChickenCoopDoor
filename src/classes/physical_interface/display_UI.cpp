@@ -13,6 +13,13 @@ DisplayUI::DisplayUI(ChickenDoorInterface interface,DisplayUiConfig config):
   //delay(500);
 }
 
+void DisplayUI::begin()
+{
+  display.begin();
+  button1.begin();
+  button2.begin();
+}
+
 void DisplayUI::defalutForShowNumber(int num)
 {
   display.showNumberDecEx(num, 0b01000000, true);

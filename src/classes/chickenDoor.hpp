@@ -10,6 +10,7 @@
 class ChickenDoor{
   public:
     ChickenDoor();
+    void begin();
   protected:
   bool isOpen=false;
     std::function<MoveTimes()> get=[&](){return moveTimes; };

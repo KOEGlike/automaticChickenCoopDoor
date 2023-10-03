@@ -67,12 +67,17 @@ TM1637Display::TM1637Display(uint8_t pinClk, uint8_t pinDIO, unsigned int bitDel
 
 	// Set the pin direction and default value.
 	// Both pins are set as inputs, allowing the pull-up resistors to pull them up
-    pinMode(m_pinClk, INPUT);
-    pinMode(m_pinDIO,INPUT);
-	digitalWrite(m_pinClk, LOW);
-	digitalWrite(m_pinDIO, LOW);
+    
+	
 }
 
+void TM1637Display::begin()
+{
+pinMode(m_pinClk, INPUT);
+    pinMode(m_pinDIO,INPUT);
+    digitalWrite(m_pinClk, LOW);
+	digitalWrite(m_pinDIO, LOW);
+}
 void TM1637Display::setBrightness(uint8_t brightness, bool on)
 {
 	m_brightness = (brightness & 0x7) | (on? 0x08 : 0x00);

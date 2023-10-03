@@ -15,6 +15,7 @@ public:
     Button(int pin, std::function<void()> press , std::function<void()> longPress , bool* globalPressed);
     ~Button();
     void check();
+    void begin();
 };
 
 #endif
