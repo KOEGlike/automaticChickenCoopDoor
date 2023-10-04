@@ -68,4 +68,17 @@ struct DisplayUiConfig
   uint8_t clkPin, dioPin,  btn1Pin,  btn2Pin;
 };
 
+struct MotorInterface
+{
+MotorInterface(std::function<void()> getStateFunc,std::function<void()> setStateFunc,std::function<void()> getCalibrationStateFunc)
+{
+  getState = getStateFunc;
+  setState = setStateFunc;
+  getCalibrationState = getCalibrationStateFunc;
+}
+std::function<void()> getState;
+std::function<void()> setState;
+std::function<void()> getCalibrationState;
+};
+
 #endif
