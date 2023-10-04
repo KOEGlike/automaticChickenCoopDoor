@@ -3,6 +3,7 @@
 
 #include "physical_interface/display_UI.hpp"
 #include "UI_interfaces.hpp"
+#include "motor.hpp"
 #include <TimeLib.h>
 #include <functional>
 #include <Arduino.h>
@@ -17,9 +18,9 @@ class ChickenDoor{
     std::function<void(MoveTimes )> update= [&](MoveTimes m_moveTimes){moveTimes=m_moveTimes; };
     std::function<void(tmElements_t )> updateCurrentTime=[&](tmElements_t time){setTime(makeTime(time));};
     std::function<tmElements_t( )> getCurrentTime=[&](){tmElements_t t; breakTime(now(), t); return t ;};
-    std::function<void()> openDoor;
-    std::function<void()> closeDoor;
-    std::function<bool()> getDoorState;
+    std::function<void()> openDoor=[&](){};
+    std::function<void()> closeDoor=[&](){};
+    std::function<bool()> getDoorState=[&](){return true;};
     
     MoveTimes moveTimes;
     ChickenDoorInterface interface;
