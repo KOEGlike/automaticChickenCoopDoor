@@ -11,7 +11,7 @@
 
 class ChickenDoor{
   public:
-    ChickenDoor();
+    ChickenDoor(DisplayUiConfig displayUiConfig);
   protected:
   bool isOpen=false;
     std::function<MoveTimes()> get=[&](){return moveTimes; };
@@ -24,7 +24,7 @@ class ChickenDoor{
     
     MoveTimes moveTimes;
     ChickenDoorInterface interface;
-    DisplayUiConfig displayUiConfig;
+    
     DisplayUI displayUI;
 
     

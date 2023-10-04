@@ -81,4 +81,19 @@ std::function<void()> setState;
 std::function<void()> getCalibrationState;
 };
 
+struct MotorConfig
+{
+  MotorConfig(uint8_t dirPin, uint8_t stepPin, uint8_t resetPin, uint8_t enablePin, uint8_t ms1Pin, uint8_t ms2Pin, uint8_t ms3Pin)
+  {
+    dir = dirPin;
+    step = stepPin;
+    reset = resetPin;
+    enable = enablePin;
+    ms1 = ms1Pin;
+    ms2 = ms2Pin;
+    ms3 = ms3Pin;
+  }
+uint8_t dir, step, reset,  enable, ms1, ms2, ms3;
+};
+
 #endif
