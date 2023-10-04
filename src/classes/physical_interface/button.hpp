@@ -17,4 +17,10 @@ public:
     void check();
 };
 
+class ButtonManager {
+
+};
+
+inline ButtonManager buttonManager;
+
 #endif
