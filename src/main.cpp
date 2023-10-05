@@ -6,12 +6,12 @@
 #include <math.h>
 #include<A4988.h>
 
-
-#include "classes/counter.hpp"
 #include "classes/chickenDoor.hpp"
 #include "classes/async_handler.hpp"
 
-ChickenDoor *door= new ChickenDoor();
+DisplayUiConfig displayUiConfig{4,5,6,7};
+
+ChickenDoor *door= new ChickenDoor(displayUiConfig);
 
 void setup() {
   Serial.begin(115200);

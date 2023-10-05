@@ -1,10 +1,9 @@
 #include "ChickenDoor.hpp"
 
 
-ChickenDoor::ChickenDoor():
+ChickenDoor::ChickenDoor(DisplayUiConfig displayUiConfig):
 moveTimes{12,12,12,12},
-displayUiConfig(4,5,6,7),
-interface{get, update, updateCurrentTime, getCurrentTime},
+interface{get, update, updateCurrentTime, getCurrentTime,openDoor,closeDoor, getDoorState},
 displayUI{interface,displayUiConfig}
 {
   Serial.println("ChickenDoor constructor"); 

@@ -12,9 +12,9 @@
 #include "button.hpp"
 #include "custom_display_behavior.hpp"
 #include "four_didget_time.hpp"
-#include "../counter.hpp"
+#include "counter.hpp"
 #include "../async_handler.hpp"
-#include "../UI_interfaces.hpp"
+#include "../interfaces.hpp"
 
 class DisplayUI
 {
