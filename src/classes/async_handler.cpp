@@ -30,7 +30,7 @@ uint32_t AsyncHandler::registerCallback(unsigned long delay,uint32_t times, std:
 
 void AsyncHandler::check()
 {
-  // Serial.println("async check");
+   Serial.println("async check");
   if(callbacks.size()==0)
   {
     return;

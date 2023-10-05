@@ -6,7 +6,7 @@ moveTimes{12,12,12,12},
 interface{get, update, updateCurrentTime, getCurrentTime,openDoor,closeDoor, getDoorState},
 displayUI{interface,displayUiConfig}
 {
-  Serial.println("ChickenDoor constructor"); 
+ // Serial.println("ChickenDoor constructor"); 
 }
 
 

@@ -9,7 +9,7 @@ DisplayUI::DisplayUI(ChickenDoorInterface interface,DisplayUiConfig config):
     times(interface.get())
 {
   m_interface=interface;
-  Serial.println("DisplayUi constructor");
+  //Serial.println("DisplayUi constructor");
   //delay(500);
 }
 

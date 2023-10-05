@@ -13,7 +13,7 @@ FourDigitTime::FourDigitTime():H1(3,[&](int times){H1OnMutate(times);}),
  M1(6,[&](int times){M1OnMutate(times);}), 
  M2(10,[&](int times){M2OnMutate(times);})
 {
-    Serial.println("FourDigitTime init");
+   // Serial.println("FourDigitTime init");
     //delay(500);
 }
 

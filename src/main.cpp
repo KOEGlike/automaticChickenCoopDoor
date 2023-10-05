@@ -11,13 +11,13 @@
 
 DisplayUiConfig displayUiConfig{4,5,6,7};
 
-ChickenDoor *door= new ChickenDoor(displayUiConfig);
+ChickenDoor door(displayUiConfig);
 
 void setup() {
   Serial.begin(115200);
   
   Serial.println("Starting");
- door->begin();
+ door.begin();
   
 }
 

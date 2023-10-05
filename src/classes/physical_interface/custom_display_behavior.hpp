@@ -23,7 +23,8 @@ protected:
 public:
     CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO);
     ~CustomDisplayBehavior() ;
-    
+    void begin();
+
     void blinkSegments(uint8_t segmentsToBlink, unsigned long offTime = 50);
     void blinkSegmentsContinuouslyOn(uint8_t segmentsToBlink, unsigned long offTime = 50, unsigned long onTime = 50);
     void blinkSegmentsContinuouslyOff();
