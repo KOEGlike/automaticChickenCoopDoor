@@ -10,8 +10,10 @@ class Motor
   void startCalibration(uint8_t speed);
   void stopCalibration();
   void changeState(float procentage);
+  void begin();
   protected:
   A4988 motor;
+  MotorInterface m_interfece;
 };
 
 #endif

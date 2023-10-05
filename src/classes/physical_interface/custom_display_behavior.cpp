@@ -12,24 +12,17 @@ CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
     Async.registerCallback(0,-1, [&](){check();});
   }
   CustomDisplayBehavior :: ~CustomDisplayBehavior() {
+    Serial.println("CustomDisplayBehavior destruct");
   Async.deleteCallBack(asyncId);
   }
 
 void CustomDisplayBehavior::blinkCheck() {
-  //Serial.print("segments length: ");
- // Serial.println(segmentsLength);
-  //Serial.println("blinkCheck");
-  //Serial.print("dot is binking: ");
-  
-  //Serial.println(dotIsBlinking);
   if (millis() - blinkStartInMillis >= m_offTime && isBlinking) {
-   // Serial.println("blinkCheck 1");
     blinkEnd = millis();
     isBlinking = false;
     uint8_t segments[4];
-    //Serial.print("segments length: ");
- //Serial.println(segmentsLength);
-memcpy(segments, currentSegments, segmentsLength);
+    
+    memcpy(segments, currentSegments, segmentsLength);
     if(dotIsBlinking)
     {
       segments[1]&=~0b10000000;
@@ -43,54 +36,40 @@ memcpy(segments, currentSegments, segmentsLength);
   }
   
   if (isContinuouslyBlinking && millis() - blinkEnd >= m_onTime && !isBlinking) {
-    //Serial.println("blinkCheck 2");
     blinkSegments(segmentsThatBlink, m_offTime);
   }
   
   if (timesToBlink > 0 && timesBlinked == timesToBlink) {
-   // Serial.println("blinkCheck 3");
     blinkSegmentsContinuouslyOff();
     timesToBlink = -1;
     bilinkSegmentsAnAmountOnEndFunc();
   }
-   //Serial.print("dot is binking: ");
-  //Serial.println(dotIsBlinking);
+   
 }
 
 void CustomDisplayBehavior::dotBlinkCheck() {
- //Serial.println("dot blinkCheck");
- //Serial.print("dot is binking: ");
- // Serial.println(dotIsBlinking);
- // Serial.print("segments length: ");
-  //Serial.println(segmentsLength);
+
   if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
-    //Serial.println("dot blinkCheck 1");
     dotBlinkEnd = millis();
     dotIsBlinking = false;
     uint8_t segments[4];
     memcpy(segments, currentSegments, segmentsLength);
-    //Serial.println("dot blinkCheck 1.1");
     if(isBlinking)
     {
       segments[1]=0;
     }
-    //Serial.println("dot blinkCheck 1.2");
     dotIsOn=true;
     segments[1]|=0b10000000;
     setSegments(currentSegments);
-    //Serial.println("dot blinkCheck 1.3");
     timesDotBlinked++;
-    //Serial.println("dot blinkCheck 1.4");
   }
   
   if (dotIsContinuouslyBlinking && millis() - dotBlinkEnd >= m_dotOnTime && !dotIsBlinking) {
-    //Serial.println("dot blinkCheck 2");
     blinkDots(m_dotOffTime);
     dotIsOn=false;
   }
 
   if (timesDotToBlink > 0 && timesDotBlinked >= timesDotToBlink) {
-    //Serial.println("dot blinkCheck 3");
     blinkDotsContinuouslyOff();
     timesDotToBlink = -1;
     bilinkDotsAnAmountOnEndFunc();
@@ -98,7 +77,6 @@ void CustomDisplayBehavior::dotBlinkCheck() {
 
   if(millis()-dotBlinkAnAmountLongDelayContinuosStart>=dotBlinkAnAmountLongDelayContinuos&&dotBlinkAnAmountLongDelayContinuosAmount>=0&&isDotBlinkAnAmountLongDelayContinuos==true)
   {
-    //Serial.println("dot blinkCheck 4");
     isDotBlinkAnAmountLongDelayContinuos=false;
     blinkDotsAnAmount(dotBlinkAnAmountLongDelayContinuosAmount, blinkDotsAnAmountThenDelayContinuouslyOffTime,blinkDotsAnAmountThenDelayContinuouslyOnTime, [&](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true;} );
   }
@@ -108,8 +86,6 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
   if (isBlinking) {
     return;
   }
-  //Serial.print("segments length: ");
-  //Serial.println(segmentsLength);
   isBlinking = true;
   uint8_t beforeBlinkSegments[4];
   memcpy(beforeBlinkSegments, currentSegments, segmentsLength);
@@ -176,8 +152,7 @@ void CustomDisplayBehavior::blinkDots(unsigned long offTime){
   if (dotIsBlinking) {
     return;
   }
-  //Serial.print("segments length: ");
- // Serial.println(segmentsLength);
+  
   uint8_t beforeBlinkSegments[4];
   memcpy(beforeBlinkSegments, currentSegments, segmentsLength);
   uint8_t segments[4];
