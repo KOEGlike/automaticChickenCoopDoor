@@ -7,12 +7,16 @@ m_interfece{interface}
  
 }
 
-void  Motor::changeState()
+void Motor::changeState(float percentage)
 {
-  motor.
 }
 
 void Motor::begin()
 {
-  motor.begin()
+  motor.begin();
+}
+
+void Motor::moveSteps(int steps)
+{
+
 }
