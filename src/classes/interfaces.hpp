@@ -75,6 +75,7 @@ MotorInterface(std::function<float()> getStateFunc,std::function<void(float)> se
   getState = getStateFunc;
   setState = setStateFunc;
   getCalibrationState = getCalibrationStateFunc;
+  setCalibrationState = setCalibrationStateFunc;
 }
 std::function<float()> getState;
 std::function<void(float)> setState;

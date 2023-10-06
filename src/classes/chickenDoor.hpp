@@ -11,7 +11,7 @@
 
 class ChickenDoor{
   public:
-    ChickenDoor(DisplayUiConfig displayUiConfig);
+    ChickenDoor(DisplayUiConfig *displayUiConfig);
     void begin();
   protected:
   bool isOpen=false;

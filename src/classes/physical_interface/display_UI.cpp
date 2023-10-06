@@ -1,12 +1,12 @@
 #include "display_UI.hpp"
 
-DisplayUI::DisplayUI(ChickenDoorInterface interface,DisplayUiConfig config): 
-    button1(config.btn1Pin, [&]() {   addToCurrentSegment();},[&]() {editingTogle();}, &globalPressed),
-    button2 (config.btn2Pin, [&]() {moveCursorForward();},[&]() {changeCurrentChangingTime();}, &globalPressed), 
-    display(config.clkPin, config.dioPin),
+DisplayUI::DisplayUI(ChickenDoorInterface *interface,DisplayUiConfig *config): 
+    button1(config->btn1Pin, [&]() {   addToCurrentSegment();},[&]() {editingTogle();}, &globalPressed),
+    button2 (config->btn2Pin, [&]() {moveCursorForward();},[&]() {changeCurrentChangingTime();}, &globalPressed), 
+    display(config->clkPin, config->dioPin),
     currentSelectedSegment(4), 
     currentChangingTime(3),
-    times(interface.get())
+    times(interface->get())
 {
   m_interface=interface;
   //Serial.println("DisplayUi constructor");
@@ -26,7 +26,7 @@ void DisplayUI::defalutForShowNumber(int num)
 }
 
 int DisplayUI::digitValueRouter(int state)
-{tmElements_t currrentTime= m_interface.getCurrentTime();
+{tmElements_t currrentTime= m_interface->getCurrentTime();
   switch(state) {
   case 0:
      
@@ -47,17 +47,17 @@ void DisplayUI::setTimeRouter(int didgets, int state)
   tmElements_t currentTime;
     currentTime.Hour=didgets/100;
     currentTime.Minute=didgets%100;
-    m_interface.updateCurrentTime(currentTime);
+    m_interface->updateCurrentTime(currentTime);
     break;
   case 1:
     times.openTime.Minute=didgets%100;
     times.openTime.Hour=didgets/100;
-    m_interface.update(times);
+    m_interface->update(times);
     break;
   case 2:
     times.closeTime.Minute=didgets%100;
     times.closeTime.Hour=didgets/100;
-    m_interface.update(times);
+    m_interface->update(times);
     break;
   }
 }
@@ -84,7 +84,7 @@ void DisplayUI::editingTogle()
     Serial.println("editingTogle");
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-    m_interface.update(times);
+    m_interface->update(times);
     display.blinkSegmentsContinuouslyOff();
     display.blinkDotsContinuouslyOff();
     display.setBrightness(0);
@@ -95,7 +95,7 @@ void DisplayUI::editingTogle()
     display.setBrightness(7);
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-    times=m_interface.get();
+    times=m_interface->get();
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defalutForShowNumber(digits.getDigits());
     dotTimeingRouter(currentChangingTime.getState()); 

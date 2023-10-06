@@ -4,7 +4,7 @@
 
 DisplayUiConfig displayUiConfig{4,5,6,7};
 
-ChickenDoor door(displayUiConfig);
+ChickenDoor door(&displayUiConfig);
 
 void setup() {
   Serial.begin(115200);
