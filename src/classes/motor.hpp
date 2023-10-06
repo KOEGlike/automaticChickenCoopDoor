@@ -7,11 +7,12 @@ class Motor
 {
   public:
   Motor(MotorConfig config, MotorInterface interface);
-  void startCalibration(uint8_t speed);
-  void stopCalibration();
   void changeState(float procentage);
+  void moveSteps(int steps);
+  void begin();
   protected:
   A4988 motor;
+  MotorInterface m_interfece;
 };
 
 #endif

@@ -1,13 +1,6 @@
-#include <TimeLib.h>
-#include <Arduino.h>
-#include "driver/gpio.h"
-#include <functional>
-#include <Preferences.h>
-#include <math.h>
-#include<A4988.h>
-
 #include "classes/chickenDoor.hpp"
 #include "classes/async_handler.hpp"
+#include "classes/interfaces.hpp"
 
 DisplayUiConfig displayUiConfig{4,5,6,7};
 
@@ -22,6 +15,5 @@ void setup() {
 }
 
 void loop() {
- 
 Async.check();
 }

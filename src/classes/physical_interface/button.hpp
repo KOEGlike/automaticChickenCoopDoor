@@ -29,7 +29,9 @@ class ButtonManager {
     public:
         void link(std::vector<Button*> buttons, std::function<void()> onPress);
     protected:
-    	std::map<int, Button*> m_buttons ;
+    	std::map<int, Button*> m_buttons;
+        std::map<int, ButtonLinkStruct> buttonLinks;
+        void check();
 };
 
 inline ButtonManager buttonManager;
