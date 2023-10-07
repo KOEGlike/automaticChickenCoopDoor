@@ -21,7 +21,7 @@ class MotorCalibrator{
     Motor *m_motor;
     MotorInterface *m_interface;
     long m_stepAmout, m_currentStep;
-    std::pair<int,int> m_limits;
+    MotorCalibratorLimits m_limits;
     bool m_isDone=false;
 };
 
