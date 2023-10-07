@@ -5,19 +5,23 @@
 #include "interfaces.hpp"
 
 class Motor;
-
+struct MotorCalibratorLimits
+{
+  int upper, lower;
+};
 class MotorCalibrator{
   public:
     MotorCalibrator(Motor *motor, MotorInterface *interface,  long stepAmout, bool isDone=false);
-    void moveUp();
-    void moveDown();
+    void turnClockwise();
+    void turnCounterClockwise();
     void setUpper();
     void setLower();
     void finish();
   protected:
     Motor *m_motor;
     MotorInterface *m_interface;
-    long m_stepAmout, m_stepCounter=0, m_movementLengthInSteps;
+    long m_stepAmout, m_currentStep;
+    std::pair<int,int> m_limits;
     bool m_isDone=false;
 };
 

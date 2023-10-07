@@ -40,32 +40,29 @@ MotorCalibrator::MotorCalibrator(Motor *motor, MotorInterface *interface, long s
   m_isDone=isDone;
 }
 
-void MotorCalibrator::finish()
-{
-  m_isDone=true;
-  m_motor->isCalibarting=false;
-}
 
-void MotorCalibrator::moveDown()
+void MotorCalibrator::turnClockwise()
 {
   if(m_isDone) return;
-  m_stepCounter+=m_stepAmout;
+  
   m_motor->moveSteps(m_stepAmout);
 }
 
-void MotorCalibrator::moveUp()
+void MotorCalibrator::turnCounterClockwise()
 {
   if(m_isDone) return;
-  m_stepCounter=m_stepCounter-m_stepAmout>=0?m_stepCounter-m_stepAmout:0;
-  m_motor->moveSteps(m_stepAmout);
+ 
+  m_motor->moveSteps(-m_stepAmout);
 }
 
 void MotorCalibrator::setLower()
 {
-  
+  m_isDone=true;
+  m_motor->isCalibarting=false;
+
 }
 
 void MotorCalibrator::setUpper()
 {
-  m_stepCounter=0;
+ 
 }

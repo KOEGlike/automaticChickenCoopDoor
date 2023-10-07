@@ -68,9 +68,19 @@ struct DisplayUiConfig
   uint8_t clkPin, dioPin,  btn1Pin,  btn2Pin;
 };
 
+struct MotorCalibrationState
+{
+  MotorCalibrationState(bool upIsClocwise, long movementLengthInSteps)
+  {
+    this->upIsClocwise = upIsClocwise;
+    this->movementLengthInSteps = movementLengthInSteps;
+  }
+  bool upIsClocwise;
+  long movementLengthInSteps;
+};
 struct MotorInterface
 {
-MotorInterface(std::function<float()> getStateFunc,std::function<void(float)> setStateFunc,std::function<int()> getCalibrationStateFunc,std::function<void(int )> setCalibrationStateFunc)
+MotorInterface(std::function<float()> getStateFunc,std::function<void(float)> setStateFunc,std::function<MotorCalibrationState()> getCalibrationStateFunc,std::function<void(MotorCalibrationState )> setCalibrationStateFunc)
 {
   getState = getStateFunc;
   setState = setStateFunc;
@@ -79,8 +89,8 @@ MotorInterface(std::function<float()> getStateFunc,std::function<void(float)> se
 }
 std::function<float()> getState;
 std::function<void(float)> setState;
-std::function<int()> getCalibrationState;
-std::function<void(int )> setCalibrationState;
+std::function<MotorCalibrationState()> getCalibrationState;
+std::function<void(MotorCalibrationState )> setCalibrationState;
 };
 
 struct MotorConfig
@@ -97,5 +107,7 @@ struct MotorConfig
   }
 uint8_t steps, dir, step,   enable, ms1, ms2, ms3;
 };
+
+
 
 #endif
