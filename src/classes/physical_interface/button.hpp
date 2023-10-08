@@ -23,6 +23,7 @@ public:
 struct ButtonLinkStruct{
 std::vector<int> buttonIds;
 std::function<void()> onPress;
+std::function<void()> onLongPress;
 };
 
 class ButtonManager {
