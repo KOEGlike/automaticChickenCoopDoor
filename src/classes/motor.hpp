@@ -5,38 +5,34 @@
 #include "interfaces.hpp"
 
 class Motor;
-struct MotorCalibratorLimits
-{
-  int upper, lower;
-};
+
 class MotorCalibrator{
   public:
-    MotorCalibrator(Motor *motor, MotorInterface *interface,  long stepAmout, bool isDone=false);
+    MotorCalibrator(Motor *motor, MotorInterface *interface,  long stepAmout);
     void turnClockwise();
     void turnCounterClockwise();
-    void setUpper();
-    void setLower();
-    void finish();
+    void setOppenedState();
+    void setClosedState();
   protected:
     Motor *m_motor;
     MotorInterface *m_interface;
     long m_stepAmout, m_currentStep;
-    MotorCalibratorLimits m_limits;
-    bool m_isDone=false;
+    bool m_upIsClockwise=true, firstIsSet=false;
 };
 
 class Motor
 {
   public:
-    Motor(MotorConfig config, MotorInterface interface);
+    Motor(MotorConfig config, MotorInterface *interface);
+    ~Motor();
     void changeState(float procentage);
     void moveSteps(long steps);
     void begin();
-    bool isCalibarting=false;
-    MotorCalibrator calibrate(int stepAmout);
+    MotorCalibrator *currentMotorCalibrator=nullptr;
+    MotorCalibrator* calibrate(int stepAmout);
   protected:
     A4988 m_motor;
-    MotorInterface m_interfece;
+    MotorInterface *m_interfece;
 };
 
 #endif

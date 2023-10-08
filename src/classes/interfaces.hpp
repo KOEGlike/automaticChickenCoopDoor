@@ -80,32 +80,34 @@ struct MotorCalibrationState
 };
 struct MotorInterface
 {
-MotorInterface(std::function<float()> getStateFunc,std::function<void(float)> setStateFunc,std::function<MotorCalibrationState()> getCalibrationStateFunc,std::function<void(MotorCalibrationState )> setCalibrationStateFunc)
+MotorInterface(std::function<uint()> getStateFunc,std::function<void(uint)> setStateFunc,std::function<MotorCalibrationState()> getCalibrationStateFunc,std::function<void(MotorCalibrationState )> setCalibrationStateFunc,std::function<void()> settingStateClosedFunc,std::function<void()> settingStateOpenFunc,std::function<void()>finishedCalibratingfunc)
 {
   getState = getStateFunc;
   setState = setStateFunc;
   getCalibrationState = getCalibrationStateFunc;
   setCalibrationState = setCalibrationStateFunc;
+  settingStateOpen=settingStateOpenFunc;
+  settingStateClosed=settingStateClosedFunc;
+  finishedCalibrating=finishedCalibratingfunc;
 }
-std::function<float()> getState;
-std::function<void(float)> setState;
+std::function<uint()> getState;
+std::function<void(uint)> setState;
 std::function<MotorCalibrationState()> getCalibrationState;
 std::function<void(MotorCalibrationState )> setCalibrationState;
+std::function<void()> settingStateOpen, settingStateClosed, finishedCalibrating;
 };
 
 struct MotorConfig
 {
-  MotorConfig(uint8_t stepsPin ,uint8_t dirPin, uint8_t stepPin, uint8_t resetPin, uint8_t enablePin, uint8_t ms1Pin, uint8_t ms2Pin, uint8_t ms3Pin)
+  MotorConfig(uint8_t stepsPin ,uint8_t dirPin, uint8_t stepPin, uint8_t resetPin, uint8_t enablePin)
   {
     dir = dirPin;
     step = stepPin;
     steps = stepsPin;
     enable = enablePin;
-    ms1 = ms1Pin;
-    ms2 = ms2Pin;
-    ms3 = ms3Pin;
+    
   }
-uint8_t steps, dir, step,   enable, ms1, ms2, ms3;
+uint8_t steps, dir, step,   enable;
 };
 
 
