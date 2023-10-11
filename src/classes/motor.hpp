@@ -8,28 +8,28 @@ class Motor;
 
 class MotorCalibrator{
   public:
-    MotorCalibrator(Motor *motor, MotorInterface *interface,  long stepAmout);
+    MotorCalibrator(Motor *motor, MotorInterface *interface);
+    void start(long stepAmout, bool firstSetIsBottom=true);
     void turnClockwise();
     void turnCounterClockwise();
-    void setOppenedState();
-    void setClosedState();
+    void setFirstState();
+    void setSecondState();
+    void end();
   protected:
     Motor *m_motor;
     MotorInterface *m_interface;
     long m_stepAmout, m_currentStep;
-    bool m_upIsClockwise=true, firstIsSet=false;
+    bool m_upIsClockwise=true, m_firstSetIsBottom, m_isDone=true, m_firstIsSet=false;
 };
 
 class Motor
 {
   public:
     Motor(MotorConfig config, MotorInterface *interface);
-    ~Motor();
     void changeState(float procentage);
     void moveSteps(long steps);
     void begin();
-    MotorCalibrator *currentMotorCalibrator=nullptr;
-    MotorCalibrator* calibrate(int stepAmout);
+    MotorCalibrator calibrator;
   protected:
     A4988 m_motor;
     MotorInterface *m_interfece;

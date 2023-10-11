@@ -2,14 +2,8 @@
 #include <cmath>
 Motor::Motor(MotorConfig config, MotorInterface *interface): 
 m_motor{config.steps, config.dir, config.step, config.enable}, 
-m_interfece{interface}
+m_interfece{interface}, calibrator{this, interface}
 {
- 
-}
-
-Motor::~Motor()
-{
-  delete currentMotorCalibrator;
 }
 
 void Motor::changeState(float percentage)
@@ -30,53 +24,55 @@ void Motor::moveSteps(long steps)
   m_motor.move(m_interfece->getCalibrationState().upIsClocwise?steps:-steps);
 }
 
-MotorCalibrator* Motor::calibrate(int stepAmout)
-{ 
-  delete currentMotorCalibrator;
-  currentMotorCalibrator=new MotorCalibrator(this, m_interfece, stepAmout);
-  return currentMotorCalibrator;
-}
 
-MotorCalibrator::MotorCalibrator(Motor *motor, MotorInterface *interface, long stepAmout)
+MotorCalibrator::MotorCalibrator(Motor *motor, MotorInterface *interface)
 {
   m_motor = motor;
-  m_stepAmout = stepAmout;
   m_interface=interface;
   interface->settingStateClosed();
+}
+
+void MotorCalibrator::start(long stepAmout, bool firstSetIsBottom)
+{
+  m_stepAmout = stepAmout;
+  m_isDone=false;
+  m_currentStep=0;
+  m_firstSetIsBottom=firstSetIsBottom;
 }
 
 
 void MotorCalibrator::turnClockwise()
 {
-  if(m_motor->currentMotorCalibrator!=this&&m_motor->currentMotorCalibrator!=nullptr) return;
-  m_currentStep+=m_upIsClockwise?m_stepAmout:-m_stepAmout;
+  if(m_isDone==true)return;
+  m_currentStep+=m_stepAmout;
   m_motor->moveSteps(m_stepAmout);
 }
 
 void MotorCalibrator::turnCounterClockwise()
 {
-  if(m_motor->currentMotorCalibrator!=this&&m_motor->currentMotorCalibrator!=nullptr) return;
-  m_currentStep+=m_upIsClockwise?-m_stepAmout:m_stepAmout;
+  if(m_isDone==true)return;
+  m_currentStep-=m_stepAmout;
   m_motor->moveSteps(-m_stepAmout);
 }
 
-void MotorCalibrator::setClosedState()
+void MotorCalibrator::setFirstState()
 {
-  m_interface->setState(0);
-  m_upIsClockwise=m_currentStep>=0?true:false;
+  if(m_isDone==true)return;
+  m_firstIsSet=true;
+  m_interface->setState(m_firstSetIsBottom?0:1);
   m_currentStep=0;
-  firstIsSet=true;
-  m_interface->settingStateOpen();
+  return;
 }
 
-void MotorCalibrator::setOppenedState()
+void MotorCalibrator::setSecondState()
 {
-  if(!firstIsSet)
-  {
-    throw std::runtime_error("You must set the closed state first");
-  }
-  m_interface->setState(1);
-  m_interface->setCalibrationState(MotorCalibrationState(m_upIsClockwise, m_currentStep));
-  m_motor->currentMotorCalibrator=nullptr;
+  if(m_isDone==true)return;
+  if(m_firstIsSet==false)return;
+  m_upIsClockwise=m_currentStep>=0?true:false;
+  
+  m_interface->setState(m_firstSetIsBottom?1:0);
+  
+  m_interface->setCalibrationState(MotorCalibrationState(m_upIsClockwise, m_firstSetIsBottom?m_currentStep:-m_currentStep));
+  m_isDone=true;
 }
 
