@@ -1,10 +1,12 @@
 #include "ChickenDoor.hpp"
 
 
-ChickenDoor::ChickenDoor(DisplayUiConfig *displayUiConfig):
+ChickenDoor::ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig):
 moveTimes{12,12,12,12},
-interface{get, update, updateCurrentTime, getCurrentTime,openDoor,closeDoor, getDoorState},
-displayUI{&interface,displayUiConfig}
+interface{getTimes, updateTimes, updateCurrentTime, getCurrentTime, getMotor},
+displayUI{&interface,displayUiConfig},
+motorInterface{getMotorState, setMotorState, getMotorCalibrationState, setMotorCalibrationState, settingStateClosed, settingStateOpen, finishedCalibrating},
+motor{motorConfig, &motorInterface}
 {
  // Serial.println("ChickenDoor constructor"); 
 }
@@ -13,4 +15,5 @@ displayUI{&interface,displayUiConfig}
 void ChickenDoor::begin()
 {
   displayUI.begin();
+  motor.begin();
 }

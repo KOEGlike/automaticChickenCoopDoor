@@ -5,19 +5,17 @@
 #include "interfaces.hpp"
 
 class Motor;
-
+class MotorConfig;
+class MotorInterface;
 class MotorCalibrator{
   public:
-    MotorCalibrator(Motor *motor, MotorInterface *interface);
+    MotorCalibrator(Motor *motor);
     void start(long stepAmout, bool firstSetIsBottom=true);
-    void turnClockwise();
-    void turnCounterClockwise();
+    void turn(bool isClockwise);
     void setFirstState();
     void setSecondState();
-    void end();
   protected:
     Motor *m_motor;
-    MotorInterface *m_interface;
     long m_stepAmout, m_currentStep;
     bool m_upIsClockwise=true, m_firstSetIsBottom, m_isDone=true, m_firstIsSet=false;
 };
@@ -25,14 +23,16 @@ class MotorCalibrator{
 class Motor
 {
   public:
-    Motor(MotorConfig config, MotorInterface *interface);
+    Motor(MotorConfig *config, MotorInterface *interface);
     void changeState(float procentage);
     void moveSteps(long steps);
+    float getState();
     void begin();
     MotorCalibrator calibrator;
+    friend class MotorCalibrator;
   protected:
     A4988 m_motor;
-    MotorInterface *m_interfece;
+    MotorInterface *m_interface;
 };
 
 #endif

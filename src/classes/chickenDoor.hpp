@@ -11,21 +11,30 @@
 
 class ChickenDoor{
   public:
-    ChickenDoor(DisplayUiConfig *displayUiConfig);
+    ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig);
     void begin();
   protected:
   bool isOpen=false;
-    std::function<MoveTimes()> get=[&](){return moveTimes; };
-    std::function<void(MoveTimes )> update= [&](MoveTimes m_moveTimes){moveTimes=m_moveTimes; };
+    std::function<MoveTimes()> getTimes=[&](){return moveTimes; };
+    std::function<void(MoveTimes )> updateTimes= [&](MoveTimes m_moveTimes){moveTimes=m_moveTimes; };
     std::function<void(tmElements_t )> updateCurrentTime=[&](tmElements_t time){setTime(makeTime(time));};
     std::function<tmElements_t( )> getCurrentTime=[&](){tmElements_t t; breakTime(now(), t); return t ;};
-    std::function<void()> openDoor=[&](){};
-    std::function<void()> closeDoor=[&](){};
-    std::function<bool()> getDoorState=[&](){return true;};
+    std::function<Motor*()> getMotor=[&](){return &motor;};
     
+    std::function<uint()> getMotorState;
+    std::function<void(uint)> setMotorState;
+    std::function<MotorCalibrationState()> getMotorCalibrationState;
+    std::function<void(MotorCalibrationState )> setMotorCalibrationState;
+    std::function<void()> settingStateOpen, settingStateClosed, finishedCalibrating;
+
     MoveTimes moveTimes;
+    MotorCalibrationState motorCalibrationState;
+
     ChickenDoorInterface interface;
-    
+    MotorInterface motorInterface;
+
+    Motor motor;
+
     DisplayUI displayUI;
 
     

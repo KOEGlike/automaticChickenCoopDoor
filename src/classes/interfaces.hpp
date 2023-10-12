@@ -3,6 +3,10 @@
 
 #include <functional>
 #include <TimeLib.h>
+#include "motor.hpp"
+
+class Motor;
+
 struct MoveTimes
 {
   MoveTimes(tmElements_t openDoorTime, tmElements_t closeDoorTime)
@@ -23,34 +27,30 @@ struct MoveTimes
   tmElements_t  openTime, closeTime;
 };
 
+
+
 struct ChickenDoorInterface
 {
   ChickenDoorInterface(std::function<MoveTimes()> getFunc,
   std::function<void(MoveTimes )> updateFunc,
   std::function<void(tmElements_t)> updateCurrentTimeFunc,
-   std::function<tmElements_t()> getCurrentTimeFunc,
-   std::function<void()> openDoorFunc,
-  std::function<void()> closeDoorFunc,
-  std::function<bool()> getDoorStateFunc)
+  std::function<tmElements_t()> getCurrentTimeFunc,
+  std::function<Motor*()> getMotorFunc)
   {
-    get = getFunc;
-    update = updateFunc;
+    getTimes = getFunc;
+    updateTimes = updateFunc;
     updateCurrentTime = updateCurrentTimeFunc;
     getCurrentTime = getCurrentTimeFunc;
-    openDoor = openDoorFunc;
-    closeDoor = closeDoorFunc;
-    getDoorState = getDoorStateFunc;
+    getMotor = getMotorFunc;
     Serial.println("ChickenDoorInterface");
     //delay(500);
   }
-  ChickenDoorInterface(){Serial.println("ChickenDoorInterface def Constructor");delay(500);};
-  std::function<MoveTimes()> get;
-  std::function<void(MoveTimes )> update;
+  ChickenDoorInterface(){Serial.println("ChickenDoorInterface def Constructor");};
+  std::function<MoveTimes()> getTimes;
+  std::function<void(MoveTimes )> updateTimes;
   std::function<void(tmElements_t )> updateCurrentTime;
   std::function<tmElements_t()> getCurrentTime;
-  std::function<void()> openDoor;
-  std::function<void()> closeDoor;
-  std::function<bool()> getDoorState;
+  std::function<Motor*()> getMotor;
 };
 
 
@@ -75,9 +75,12 @@ struct MotorCalibrationState
     this->upIsClocwise = upIsClocwise;
     this->movementLengthInSteps = movementLengthInSteps;
   }
-  bool upIsClocwise;
-  long movementLengthInSteps;
+  MotorCalibrationState(){};
+  bool upIsClocwise = true;
+  long movementLengthInSteps=0;
 };
+
+
 struct MotorInterface
 {
 MotorInterface(std::function<uint()> getStateFunc,std::function<void(uint)> setStateFunc,std::function<MotorCalibrationState()> getCalibrationStateFunc,std::function<void(MotorCalibrationState )> setCalibrationStateFunc,std::function<void()> settingStateClosedFunc,std::function<void()> settingStateOpenFunc,std::function<void()>finishedCalibratingfunc)
@@ -105,7 +108,6 @@ struct MotorConfig
     step = stepPin;
     steps = stepsPin;
     enable = enablePin;
-    
   }
 uint8_t steps, dir, step,   enable;
 };

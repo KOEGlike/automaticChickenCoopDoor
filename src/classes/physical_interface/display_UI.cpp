@@ -6,7 +6,7 @@ DisplayUI::DisplayUI(ChickenDoorInterface *interface,DisplayUiConfig *config):
     display(config->clkPin, config->dioPin),
     currentSelectedSegment(4), 
     currentChangingTime(3),
-    times(interface->get())
+    times(interface->getTimes())
 {
   m_interface=interface;
   //Serial.println("DisplayUi constructor");
@@ -52,12 +52,12 @@ void DisplayUI::setTimeRouter(int didgets, int state)
   case 1:
     times.openTime.Minute=didgets%100;
     times.openTime.Hour=didgets/100;
-    m_interface->update(times);
+    m_interface->updateTimes(times);
     break;
   case 2:
     times.closeTime.Minute=didgets%100;
     times.closeTime.Hour=didgets/100;
-    m_interface->update(times);
+    m_interface->updateTimes(times);
     break;
   }
 }
@@ -84,7 +84,7 @@ void DisplayUI::editingTogle()
     Serial.println("editingTogle");
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-    m_interface->update(times);
+    m_interface->updateTimes(times);
     display.blinkSegmentsContinuouslyOff();
     display.blinkDotsContinuouslyOff();
     display.setBrightness(0);
@@ -95,7 +95,7 @@ void DisplayUI::editingTogle()
     display.setBrightness(7);
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-    times=m_interface->get();
+    times=m_interface->getTimes();
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defalutForShowNumber(digits.getDigits());
     dotTimeingRouter(currentChangingTime.getState()); 
