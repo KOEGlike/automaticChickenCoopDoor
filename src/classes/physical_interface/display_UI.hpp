@@ -44,10 +44,9 @@ class DisplayUI
 		void editingTogle();
 		void changeCurrentChangingTime();
 		
-		uint8_t btn1, btn2, clk, dio;
 		CustomDisplayBehavior display;
+		
 		Button button1;
-
 		Button button2;
 
 };

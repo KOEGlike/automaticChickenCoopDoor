@@ -5,6 +5,7 @@
 #include <vector>
 #include "../async_handler.hpp"
 
+class ButtonManager;
 class Button {
 protected:
     int m_pin;
@@ -18,21 +19,24 @@ public:
     uint32_t asyncId;
     void check();
     void begin();
+    friend class ButtonManager;
 };
 
 struct ButtonLinkStruct{
-std::vector<int> buttonIds;
+std::vector<Button*> buttonPtrs;
 std::function<void()> onPress;
 std::function<void()> onLongPress;
 };
 
 class ButtonManager {
     public:
-        void link(std::vector<Button*> buttons, std::function<void()> onPress);
+        void link(std::vector<Button*> buttons, std::function<void()> onPress, std::function<void()> onLongPress);
+        void addButton(Button* button);
+        void check();
+        void begin();
     protected:
     	std::map<int, Button*> m_buttons;
         std::map<int, ButtonLinkStruct> buttonLinks;
-        void check();
 };
 
 inline ButtonManager buttonManager;

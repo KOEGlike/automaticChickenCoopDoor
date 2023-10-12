@@ -58,3 +58,21 @@ void Button::check() {
         pressedForMillis = 0;
     }
 }
+
+void ButtonManager::link(std::vector<Button*> buttons, std::function<void()> onPress, std::function<void()> onLongPress)
+{
+
+}
+
+void ButtonManager::addButton(Button* button)
+{
+    
+}
+
+void ButtonManager::check() {
+
+}
+
+void ButtonManager::begin() {
+
+}
