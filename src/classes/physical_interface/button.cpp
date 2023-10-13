@@ -29,34 +29,38 @@ Serial.println("Button begin");
 void Button::check() {
     //Serial.println("check");
     if (digitalRead(m_pin) == HIGH) {
-        if (pressed == true) {
-            pressedForMillis = millis() - pressStartInMillies;
-        }
         pressed = false;
         *m_globalPressed = false;
     } else {
-        if (pressed == false) {
+        pressedForMillis = millis() - pressStartInMillies;
+        if (pressed == false&&wasHighBefore) {
             pressStartInMillies = millis();
+            pressedForMillis=0;
+            pressed = true;
         }
-        if (*m_globalPressed == false) {
+
+        /*if (*m_globalPressed == false) {
             pressed = true;
             *m_globalPressed = true;
-        }
+        }*/
     }
 
-    if (pressed == false && *m_globalPressed == false && pressedForMillis >= debounceInMillis) {
-        if (pressedForMillis < millisForLongPress) {
+    if ( pressedForMillis >= debounceInMillis) {
+        if (pressedForMillis < millisForLongPress&&pressed==false) { 
             m_press();
-             Serial.println("m_press");
-        } else {
+            Serial.println("m_press");
+        } else if(pressed == true&&pressedForMillis >= millisForLongPress){
             m_longPress();
-             Serial.println("m_longPress");
+            pressed = false;
+            Serial.println("m_longPress");
         }
     }
 
     if (pressed == false) {
         pressedForMillis = 0;
     }
+
+    wasHighBefore=digitalRead(m_pin)==HIGH?true:false;
 }
 
 void ButtonManager::link(std::vector<Button*> buttons, std::function<void()> onPress, std::function<void()> onLongPress)

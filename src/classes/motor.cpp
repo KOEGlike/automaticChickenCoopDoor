@@ -1,9 +1,10 @@
 #include "motor.hpp"	
 #include <cmath>
 Motor::Motor(MotorConfig *config, MotorInterface *interface): 
-m_motor{config->steps, config->dir, config->step, config->enable}, 
+m_stepper{config->steps, config->dir, config->step, config->enable}, 
 m_interface{interface}, calibrator{this}
 {
+  
 }
 
 void Motor::changeState(float percentage)
@@ -15,13 +16,13 @@ void Motor::changeState(float percentage)
 
 void Motor::begin()
 {
-  m_motor.begin();
+ m_stepper.begin();
 }
 
 void Motor::moveSteps(long steps)
 {
   m_interface->setState(m_interface->getState()+steps);
-  m_motor.move(m_interface->getCalibrationState().upIsClocwise?steps:-steps);
+  m_stepper.move(m_interface->getCalibrationState().upIsClocwise?steps:-steps);
 }
 
 float Motor::getState()
@@ -29,10 +30,8 @@ float Motor::getState()
   return m_interface->getState();
 }
 
-MotorCalibrator::MotorCalibrator(Motor *motor)
-{
-  m_motor = motor;
-  m_motor->m_interface->settingStateClosed();
+MotorCalibrator::MotorCalibrator(Motor *motor){
+  m_motor=motor;
 }
 
 void MotorCalibrator::start(long stepAmout, bool firstSetIsBottom)
@@ -48,7 +47,7 @@ void MotorCalibrator::turn(bool isClockwise)
 {
   if(m_isDone==true)return;
   m_currentStep+=isClockwise?m_stepAmout:-m_stepAmout;
-  m_motor->m_motor.move(isClockwise?m_stepAmout:-m_stepAmout);
+  m_motor->m_stepper.move(isClockwise?m_stepAmout:-m_stepAmout);
 }
 
 

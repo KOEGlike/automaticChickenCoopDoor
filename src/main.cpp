@@ -9,10 +9,7 @@ ChickenDoor door(&displayUiConfig, &motorConfig);
 
 void setup() {
   Serial.begin(115200);
-  
-  Serial.println("Starting");
- door.begin();
-  
+  door.begin();
 }
 
 void loop() {

@@ -28,10 +28,10 @@ class Motor
     void moveSteps(long steps);
     float getState();
     void begin();
-    MotorCalibrator calibrator;
     friend class MotorCalibrator;
+    MotorCalibrator calibrator;
   protected:
-    A4988 m_motor;
+    A4988 m_stepper;
     MotorInterface *m_interface;
 };
 
