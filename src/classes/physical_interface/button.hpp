@@ -35,8 +35,9 @@ class ButtonManager {
         void check();
         void begin();
     protected:
-    	std::map<int, Button*> m_buttons;
-        std::map<int, ButtonLinkStruct> buttonLinks;
+    	std::map<uint, Button*> m_buttons;
+        std::map<uint, ButtonLinkStruct> buttonLinks;
+        //uint max
 };
 
 inline ButtonManager buttonManager;

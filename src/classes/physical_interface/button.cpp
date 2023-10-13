@@ -65,8 +65,9 @@ void Button::check() {
 
 void ButtonManager::link(std::vector<Button*> buttons, std::function<void()> onPress, std::function<void()> onLongPress)
 {
+    //buttonLinks[buttonLinks.count()] = ButtonLinkStruct{std::vector<Button*>(buttons), onPress, onLongPress};
+    }
 
-}
 
 void ButtonManager::addButton(Button* button)
 {
