@@ -18,6 +18,7 @@ void DisplayUI::begin()
   display.begin();
   button1.begin();
   button2.begin();
+  ButtonManager.link(std::vector<Button*>{&button1,&button2}, [](){Serial.println("duble press");});
 }
 
 void DisplayUI::defalutForShowNumber(int num)

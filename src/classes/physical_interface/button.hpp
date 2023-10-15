@@ -35,7 +35,6 @@ class ButtonManager_t {
     	std::map<uint, Button*> buttons;
         std::map<uint, ButtonLinkStruct> buttonLinks;
         uint currentMaxButtonId=0,currentMaxLinkId=0, asyncId;
-        static bool ButtonLinkStructComparasainForSort(uint linkId1,uint linkId2, std::vector<Button*> buttonLinks);
         std::vector<uint>  sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(std::vector<uint> linkIds);
 };
 

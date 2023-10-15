@@ -77,7 +77,7 @@ void ButtonManager_t::check()
                     bool allPressed=true;
                     for(auto button: buttonLinks[linkId].buttonPtrs)
                     {
-                        if(button->pressStartInMillies-button->pressedForMillis<=5&&button->pressed==true)
+                        if(button->pressStartInMillies-button->pressedForMillis<=15&&button->pressed==true)
                         {
                             allPressed=true;
                         }
@@ -118,9 +118,4 @@ std::vector<uint> ButtonManager_t::sortVectorOfIntsThatAreLinkIdsByTheNumberOfBu
 {
     std::sort(linkIds.begin(), linkIds.end(),[&](uint linkId1,uint linkId2){return( buttonLinks[linkId1].buttonPtrs.size()>buttonLinks[linkId2].buttonPtrs.size());});
     return linkIds;
-}
-
-bool ButtonManager_t::ButtonLinkStructComparasainForSort(uint linkId1,uint linkId2)
-{
-    
 }

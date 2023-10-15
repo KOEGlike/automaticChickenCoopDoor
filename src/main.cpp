@@ -14,6 +14,7 @@ void setup() {
   door.begin();
 }
 
-void loop() {
-Async.check();
+void loop() 
+{
+  Async.check();
 }
