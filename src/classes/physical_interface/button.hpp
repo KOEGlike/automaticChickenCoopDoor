@@ -9,11 +9,10 @@ class ButtonManager;
 class Button {
     public:
         Button(int pin, std::function<void()> press , std::function<void()> longPress , bool* globalPressed);
-        ~Button();
-        uint32_t asyncId;
         void begin();
         friend class ButtonManager_t;
     protected:
+        std::vector<uint> linkIds;
         int m_pin;
         std::function<void()> m_longPress, m_press;
         bool pressed = false,wasHighBefore=true;
@@ -23,13 +22,12 @@ class Button {
 struct ButtonLinkStruct{
 std::vector<Button*> buttonPtrs;
 std::function<void()> onPress;
-std::function<void()> onLongPress;
 };
 
 class ButtonManager_t {
     public:
         ~ButtonManager_t();
-        void link(std::vector<Button*> buttons, std::function<void()> onPress, std::function<void()> onLongPress);
+        void link(std::vector<Button*> buttons, std::function<void()> onPress);
         void addButton(Button* button);
         void check();
         void begin();
@@ -37,6 +35,8 @@ class ButtonManager_t {
     	std::map<uint, Button*> buttons;
         std::map<uint, ButtonLinkStruct> buttonLinks;
         uint currentMaxButtonId=0,currentMaxLinkId=0, asyncId;
+        static bool ButtonLinkStructComparasainForSort(uint linkId1,uint linkId2, std::vector<Button*> buttonLinks);
+        std::vector<uint>  sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(std::vector<uint> linkIds);
 };
 
 inline ButtonManager_t ButtonManager;
