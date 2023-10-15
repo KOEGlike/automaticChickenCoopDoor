@@ -7,19 +7,17 @@
 
 class ButtonManager;
 class Button {
-protected:
-    int m_pin;
-    bool* m_globalPressed, wasHighBefore=true;
-    std::function<void()> m_longPress, m_press;
-    bool pressed = false;
-    unsigned long millisForLongPress = 300, debounceInMillis = 2, pressedForMillis = 0, pressStartInMillies=0;
-public:
-    Button(int pin, std::function<void()> press , std::function<void()> longPress , bool* globalPressed);
-    ~Button();
-    uint32_t asyncId;
-    void check();
-    void begin();
-    friend class ButtonManager;
+    public:
+        Button(int pin, std::function<void()> press , std::function<void()> longPress , bool* globalPressed);
+        ~Button();
+        uint32_t asyncId;
+        void begin();
+        friend class ButtonManager_t;
+    protected:
+        int m_pin;
+        std::function<void()> m_longPress, m_press;
+        bool pressed = false,wasHighBefore=true;
+        unsigned long millisForLongPress = 300, debounceInMillis = 2, pressedForMillis = 0, pressStartInMillies=0;
 };
 
 struct ButtonLinkStruct{
@@ -28,18 +26,19 @@ std::function<void()> onPress;
 std::function<void()> onLongPress;
 };
 
-class ButtonManager {
+class ButtonManager_t {
     public:
+        ~ButtonManager_t();
         void link(std::vector<Button*> buttons, std::function<void()> onPress, std::function<void()> onLongPress);
         void addButton(Button* button);
         void check();
         void begin();
     protected:
-    	std::map<uint, Button*> m_buttons;
+    	std::map<uint, Button*> buttons;
         std::map<uint, ButtonLinkStruct> buttonLinks;
-        //uint max
+        uint currentMaxButtonId=0,currentMaxLinkId=0, asyncId;
 };
 
-inline ButtonManager buttonManager;
+inline ButtonManager_t ButtonManager;
 
 #endif

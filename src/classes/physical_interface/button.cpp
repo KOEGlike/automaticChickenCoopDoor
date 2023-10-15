@@ -4,7 +4,6 @@
 
 Button::Button(int pin, std::function<void()> press, std::function<void()> longPress, bool* globalPressed) {
     m_pin = pin;
-    m_globalPressed = globalPressed;
     m_longPress = longPress;
     m_press = press;
     //Serial.println("Button init");
@@ -19,65 +18,76 @@ Async.deleteCallBack(asyncId);
 }
 
 void Button::begin() {
-pinMode(m_pin, INPUT_PULLUP);
-
-Serial.println("Button begiiin");
-Async.registerCallback(0, -1, [&](){check();});
-Serial.println("Button begin");
+    pinMode(m_pin, INPUT_PULLUP);
+    //Async.registerCallback(0, -1, [&](){check();});
+    ButtonManager.addButton(this);
 }
 
-void Button::check() {
-    //Serial.println("check");
-    if (digitalRead(m_pin) == HIGH) {
-        pressed = false;
-        *m_globalPressed = false;
-    } else {
-        pressedForMillis = millis() - pressStartInMillies;
-        if (pressed == false&&wasHighBefore) {
-            pressStartInMillies = millis();
-            pressedForMillis=0;
-            pressed = true;
+
+
+ButtonManager_t::~ButtonManager_t() 
+{
+    Async.deleteCallBack(asyncId);
+}
+
+void ButtonManager_t::begin() 
+{
+    asyncId = Async.registerCallback(0, -1, [&](){check();});
+}
+
+void ButtonManager_t::link(std::vector<Button*> buttons, std::function<void()> onPress, std::function<void()> onLongPress)
+{
+    buttonLinks[currentMaxLinkId] = ButtonLinkStruct{std::vector<Button*>(buttons), onPress, onLongPress};
+    currentMaxLinkId++;
+}
+
+void ButtonManager_t::addButton(Button* button)
+{
+    buttons[currentMaxButtonId] = button;
+    currentMaxButtonId++;
+}
+
+void ButtonManager_t::check() 
+{
+    for(const auto &buttonEle :buttons)
+    {
+        bool pinIsHigh=digitalRead(buttonEle.second->m_pin)==HIGH?true:false;
+        if (pinIsHigh == HIGH) 
+        {
+            buttonEle.second->pressed = false;
+        } 
+        else 
+        {
+            buttonEle.second->pressedForMillis = millis() - buttonEle.second->pressStartInMillies;
+            if (buttonEle.second->pressed == false&&buttonEle.second->wasHighBefore) 
+            {
+                buttonEle.second->pressStartInMillies = millis();
+                buttonEle.second->pressedForMillis=0;
+                buttonEle.second->pressed = true;
+            }
         }
 
-        /*if (*m_globalPressed == false) {
-            pressed = true;
-            *m_globalPressed = true;
-        }*/
-    }
-
-    if ( pressedForMillis >= debounceInMillis) {
-        if (pressedForMillis < millisForLongPress&&pressed==false) { 
-            m_press();
-            Serial.println("m_press");
-        } else if(pressed == true&&pressedForMillis >= millisForLongPress){
-            m_longPress();
-            pressed = false;
-            Serial.println("m_longPress");
+        if ( buttonEle.second->pressedForMillis >= buttonEle.second->debounceInMillis) 
+        {
+            if (buttonEle.second->pressedForMillis < buttonEle.second->millisForLongPress&&buttonEle.second->pressed==false) 
+            { 
+                buttonEle.second->m_press();
+                Serial.println("m_press");
+            } 
+            else if(buttonEle.second->pressed == true&&buttonEle.second->pressedForMillis >= buttonEle.second->millisForLongPress)
+            {
+                buttonEle.second->m_longPress();
+                buttonEle.second->pressed = false;
+                Serial.println("m_longPress");
+            }
         }
+
+        if (buttonEle.second->pressed == false) 
+        {
+            buttonEle.second->pressedForMillis = 0;
+        }
+
+        buttonEle.second->wasHighBefore=pinIsHigh;
     }
-
-    if (pressed == false) {
-        pressedForMillis = 0;
-    }
-
-    wasHighBefore=digitalRead(m_pin)==HIGH?true:false;
-}
-
-void ButtonManager::link(std::vector<Button*> buttons, std::function<void()> onPress, std::function<void()> onLongPress)
-{
-    //buttonLinks[buttonLinks.count()] = ButtonLinkStruct{std::vector<Button*>(buttons), onPress, onLongPress};
-    }
-
-
-void ButtonManager::addButton(Button* button)
-{
-    
-}
-
-void ButtonManager::check() {
-
-}
-
-void ButtonManager::begin() {
 
 }
