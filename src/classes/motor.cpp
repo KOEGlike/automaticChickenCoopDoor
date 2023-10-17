@@ -17,6 +17,7 @@ void Motor::changeState(float percentage)
 void Motor::begin()
 {
  m_stepper.begin();
+ m_stepper.enable();
 }
 
 void Motor::moveSteps(long steps)
