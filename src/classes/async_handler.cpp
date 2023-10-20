@@ -41,21 +41,21 @@ void AsyncHandler::check()
     return;
   }
   
-  for (const auto &ele :callbacks)
+  for (const auto &[id, callback] :callbacks)
   {
-    if(callbacks[ele.first].timesCalled>=callbacks[ele.first].times&&callbacks[ele.first].times>=0)
+    if(callbacks[id].timesCalled>=callbacks[id].times&&callbacks[id].times>=0)
     {
-      callbacks[ele.first].onend();
-      deleteCallBack(ele.first);
+      callbacks[id].onend();
+      deleteCallBack(id);
     }
-    else if(millis()-callbacks[ele.first].lastCalled>=callbacks[ele.first].delay)
+    else if(millis()-callbacks[id].lastCalled>=callbacks[id].delay)
     {
-      callbacks[ele.first].callback();
+      callbacks[id].callback();
       
-      callbacks[ele.first].lastCalled=millis();
-      if(callbacks[ele.first].times>0)
+      callbacks[id].lastCalled=millis();
+      if(callbacks[id].times>0)
       {
-        callbacks[ele.first].timesCalled++;
+        callbacks[id].timesCalled++;
       }    
     }
   }

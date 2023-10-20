@@ -5,7 +5,7 @@
 #include <vector>
 #include "../async_handler.hpp"
 
-class ButtonManager;
+class ButtonManager_t;
 class Button {
     public:
         Button(int pin, std::function<void()> press , std::function<void()> longPress , bool* globalPressed);
@@ -36,6 +36,11 @@ class ButtonManager_t {
         std::map<uint, ButtonLinkStruct> buttonLinks;
         uint currentMaxButtonId=0,currentMaxLinkId=0, asyncId;
         std::vector<uint>  sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(std::vector<uint> linkIds);
+        
+        // New methods
+        void checkButtonPress(Button* button);
+        void handleButtonPress(Button* button);
+        void checkMultiplePress(Button* button);
 };
 
 inline ButtonManager_t ButtonManager;
