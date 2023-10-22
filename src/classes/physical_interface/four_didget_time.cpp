@@ -12,10 +12,7 @@ FourDigitTime::FourDigitTime():H1(3,[&](int times){H1OnMutate(times);}),
  H2(10,[&](int times){H2OnMutate(times);}), 
  M1(6,[&](int times){M1OnMutate(times);}), 
  M2(10,[&](int times){M2OnMutate(times);})
-{
-   // Serial.println("FourDigitTime init");
-    //delay(500);
-}
+{}
 
 void FourDigitTime::H1OnMutate(int amount)
 {
@@ -23,12 +20,10 @@ void FourDigitTime::H1OnMutate(int amount)
     if(H2.getState()>4&&H1.getAmountOfStates()>2)
     {
         H1.setAmountOfStates(2);
-        //Serial.println("H1OnMutate");
     }
      else if(H2.getState()<=4&&H1.getAmountOfStates()!=3)
     {
         H1.setAmountOfStates(3);
-        //Serial.println("H1OnMutttttate");
     }
     
 }

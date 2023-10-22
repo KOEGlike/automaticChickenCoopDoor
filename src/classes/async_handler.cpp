@@ -23,14 +23,12 @@ uint32_t AsyncHandler::registerCallback(unsigned long delay,uint32_t times, std:
     cbd.lastCalled=millis();
   }
   callbacks[maxCurrentId]=cbd;
-   Serial.println("registering callback");
   return maxCurrentId++;
 }
 
 
 void AsyncHandler::check()
 {
-  // Serial.println("async check");
   if(callbacks.size()==0)
   {
     return;

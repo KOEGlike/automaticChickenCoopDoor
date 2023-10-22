@@ -9,8 +9,6 @@ DisplayUI::DisplayUI(ChickenDoorInterface *interface,DisplayUiConfig *config):
     times(interface->getTimes())
 {
   m_interface=interface;
-  //Serial.println("DisplayUi constructor");
-  //delay(500);
 }
 
 void DisplayUI::begin()
@@ -78,10 +76,8 @@ void DisplayUI::addToCurrentSegment()
 
 void DisplayUI::editingTogle()
 {
-  Serial.println("editingToglewew");
   if(isEditing){
     isEditing=false;
-    Serial.println("editingTogle");
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
     m_interface->updateTimes(times);

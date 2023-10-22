@@ -100,7 +100,6 @@ void TM1637Display::setSegments(uint8_t segments[], uint8_t length, uint8_t pos)
 	// Write the data bytes
 	for (uint8_t k=0; k < length; k++){
 	  writeByte(segments[k]);
-    //Serial.println(currentSegments[k]);
     }
 
 	stop();

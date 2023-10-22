@@ -6,20 +6,17 @@ extern "C" {
   #include <inttypes.h>
 }
 CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
-  : TM1637Display(pinClk, pinDIO) {
-    //Serial.println("CustomDisplayBehavior constuct");
-    //delay(500);
-    
+  : TM1637Display(pinClk, pinDIO) 
+  {
   }
   CustomDisplayBehavior :: ~CustomDisplayBehavior() {
-    Serial.println("CustomDisplayBehavior destruct");
   Async.deleteCallBack(asyncId);
   }
 
 void CustomDisplayBehavior::begin() { 
-Serial.println("CustomDisplayBehavior begin");
+
 Async.registerCallback(0,-1, [&](){check();});
-Serial.println("CustomDisplayBehavior begin check");
+
 } 
 
 void CustomDisplayBehavior::blinkCheck() {

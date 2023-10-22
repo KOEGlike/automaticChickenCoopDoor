@@ -8,7 +8,6 @@ displayUI{&interface,displayUiConfig},
 motorInterface{getMotorState, setMotorState, getMotorCalibrationState, setMotorCalibrationState, settingStateClosed, settingStateOpen, finishedCalibrating},
 motor{motorConfig, &motorInterface}
 {
- // Serial.println("ChickenDoor constructor"); 
 }
 
 
