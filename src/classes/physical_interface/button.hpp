@@ -20,14 +20,22 @@ class Button {
 };
 
 struct ButtonLinkStruct{
-std::vector<Button*> buttonPtrs;
-std::function<void()> onPress;
+    ButtonLinkStruct() : maxDelta(0) {}
+    ButtonLinkStruct(std::vector<Button*> buttonPtrs, std::function<void()> onPress,int maxDelta)
+    {
+        this->buttonPtrs = buttonPtrs;
+        this->onPress = onPress;
+        this->maxDelta = maxDelta;
+    }
+    std::vector<Button*> buttonPtrs;
+    std::function<void()> onPress;
+    int maxDelta;
 };
 
 class ButtonManager_t {
     public:
         ~ButtonManager_t();
-        void link(std::vector<Button*> buttons, std::function<void()> onPress);
+        void link(std::vector<Button*> buttons, std::function<void()> onPress, int maxDelta);
         void addButton(Button* button);
         void check();
         void begin();

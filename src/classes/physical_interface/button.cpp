@@ -24,9 +24,10 @@ void ButtonManager_t::begin()
     asyncId = Async.registerCallback(0, -1, [&](){check();});
 }
 
-void ButtonManager_t::link(std::vector<Button*> buttons, std::function<void()> onPress)
+void ButtonManager_t::link(std::vector<Button*> buttons, std::function<void()> onPress, int maxDelta)
 {
-    buttonLinks[currentMaxLinkId] = ButtonLinkStruct{std::vector<Button*>(buttons), onPress};
+    ButtonLinkStruct link{buttons, onPress, maxDelta};
+    buttonLinks[currentMaxLinkId] = link;
     for(auto button : buttons)
     {
         button->linkIds.push_back(currentMaxLinkId);
@@ -46,102 +47,82 @@ void ButtonManager_t::check()
 {
     for(const auto &[id, btnPtr] :buttons)
     {
-        checkButtonPress(btnPtr);
-        handleButtonPress(btnPtr);
-        
-        btnPtr->wasHighBefore = digitalRead(btnPtr->m_pin) == HIGH ? true : false;
+        bool pinIsHigh=digitalRead(btnPtr->m_pin)==HIGH?true:false;
+        if (pinIsHigh == HIGH) 
+        {
+            btnPtr->pressed = false;
+        } 
+        else 
+        {
+            btnPtr->pressedForMillis = millis() - btnPtr->pressStartInMillies;
+            if (btnPtr->pressed == false&&btnPtr->wasHighBefore) 
+            {
+                btnPtr->pressStartInMillies = millis();
+                btnPtr->pressedForMillis=0;
+                btnPtr->pressed = true;
+            }
+        }
+
+        if ( btnPtr->pressedForMillis >= btnPtr->debounceInMillis) 
+        {
+            if (btnPtr->pressedForMillis < btnPtr->millisForLongPress&&btnPtr->pressed==false) 
+            { 
+                btnPtr->m_press();
+            } 
+            else if(btnPtr->pressed == true&&btnPtr->pressedForMillis >= btnPtr->millisForLongPress)
+            {
+                bool wasMultiplePress=false;
+                for(auto linkId : btnPtr->linkIds)
+                {
+                    bool allPressed=true;
+                    for(auto button: buttonLinks[linkId].buttonPtrs)
+                    {   
+                        if(button->millisForLongPress-button->pressedForMillis<=buttonLinks[linkId].maxDelta&&button->pressed==true)
+                        {
+                            allPressed=true;                        
+                        }
+                        else
+                        {
+                            allPressed=false;
+                        }
+
+                        if(allPressed==false)
+                        {
+                            break;
+                        }
+                    }
+                    if(allPressed==true)
+                    {
+                        buttonLinks[linkId].onPress();
+                        wasMultiplePress=true;
+                        for(auto button: buttonLinks[linkId].buttonPtrs)
+                        {
+                            button->pressed=false;
+                            button->pressedForMillis=0;
+                        }
+                        break;
+                    }
+                }
+                if(wasMultiplePress==false)
+                {
+                    btnPtr->m_longPress();
+                    btnPtr->pressed = false;
+                }
+            }
+        }
+
+        if (btnPtr->pressed == false) 
+        {
+            btnPtr->pressedForMillis = 0;
+        }
+
+        btnPtr->wasHighBefore=pinIsHigh;
     }
+
 }
-
-
 
 std::vector<uint> ButtonManager_t::sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(std::vector<uint> linkIds)
 {
     std::sort(linkIds.begin(), linkIds.end(),[&](uint linkId1,uint linkId2){return( buttonLinks[linkId1].buttonPtrs.size()>buttonLinks[linkId2].buttonPtrs.size());});
     return linkIds;
-}
-
-void ButtonManager_t::checkButtonPress(Button *button)
-{
-    bool pinIsHigh = digitalRead(button->m_pin) == HIGH ? true : false;
-    if (pinIsHigh == HIGH) 
-    {
-        button->pressed = false;
-    } 
-    else 
-    {
-        button->pressedForMillis = millis() - button->pressStartInMillies;
-        if (button->pressed == false && button->wasHighBefore) 
-        {
-            button->pressStartInMillies = millis();
-            button->pressedForMillis = 0;
-            button->pressed = true;
-        }
-    }
-}
-
-void ButtonManager_t::checkMultiplePress(Button *button)
-{
-    bool wasMultiplePress = false;
-    for(auto linkId : button->linkIds)
-    {
-        bool allPressed = true;
-        for(auto linkedButton: buttonLinks[linkId].buttonPtrs)
-        {
-            if(linkedButton->pressStartInMillies - linkedButton->pressedForMillis <= 15 && linkedButton->pressed == true)
-            {
-                allPressed = true;
-                Serial.println(button->m_pin);
-            }
-            else
-            {
-                allPressed = false;
-                Serial.println("no simal");
-            }
-
-            if(allPressed == false)
-            {
-                Serial.println("no siiimal");
-                break;
-            }
-        }
-        if(allPressed == true)
-        {
-            buttonLinks[linkId].onPress();
-            Serial.println("simal");
-            wasMultiplePress = true;
-            break;
-        }
-    }
-    
-    if(wasMultiplePress)
-    {
-        button->pressed = false;
-    }
-}
-
-void ButtonManager_t::handleButtonPress(Button *button)
-{
-    if (button->pressedForMillis >= button->debounceInMillis) 
-    {
-        if (button->pressedForMillis < button->millisForLongPress && button->pressed == false) 
-        { 
-            button->m_press();
-            Serial.println("m_press");
-        } 
-        else if(button->pressed == true && button->pressedForMillis >= button->millisForLongPress)
-        {
-            checkMultiplePress(button);
-            if(!button->pressed)
-            {
-                button->m_longPress();
-                Serial.println("m_longPress");
-            }
-        }
-    }
-
-    if (button->pressed == false) 
-    {
-        button->pressedForMillis = 0;
-    }
 }
