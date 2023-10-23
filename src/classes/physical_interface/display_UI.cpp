@@ -3,7 +3,7 @@
 DisplayUI::DisplayUI(ChickenDoorInterface *interface,DisplayUiConfig *config): 
     button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
     button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
-    button3{config->btn3Pin, [&](){btn3ShortFunc();}, [&](){btn3LongFunc();}},
+    buttonPwr{config->btn3Pin, [&](){btnPwrShortFunc();}, [&](){btnPwrLongFunc();}},
     display(config->clkPin, config->dioPin),
     currentSelectedSegment(4), 
     currentChangingTime(3),
@@ -17,7 +17,7 @@ void DisplayUI::begin()
   display.begin();
   button1.begin();
   button2.begin();
-  button3.begin();
+  buttonPwr.begin();
 }
 
 void DisplayUI::defalutForShowNumber(int num)
@@ -68,7 +68,7 @@ void DisplayUI::dotTimeingRouter(int state)
 
 void DisplayUI::addToCurrentSegment()
 {
-  if(isEditing==false){
+  if(isOn==false){
   return;
   }
   digits.mutateOneDigit(currentSelectedSegment.getState(), 1,false);
@@ -77,8 +77,8 @@ void DisplayUI::addToCurrentSegment()
 
 void DisplayUI::editingTogle()
 {
-  if(isEditing){
-    isEditing=false;
+  if(isOn){
+    isOn=false;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
     m_interface->updateTimes(times);
@@ -88,7 +88,7 @@ void DisplayUI::editingTogle()
     display.clear();
     return;
     }
-    isEditing=true;
+    isOn=true;
     display.setBrightness(7);
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
@@ -110,7 +110,7 @@ void DisplayUI::moveCursorForward()
 
 void DisplayUI::changeCurrentChangingTime()
 {
-  if(isEditing==false){
+  if(isOn==false){
   return;
   }
 
@@ -144,12 +144,13 @@ void DisplayUI::btn2LongFunc()
 
 }
 
-void DisplayUI::btn3ShortFunc()
+void DisplayUI::btnPwrShortFunc()
 {
-
+  if(!isOn)return;
+ //m_interface->getMotor()->//continue here
 }
 
-void DisplayUI::btn3LongFunc()
+void DisplayUI::btnPwrLongFunc()
 {
 
 }

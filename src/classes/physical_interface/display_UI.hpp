@@ -27,7 +27,7 @@ class DisplayUI
 
 		ChickenDoorInterface *m_interface;
 		MoveTimes times;
-		bool isEditing=false;
+		bool isOn=false;
 
 		FourDigitTime digits;
 		StateCounter currentSelectedSegment;
@@ -46,17 +46,17 @@ class DisplayUI
 
 		void btn1ShortFunc();
 		void btn2ShortFunc();
-		void btn3ShortFunc();
+		void btnPwrShortFunc();
 
 		void btn1LongFunc();
 		void btn2LongFunc();
-		void btn3LongFunc();
+		void btnPwrLongFunc();
 		
 		CustomDisplayBehavior display;
 		
 		Button button1;
 		Button button2;
-		Button button3;
+		Button buttonPwr;
 
 };
 

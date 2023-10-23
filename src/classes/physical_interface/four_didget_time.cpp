@@ -107,6 +107,3 @@ void FourDigitTime::mutateOneDigit(int placement, int mutate,bool stepover) {
     m_stepOver=true;
 
 }
-
-
-
