@@ -4,6 +4,7 @@
 #include <TM1637Display.h>
 #include <functional>
 #include "../async_handler.hpp"
+#include <vector>
 
 extern "C" {
   #include <stdlib.h>
@@ -18,7 +19,7 @@ protected:
     std::function<void()> bilinkSegmentsAnAmountOnEndFunc = []() {},bilinkDotsAnAmountOnEndFunc= []() {};
     void dotBlinkCheck();
     void blinkCheck();
-    uint32_t asyncId;
+    uint32_t asyncId, scrollAsyncId;
      void check();
 public:
     CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO);
@@ -37,6 +38,9 @@ public:
     void blinkDotsAnAmount(unsigned int amount, unsigned long offTime = 50, unsigned long onTime = 50, std::function<void()> onEnd = []() {});
     void blinkDotsAnAmountThenDelayContinuously(unsigned int amount, unsigned long longOffTime = 50,unsigned long offTime = 50, unsigned long onTime = 50);
     void blinkDotsAnAmountThenDelayContinuouslyChangeAmount(unsigned int amount);
+
+    void scrollSegmentsContinuouslyOn(std::vector<uint8_t> segments, unsigned long millisForOneMove);
+    void scrollSegmentsContinuouslyOff();
     };
 
 #endif

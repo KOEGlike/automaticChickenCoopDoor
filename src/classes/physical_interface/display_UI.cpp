@@ -1,8 +1,9 @@
 #include "display_UI.hpp"
 
 DisplayUI::DisplayUI(ChickenDoorInterface *interface,DisplayUiConfig *config): 
-    button1(config->btn1Pin, [&]() {   addToCurrentSegment();},[&]() {editingTogle();}, &globalPressed),
-    button2 (config->btn2Pin, [&]() {moveCursorForward();},[&]() {changeCurrentChangingTime();}, &globalPressed), 
+    button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
+    button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
+    button3{config->btn3Pin, [&](){btn3ShortFunc();}, [&](){btn3LongFunc();}},
     display(config->clkPin, config->dioPin),
     currentSelectedSegment(4), 
     currentChangingTime(3),
@@ -16,6 +17,7 @@ void DisplayUI::begin()
   display.begin();
   button1.begin();
   button2.begin();
+  button3.begin();
 }
 
 void DisplayUI::defalutForShowNumber(int num)
@@ -27,7 +29,6 @@ int DisplayUI::digitValueRouter(int state)
 {tmElements_t currrentTime= m_interface->getCurrentTime();
   switch(state) {
   case 0:
-     
     return currrentTime.Hour*100+currrentTime.Minute; 
   case 1:
    return times.openTime.Hour*100+times.openTime.Minute;
@@ -123,3 +124,32 @@ void DisplayUI::changeCurrentChangingTime()
 
 }
 
+void DisplayUI::btn1ShortFunc()
+{
+
+}
+
+void DisplayUI::btn1LongFunc()
+{
+
+}
+
+void DisplayUI::btn2ShortFunc()
+{
+
+}
+
+void DisplayUI::btn2LongFunc()
+{
+
+}
+
+void DisplayUI::btn3ShortFunc()
+{
+
+}
+
+void DisplayUI::btn3LongFunc()
+{
+
+}

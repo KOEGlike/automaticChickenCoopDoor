@@ -14,6 +14,9 @@ class MotorCalibrator{
     void turn(bool isClockwise);
     void setFirstState();
     void setSecondState();
+    void setState();
+    bool isCalibrating();
+    friend class Motor;
   protected:
     Motor *m_motor;
     long m_stepAmout, m_currentStep;

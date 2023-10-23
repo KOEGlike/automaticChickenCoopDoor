@@ -8,7 +8,7 @@
 class ButtonManager_t;
 class Button {
     public:
-        Button(int pin, std::function<void()> press , std::function<void()> longPress , bool* globalPressed);
+        Button(int pin, std::function<void()> press , std::function<void()> longPress);
         void begin();
         friend class ButtonManager_t;
     protected:

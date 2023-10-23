@@ -48,14 +48,15 @@ struct ChickenDoorInterface
 
 struct DisplayUiConfig
 {
-  DisplayUiConfig(uint8_t clk, uint8_t dio, uint8_t btn1, uint8_t btn2)
+  DisplayUiConfig(uint8_t clk, uint8_t dio, uint8_t btn1, uint8_t btn2, uint8_t btn3)
   {
     clkPin = clk;
     dioPin = dio;
     btn1Pin = btn1;
     btn2Pin = btn2;
+    btn3Pin = btn3;
   }
-  uint8_t clkPin, dioPin,  btn1Pin,  btn2Pin;
+  uint8_t clkPin, dioPin,  btn1Pin,  btn2Pin,btn3Pin;
 };
 
 struct MotorCalibrationState

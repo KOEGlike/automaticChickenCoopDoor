@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <functional>
 
-Button::Button(int pin, std::function<void()> press, std::function<void()> longPress, bool* globalPressed) {
+Button::Button(int pin, std::function<void()> press, std::function<void()> longPress) {
     m_pin = pin;
     m_longPress = longPress;
     m_press = press;

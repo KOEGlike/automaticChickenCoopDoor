@@ -3,8 +3,11 @@
 Motor::Motor(MotorConfig *config, MotorInterface *interface): 
 m_stepper{config->steps, config->dir, config->step, config->enable}, 
 m_interface{interface}, calibrator{this}
+{}
+
+bool MotorCalibrator::isCalibrating()
 {
-  
+  return !m_isDone;
 }
 
 void Motor::changeState(float percentage)
@@ -41,6 +44,14 @@ void MotorCalibrator::start(long stepAmout, bool firstSetIsBottom)
   m_isDone=false;
   m_currentStep=0;
   m_firstSetIsBottom=firstSetIsBottom;
+  if(firstSetIsBottom)
+  {
+    m_motor->m_interface->settingStateClosed();
+  }
+  else
+  {
+    m_motor->m_interface->settingStateOpen();
+  }
 }
 
 
@@ -59,7 +70,14 @@ void MotorCalibrator::setFirstState()
   m_firstIsSet=true;
   m_motor->m_interface->setState(m_firstSetIsBottom?0:1);
   m_currentStep=0;
-  return;
+  if(m_firstSetIsBottom)
+  {
+    m_motor->m_interface->settingStateOpen();
+  }
+  else
+  {
+    m_motor->m_interface->settingStateClosed();
+  }
 }
 
 void MotorCalibrator::setSecondState()
@@ -70,4 +88,17 @@ void MotorCalibrator::setSecondState()
   m_motor->m_interface->setState(m_firstSetIsBottom?1:0);
   m_motor->m_interface->setCalibrationState(MotorCalibrationState(m_upIsClockwise, m_firstSetIsBottom?m_currentStep:-m_currentStep));
   m_isDone=true;
+  m_motor->m_interface->finishedCalibrating();
+}
+
+void MotorCalibrator::setState()
+{
+  if(m_isDone==true)return;
+  if(m_firstIsSet==false)
+  {
+    setFirstState();
+  }
+  else{
+    setSecondState();
+  }
 }

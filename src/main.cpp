@@ -7,7 +7,8 @@ DisplayUiConfig displayUiConfig{
   4,//clk
   5,//dio
   8,//btn1
-  3//bnt2
+  3,//bnt2
+  45//btn3
   };
 MotorConfig motorConfig{
   200,//stepper motor steps amount

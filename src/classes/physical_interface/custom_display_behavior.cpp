@@ -206,3 +206,25 @@ void CustomDisplayBehavior::check() {
   dotBlinkCheck();
   blinkCheck();
 }
+
+void CustomDisplayBehavior::scrollSegmentsContinuouslyOn(std::vector<uint8_t> segments, unsigned long millisForOneMove)
+{
+  uint i=0;
+  std::function<void()> 
+  scrollAsyncFunc = [&]() 
+  {
+   if(i>=segments.size()) i=0;
+    uint8_t segmentsToDisplay[4];
+    segmentsToDisplay[0]=segments[i];
+    segmentsToDisplay[1]=segments[i+1<=segments.size()-3?i+1:3-(segments.size()-(i+1))];
+    segmentsToDisplay[2]=segments[i+2<=segments.size()-3?i+2:3-(segments.size()-(i+2))];
+    segmentsToDisplay[3]=segments[i+3<=segments.size()-3?i+3:3-(segments.size()-(i+3))];
+    i++;
+  };
+  scrollAsyncId= Async.registerCallback(millisForOneMove, -1, scrollAsyncFunc);
+}
+
+void CustomDisplayBehavior::scrollSegmentsContinuouslyOff()
+{
+  Async.deleteCallBack(scrollAsyncId);
+}
