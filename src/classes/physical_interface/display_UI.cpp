@@ -75,7 +75,7 @@ void DisplayUI::addToCurrentSegment()
   defalutForShowNumber(digits.getDigits());
 }
 
-void DisplayUI::editingTogle()
+void DisplayUI::onOffTogle()
 {
   if(isOn){
     isOn=false;
@@ -144,13 +144,18 @@ void DisplayUI::btn2LongFunc()
 
 }
 
-void DisplayUI::btnPwrShortFunc()
+void DisplayUI::switchDoorState()
 {
   if(!isOn)return;
  m_interface->getMotor()->changeState(m_interface->getMotor()->getState()>=0.5?0:1);
 }
 
+void DisplayUI::btnPwrShortFunc()
+{
+  switchDoorState();
+}
+
 void DisplayUI::btnPwrLongFunc()
 {
-
+  onOffTogle();
 }
