@@ -147,7 +147,7 @@ void DisplayUI::btn2LongFunc()
 void DisplayUI::btnPwrShortFunc()
 {
   if(!isOn)return;
- //m_interface->getMotor()->//continue here
+ m_interface->getMotor()->changeState(m_interface->getMotor()->getState()>=0.5?0:1);
 }
 
 void DisplayUI::btnPwrLongFunc()
