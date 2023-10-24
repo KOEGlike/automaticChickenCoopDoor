@@ -99,8 +99,8 @@ void DisplayUI::editingTogle()
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
     m_interface->updateTimes(times);
-    display.blinkSegmentsContinuouslyOff();
-    display.blinkDotsContinuouslyOff();
+    display.stopAllActivities();
+    display.clear();
     return;
   }
     isEditing=true;
