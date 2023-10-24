@@ -38,9 +38,9 @@ MotorCalibrator::MotorCalibrator(Motor *motor){
   m_motor=motor;
 }
 
-void MotorCalibrator::start(long stepAmout, bool firstSetIsBottom)
+void MotorCalibrator::start(bool firstSetIsBottom)
 {
-  m_stepAmout = stepAmout;
+  if(m_isDone==false)return;
   m_isDone=false;
   m_currentStep=0;
   m_firstSetIsBottom=firstSetIsBottom;
@@ -55,11 +55,11 @@ void MotorCalibrator::start(long stepAmout, bool firstSetIsBottom)
 }
 
 
-void MotorCalibrator::turn(bool isClockwise)
+void MotorCalibrator::turn(int amountOfSteps,bool isClockwise)
 {
   if(m_isDone==true)return;
-  m_currentStep+=isClockwise?m_stepAmout:-m_stepAmout;
-  m_motor->m_stepper.move(isClockwise?m_stepAmout:-m_stepAmout);
+  m_currentStep+=isClockwise?amountOfSteps:-amountOfSteps;
+  m_motor->m_stepper.move(isClockwise?amountOfSteps:-amountOfSteps);
 }
 
 

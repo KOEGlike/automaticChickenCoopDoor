@@ -27,22 +27,27 @@ class DisplayUI
 
 		ChickenDoorInterface *m_interface;
 		MoveTimes times;
-		bool isOn=false;
+		bool isOn=false, isEditing=false;
 
 		FourDigitTime digits;
 		StateCounter currentSelectedSegment;
 		StateCounter currentChangingTime;
 
 		void defalutForShowNumber(int num);
-		
+		void switchDoorState();
+		void onOffTogle();
+
 		int  digitValueRouter(int state);
 		void setTimeRouter(int didgets, int state);
 		void dotTimeingRouter(int state);
 
-		void addToCurrentSegment();;
-		void moveCursorForward();
+		void mutateCurrentSegment(int amount);
+		void moveCursor(bool forward);
 		void editingTogle();
 		void changeCurrentChangingTime();
+		
+		void startCaibration();
+		void setCalobrationState();
 
 		void btn1ShortFunc();
 		void btn2ShortFunc();

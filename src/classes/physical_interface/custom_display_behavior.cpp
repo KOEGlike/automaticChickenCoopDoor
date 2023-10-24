@@ -228,3 +228,10 @@ void CustomDisplayBehavior::scrollSegmentsContinuouslyOff()
 {
   Async.deleteCallBack(scrollAsyncId);
 }
+
+void CustomDisplayBehavior::stopAllActivities()
+{
+  dotBlinkAnAmountLongDelayContinuos=-1;dotBlinkAnAmountLongDelayContinuosStart; 
+  timesBlinked = 0; timesToBlink = -1;timesDotBlinked = 0; timesDotToBlink = -1;
+  isBlinking = false; isContinuouslyBlinking = false; dotIsBlinking=false;dotIsContinuouslyBlinking = false; dotIsOn=false;isDotBlinkAnAmountLongDelayContinuos=false;
+}

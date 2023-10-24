@@ -10,8 +10,8 @@ class MotorInterface;
 class MotorCalibrator{
   public:
     MotorCalibrator(Motor *motor);
-    void start(long stepAmout, bool firstSetIsBottom=true);
-    void turn(bool isClockwise);
+    void start( bool firstSetIsBottom=true);
+    void turn(int amountOfSteps,bool isClockwise);
     void setFirstState();
     void setSecondState();
     void setState();
@@ -19,7 +19,7 @@ class MotorCalibrator{
     friend class Motor;
   protected:
     Motor *m_motor;
-    long m_stepAmout, m_currentStep;
+    long  m_currentStep;
     bool m_upIsClockwise=true, m_firstSetIsBottom, m_isDone=true, m_firstIsSet=false;
 };
 

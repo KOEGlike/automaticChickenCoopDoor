@@ -66,30 +66,44 @@ void DisplayUI::dotTimeingRouter(int state)
   display.blinkDotsAnAmountThenDelayContinuouslyChangeAmount(state+1);
 }
 
-void DisplayUI::addToCurrentSegment()
+void DisplayUI::mutateCurrentSegment(int amount)
 {
-  if(isOn==false){
-  return;
-  }
-  digits.mutateOneDigit(currentSelectedSegment.getState(), 1,false);
+  if(isOn==false||!isEditing)return;
+
+  digits.mutateOneDigit(currentSelectedSegment.getState(), amount,false);
   defalutForShowNumber(digits.getDigits());
 }
 
 void DisplayUI::onOffTogle()
 {
+  if(m_interface->getMotor()->calibrator.isCalibrating()||isEditing)return;
+  
   if(isOn){
     isOn=false;
-    currentChangingTime.setState(0);
-    currentSelectedSegment.setState(0);
-    m_interface->updateTimes(times);
-    display.blinkSegmentsContinuouslyOff();
-    display.blinkDotsContinuouslyOff();
     display.setBrightness(0);
     display.clear();
     return;
     }
     isOn=true;
     display.setBrightness(7);
+}
+
+void DisplayUI::editingTogle()
+{
+  
+  if(m_interface->getMotor()->calibrator.isCalibrating()||!isOn)return;
+
+  if(isEditing)
+  {
+    isEditing=false;
+    currentChangingTime.setState(0);
+    currentSelectedSegment.setState(0);
+    m_interface->updateTimes(times);
+    display.blinkSegmentsContinuouslyOff();
+    display.blinkDotsContinuouslyOff();
+    return;
+  }
+    isEditing=true;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
     times=m_interface->getTimes();
@@ -101,19 +115,19 @@ void DisplayUI::onOffTogle()
     
 }
 
-void DisplayUI::moveCursorForward()
+void DisplayUI::moveCursor(bool forward)
 {
-  currentSelectedSegment.add();
+  if(isOn==false||!isEditing)return;
+  
+  currentSelectedSegment.add(forward?1:-1);
   display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
 }
 
 
 void DisplayUI::changeCurrentChangingTime()
 {
-  if(isOn==false){
-  return;
-  }
-
+  if(isOn==false)return;
+  
   setTimeRouter(digits.getDigits(), currentChangingTime.getState());
   currentChangingTime.add();
   dotTimeingRouter(currentChangingTime.getState());    
@@ -124,34 +138,92 @@ void DisplayUI::changeCurrentChangingTime()
 
 }
 
-void DisplayUI::btn1ShortFunc()
+void DisplayUI::setCalobrationState()
 {
-
+  if(!isOn)return;
+  m_interface->getMotor()->calibrator.setState();
 }
 
-void DisplayUI::btn1LongFunc()
+void DisplayUI::startCaibration()
 {
-
-}
-
-void DisplayUI::btn2ShortFunc()
-{
-
-}
-
-void DisplayUI::btn2LongFunc()
-{
-
+  if(!isOn||isEditing);
+  m_interface->getMotor()->calibrator.start();
 }
 
 void DisplayUI::switchDoorState()
 {
   if(!isOn)return;
- m_interface->getMotor()->changeState(m_interface->getMotor()->getState()>=0.5?0:1);
+  if(m_interface->getMotor()->calibrator.isCalibrating())return;
+  m_interface->getMotor()->changeState(m_interface->getMotor()->getState()>=0.5?0:1);
+}
+
+
+void DisplayUI::btn1ShortFunc()
+{
+  if(m_interface->getMotor()->calibrator.isCalibrating())
+  {
+    m_interface->getMotor()->calibrator.turn(5, false);
+    return;
+  }
+  if(isEditing)
+  {
+    mutateCurrentSegment(-1);
+    return;
+  }
+}
+
+void DisplayUI::btn1LongFunc()
+{
+  if(m_interface->getMotor()->calibrator.isCalibrating())
+  {
+    m_interface->getMotor()->calibrator.turn(10, false);
+    return;
+  }
+  if(isEditing)
+  {
+    mutateCurrentSegment(1);
+    return;
+  }
+}
+
+void DisplayUI::btn2ShortFunc()
+{
+  if(m_interface->getMotor()->calibrator.isCalibrating())
+  {
+    m_interface->getMotor()->calibrator.turn(5, true);
+    return;
+  }
+  if(isEditing)
+  {
+    moveCursor(false);
+    return;
+  }
+}
+
+void DisplayUI::btn2LongFunc()
+{
+  if(m_interface->getMotor()->calibrator.isCalibrating())
+  {
+    m_interface->getMotor()->calibrator.turn(10, true);
+    return;
+  }
+  if(isEditing)
+  {
+    moveCursor(true);
+    return;
+  }
 }
 
 void DisplayUI::btnPwrShortFunc()
 {
+  if(isEditing)
+  {
+    changeCurrentChangingTime();
+  }
+  if(m_interface->getMotor()->calibrator.isCalibrating())
+  {
+    setCalobrationState();
+  }
   switchDoorState();
 }
 
