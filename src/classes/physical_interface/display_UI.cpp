@@ -1,4 +1,5 @@
 #include "display_UI.hpp"
+#include <vector>
 
 DisplayUI::DisplayUI(ChickenDoorInterface *interface,DisplayUiConfig *config): 
     button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
@@ -18,6 +19,9 @@ void DisplayUI::begin()
   button1.begin();
   button2.begin();
   buttonPwr.begin();
+  ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){startCaibration();Serial.println("btn 1 pwr");});
+  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){editingTogle();Serial.println("btn 2 pwr");});
+  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr, &button1}, [&](){Serial.println("triple pead");}, 50);
 }
 
 void DisplayUI::defalutForShowNumber(int num)
@@ -81,16 +85,18 @@ void DisplayUI::onOffTogle()
   if(isOn){
     isOn=false;
     display.setBrightness(0);
+    display.stopAllActivities();
     display.clear();
     return;
     }
     isOn=true;
     display.setBrightness(7);
+    display.scrollSegmentsAnAmount(std::vector<uint8_t>{SEG_G, SEG_G,SEG_F|SEG_E|SEG_G|SEG_B|SEG_C, SEG_A|SEG_F|SEG_G|SEG_E|SEG_D, SEG_F|SEG_E|SEG_D, SEG_F|SEG_E|SEG_D, SEG_A|SEG_B|SEG_C|SEG_D|SEG_E|SEG_F, SEG_G, SEG_G}, 1000, -1);
 }
 
 void DisplayUI::editingTogle()
 {
-  
+  Serial.println("editingTogle");
   if(m_interface->getMotor()->calibrator.isCalibrating()||!isOn)return;
 
   if(isEditing)
@@ -117,7 +123,7 @@ void DisplayUI::editingTogle()
 
 void DisplayUI::moveCursor(bool forward)
 {
-  if(isOn==false||!isEditing)return;
+  if(isOn==false||!isEditing||m_interface->getMotor()->calibrator.isCalibrating())return;
   
   currentSelectedSegment.add(forward?1:-1);
   display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
@@ -126,7 +132,7 @@ void DisplayUI::moveCursor(bool forward)
 
 void DisplayUI::changeCurrentChangingTime()
 {
-  if(isOn==false)return;
+  if(isOn==false||m_interface->getMotor()->calibrator.isCalibrating()||!isEditing)return;
   
   setTimeRouter(digits.getDigits(), currentChangingTime.getState());
   currentChangingTime.add();
@@ -140,13 +146,14 @@ void DisplayUI::changeCurrentChangingTime()
 
 void DisplayUI::setCalobrationState()
 {
-  if(!isOn)return;
+  if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing)return;
   m_interface->getMotor()->calibrator.setState();
 }
 
 void DisplayUI::startCaibration()
 {
-  if(!isOn||isEditing);
+  Serial.println("startCaibration");
+  if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing);
   m_interface->getMotor()->calibrator.start();
 }
 

@@ -35,7 +35,7 @@ struct ButtonLinkStruct{
 class ButtonManager_t {
     public:
         ~ButtonManager_t();
-        void link(std::vector<Button*> buttons, std::function<void()> onPress, int maxDelta);
+        void link(std::vector<Button*> buttons, std::function<void()> onPress, int maxDelta=40);
         void addButton(Button* button);
         void check();
         void begin();

@@ -29,16 +29,19 @@ class CustomDisplayBehavior : public TM1637Display {
     void blinkDotsAnAmountThenDelayContinuously(unsigned int amount, unsigned long longOffTime = 50,unsigned long offTime = 50, unsigned long onTime = 50);
     void blinkDotsAnAmountThenDelayContinuouslyChangeAmount(unsigned int amount);
 
-    void scrollSegmentsContinuouslyOn(std::vector<uint8_t> segments, unsigned long millisForOneMove);
+    void scrollSegmentsAnAmount(std::vector<uint8_t> segments, unsigned long millisForOneMove, int amount);
     void scrollSegmentsContinuouslyOff();
+
+    
 
     void stopAllActivities();
   protected:
     unsigned long blinkStartInMillis, m_offTime, m_onTime, blinkEnd,dotBlinkStartInMillis, m_dotOffTime, m_dotOnTime, dotBlinkEnd, dotBlinkAnAmountLongDelayContinuos=-1,dotBlinkAnAmountLongDelayContinuosStart, blinkDotsAnAmountThenDelayContinuouslyOffTime, blinkDotsAnAmountThenDelayContinuouslyOnTime,dotBlinkAnAmountLongDelayContinuosAmount ;
-    int timesBlinked = 0, timesToBlink = -1,timesDotBlinked = 0, timesDotToBlink = -1;
+    int timesBlinked = 0, timesToBlink = -1,timesDotBlinked = 0, timesDotToBlink = -1, scrollCycles=0, scrollFullCycles=0;
     bool isBlinking = false, isContinuouslyBlinking = false, dotIsBlinking=false,dotIsContinuouslyBlinking = false, dotIsOn=false,isDotBlinkAnAmountLongDelayContinuos=false;
     uint8_t segmentsThatBlink;
     std::function<void()> bilinkSegmentsAnAmountOnEndFunc = []() {},bilinkDotsAnAmountOnEndFunc= []() {};
+    std::vector<uint8_t> segmentsToScroll;
     void dotBlinkCheck();
     void blinkCheck();
     uint32_t asyncId, scrollAsyncId;

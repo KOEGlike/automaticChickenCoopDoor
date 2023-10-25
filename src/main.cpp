@@ -4,11 +4,11 @@
 #include "classes/physical_interface/button.hpp"
 
 DisplayUiConfig displayUiConfig{
-  4,//clk
-  5,//dio
-  8,//btn1
-  3,//bnt2
-  45//btn3
+  5,//clk
+  4,//dio
+  15,//btn1
+  16,//bnt2
+  17//btn pwr
   };
 MotorConfig motorConfig{
   200,//stepper motor steps amount

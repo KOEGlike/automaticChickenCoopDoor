@@ -207,19 +207,26 @@ void CustomDisplayBehavior::check() {
   blinkCheck();
 }
 
-void CustomDisplayBehavior::scrollSegmentsContinuouslyOn(std::vector<uint8_t> segments, unsigned long millisForOneMove)
+void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments, unsigned long millisForOneMove, int amount)
 {
-  uint i=0;
+  scrollCycles=0; scrollFullCycles=0;
+  segmentsToScroll=segments;
   std::function<void()> 
   scrollAsyncFunc = [&]() 
   {
-   if(i>=segments.size()) i=0;
+   if(scrollCycles>=segmentsToScroll.size()) {scrollCycles=0;scrollFullCycles++;}
+   if(scrollFullCycles>=amount&&amount>=0) {scrollSegmentsContinuouslyOff();return;}
     uint8_t segmentsToDisplay[4];
-    segmentsToDisplay[0]=segments[i];
-    segmentsToDisplay[1]=segments[i+1<=segments.size()-3?i+1:3-(segments.size()-(i+1))];
-    segmentsToDisplay[2]=segments[i+2<=segments.size()-3?i+2:3-(segments.size()-(i+2))];
-    segmentsToDisplay[3]=segments[i+3<=segments.size()-3?i+3:3-(segments.size()-(i+3))];
-    i++;
+    Serial.println(scrollCycles);
+    Serial.println(segmentsToScroll[scrollCycles]);
+    for(int i=0;i<4;i++)
+    {
+      segmentsToDisplay[i]=segmentsToScroll[scrollCycles+i<segmentsToScroll.size()?scrollCycles+i:(segmentsToScroll.size()-(scrollCycles+i))];
+    }
+    setSegments(segmentsToDisplay);
+    scrollCycles++;
+    Serial.println(scrollCycles);
+    Serial.println(segmentsToScroll[scrollCycles]);
   };
   scrollAsyncId= Async.registerCallback(millisForOneMove, -1, scrollAsyncFunc);
 }
@@ -234,4 +241,5 @@ void CustomDisplayBehavior::stopAllActivities()
   dotBlinkAnAmountLongDelayContinuos=-1;dotBlinkAnAmountLongDelayContinuosStart; 
   timesBlinked = 0; timesToBlink = -1;timesDotBlinked = 0; timesDotToBlink = -1;
   isBlinking = false; isContinuouslyBlinking = false; dotIsBlinking=false;dotIsContinuouslyBlinking = false; dotIsOn=false;isDotBlinkAnAmountLongDelayContinuos=false;
+  Async.deleteCallBack(scrollAsyncId);
 }
