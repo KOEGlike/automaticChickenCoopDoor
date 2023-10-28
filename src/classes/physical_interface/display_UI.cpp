@@ -109,6 +109,7 @@ void DisplayUI::editingTogle()
     display.clear();
     return;
   }
+    display.stopAllActivities();
     isEditing=true;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
@@ -174,7 +175,7 @@ void DisplayUI::btn1ShortFunc()
   }
   if(isEditing)
   {
-    mutateCurrentSegment(-1);
+    mutateCurrentSegment(1);
     return;
   }
 }
@@ -188,7 +189,7 @@ void DisplayUI::btn1LongFunc()
   }
   if(isEditing)
   {
-    mutateCurrentSegment(1);
+    mutateCurrentSegment(-1);
     return;
   }
 }
@@ -226,10 +227,12 @@ void DisplayUI::btnPwrShortFunc()
   if(isEditing)
   {
     changeCurrentChangingTime();
+    return;
   }
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
     setCalobrationState();
+    return;
   }
   switchDoorState();
 }

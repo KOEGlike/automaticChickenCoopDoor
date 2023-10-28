@@ -214,19 +214,15 @@ void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments
   std::function<void()> 
   scrollAsyncFunc = [&]() 
   {
-   if(scrollCycles>=segmentsToScroll.size()) {scrollCycles=0;scrollFullCycles++;}
+   if(scrollCycles>segmentsToScroll.size()-1) {scrollCycles=0;scrollFullCycles++;}
    if(scrollFullCycles>=amount&&amount>=0) {scrollSegmentsContinuouslyOff();return;}
     uint8_t segmentsToDisplay[4];
-    Serial.println(scrollCycles);
-    Serial.println(segmentsToScroll[scrollCycles]);
     for(int i=0;i<4;i++)
     {
-      segmentsToDisplay[i]=segmentsToScroll[scrollCycles+i<segmentsToScroll.size()?scrollCycles+i:(segmentsToScroll.size()-(scrollCycles+i))];
+      segmentsToDisplay[i]=segmentsToScroll[scrollCycles+i<segmentsToScroll.size()?scrollCycles+i:((scrollCycles+i)-segmentsToScroll.size())];
     }
     setSegments(segmentsToDisplay);
     scrollCycles++;
-    Serial.println(scrollCycles);
-    Serial.println(segmentsToScroll[scrollCycles]);
   };
   scrollAsyncId= Async.registerCallback(millisForOneMove, -1, scrollAsyncFunc);
 }

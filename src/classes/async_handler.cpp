@@ -1,10 +1,8 @@
 #include "async_handler.hpp"
 
-
-
 void AsyncHandler::deleteCallBack(uint32_t id)
 {
-    callbacks.erase(id);
+  callbacks.erase(id);
 }
 
 callbackData::callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack,std::function<void(void)> onEnd){

@@ -20,11 +20,17 @@ void StateCounter::add(uint8_t amount)
 
 void StateCounter::subtract(uint8_t amount)
 {
+    Serial.println("sub");
+    Serial.println("before: ");
+    Serial.print(state);
     state = (state - amount) % m_amountOfStates;
     if (state < 0)
     {
+        Serial.println("n subtract");
         state = m_amountOfStates + state;
     }
+    Serial.println("after: ");
+    Serial.print(state);
 }
 
 void StateCounter::mutate(uint8_t amount)
@@ -32,7 +38,7 @@ void StateCounter::mutate(uint8_t amount)
     m_onMutate(amount);
     if(amount<0)
     {
-        subtract(-amount);
+        subtract(amount);
     }
     else
     {
