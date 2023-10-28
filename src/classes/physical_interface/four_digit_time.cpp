@@ -1,4 +1,4 @@
-#include "four_didget_time.hpp"
+#include "four_digit_time.hpp"
 extern "C" {
   #include <stdlib.h>
   #include <inttypes.h>
@@ -87,8 +87,8 @@ void FourDigitTime::mutateMinutes(int minutes) {
     }
 }
 
-void FourDigitTime::mutateOneDigit(int placement, int mutate,bool stepover) {
-     m_stepOver=stepover;
+void FourDigitTime::mutateOneDigit(int placement, int mutate,bool stepOver) {
+     m_stepOver=stepOver;
     switch (placement)
     {
     case 0:

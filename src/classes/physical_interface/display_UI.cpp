@@ -19,21 +19,20 @@ void DisplayUI::begin()
   button1.begin();
   button2.begin();
   buttonPwr.begin();
-  ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){startCaibration();Serial.println("btn 1 pwr");});
-  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){editingTogle();Serial.println("btn 2 pwr");});
-  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr, &button1}, [&](){Serial.println("triple pead");}, 50);
+  ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){startCalibration();});
+  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){editingToggle();});
 }
 
-void DisplayUI::defalutForShowNumber(int num)
+void DisplayUI::defaultForShowNumber(int num)
 {
   display.showNumberDecEx(num, 0b01000000, true);
 }
 
 int DisplayUI::digitValueRouter(int state)
-{tmElements_t currrentTime= m_interface->getCurrentTime();
+{tmElements_t currentTime= m_interface->getCurrentTime();
   switch(state) {
   case 0:
-    return currrentTime.Hour*100+currrentTime.Minute; 
+    return currentTime.Hour*100+currentTime.Minute; 
   case 1:
    return times.openTime.Hour*100+times.openTime.Minute;
   case 2:
@@ -43,29 +42,29 @@ int DisplayUI::digitValueRouter(int state)
   }
 }
 
-void DisplayUI::setTimeRouter(int didgets, int state)
+void DisplayUI::setTimeRouter(int digits, int state)
 {
   switch(state) {
   case 0:
   tmElements_t currentTime;
-    currentTime.Hour=didgets/100;
-    currentTime.Minute=didgets%100;
+    currentTime.Hour=digits/100;
+    currentTime.Minute=digits%100;
     m_interface->updateCurrentTime(currentTime);
     break;
   case 1:
-    times.openTime.Minute=didgets%100;
-    times.openTime.Hour=didgets/100;
+    times.openTime.Minute=digits%100;
+    times.openTime.Hour=digits/100;
     m_interface->updateTimes(times);
     break;
   case 2:
-    times.closeTime.Minute=didgets%100;
-    times.closeTime.Hour=didgets/100;
+    times.closeTime.Minute=digits%100;
+    times.closeTime.Hour=digits/100;
     m_interface->updateTimes(times);
     break;
   }
 }
 
-void DisplayUI::dotTimeingRouter(int state)
+void DisplayUI::dotTimingRouter(int state)
 {
   display.blinkDotsAnAmountThenDelayContinuouslyChangeAmount(state+1);
 }
@@ -75,10 +74,10 @@ void DisplayUI::mutateCurrentSegment(int amount)
   if(isOn==false||!isEditing)return;
 
   digits.mutateOneDigit(currentSelectedSegment.getState(), amount,false);
-  defalutForShowNumber(digits.getDigits());
+  defaultForShowNumber(digits.getDigits());
 }
 
-void DisplayUI::onOffTogle()
+void DisplayUI::onOffToggle()
 {
   if(m_interface->getMotor()->calibrator.isCalibrating()||isEditing)return;
   
@@ -94,9 +93,8 @@ void DisplayUI::onOffTogle()
     display.scrollSegmentsAnAmount(std::vector<uint8_t>{SEG_G, SEG_G,SEG_F|SEG_E|SEG_G|SEG_B|SEG_C, SEG_A|SEG_F|SEG_G|SEG_E|SEG_D, SEG_F|SEG_E|SEG_D, SEG_F|SEG_E|SEG_D, SEG_A|SEG_B|SEG_C|SEG_D|SEG_E|SEG_F, SEG_G, SEG_G}, 1000, -1);
 }
 
-void DisplayUI::editingTogle()
+void DisplayUI::editingToggle()
 {
-  Serial.println("editingTogle");
   if(m_interface->getMotor()->calibrator.isCalibrating()||!isOn)return;
 
   if(isEditing)
@@ -115,8 +113,8 @@ void DisplayUI::editingTogle()
     currentSelectedSegment.setState(0);
     times=m_interface->getTimes();
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
-    defalutForShowNumber(digits.getDigits());
-    dotTimeingRouter(currentChangingTime.getState()); 
+    defaultForShowNumber(digits.getDigits());
+    dotTimingRouter(currentChangingTime.getState()); 
     display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
     display.blinkDotsAnAmountThenDelayContinuously(1, offTime*offLongMult,offTime*offShortMult,onTime*onTimeMult)  ; 
     
@@ -137,23 +135,23 @@ void DisplayUI::changeCurrentChangingTime()
   
   setTimeRouter(digits.getDigits(), currentChangingTime.getState());
   currentChangingTime.add();
-  dotTimeingRouter(currentChangingTime.getState());    
+  dotTimingRouter(currentChangingTime.getState());    
   currentSelectedSegment.setState(0);
   digits.setDigits(digitValueRouter(currentChangingTime.getState()));
-  defalutForShowNumber(digits.getDigits());
+  defaultForShowNumber(digits.getDigits());
   display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
 
 }
 
-void DisplayUI::setCalobrationState()
+void DisplayUI::setCalibrationState()
 {
   if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing)return;
   m_interface->getMotor()->calibrator.setState();
 }
 
-void DisplayUI::startCaibration()
+void DisplayUI::startCalibration()
 {
-  Serial.println("startCaibration");
+  Serial.println("startCalibration");
   if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing);
   m_interface->getMotor()->calibrator.start();
 }
@@ -231,7 +229,7 @@ void DisplayUI::btnPwrShortFunc()
   }
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
-    setCalobrationState();
+    setCalibrationState();
     return;
   }
   switchDoorState();
@@ -239,5 +237,5 @@ void DisplayUI::btnPwrShortFunc()
 
 void DisplayUI::btnPwrLongFunc()
 {
-  onOffTogle();
+  onOffToggle();
 }

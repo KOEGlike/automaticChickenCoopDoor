@@ -11,7 +11,7 @@
 
 #include "button.hpp"
 #include "custom_display_behavior.hpp"
-#include "four_didget_time.hpp"
+#include "four_digit_time.hpp"
 #include "counter.hpp"
 #include "../async_handler.hpp"
 #include "../interfaces.hpp"
@@ -19,7 +19,7 @@
 class DisplayUI
 {
   public:
-    DisplayUI(ChickenDoorInterface *interfce, DisplayUiConfig *config );
+    DisplayUI(ChickenDoorInterface *interface, DisplayUiConfig *config );
 		void begin();
   protected:
 		unsigned int offTime=100, onTime=100;
@@ -33,21 +33,21 @@ class DisplayUI
 		StateCounter currentSelectedSegment;
 		StateCounter currentChangingTime;
 
-		void defalutForShowNumber(int num);
+		void defaultForShowNumber(int num);
 		void switchDoorState();
-		void onOffTogle();
+		void onOffToggle();
 
 		int  digitValueRouter(int state);
-		void setTimeRouter(int didgets, int state);
-		void dotTimeingRouter(int state);
+		void setTimeRouter(int digits, int state);
+		void dotTimingRouter(int state);
 
 		void mutateCurrentSegment(int amount);
 		void moveCursor(bool forward);
-		void editingTogle();
+		void editingToggle();
 		void changeCurrentChangingTime();
 		
-		void startCaibration();
-		void setCalobrationState();
+		void startCalibration();
+		void setCalibrationState();
 
 		void btn1ShortFunc();
 		void btn2ShortFunc();

@@ -45,7 +45,7 @@ void CustomDisplayBehavior::blinkCheck() {
   if (timesToBlink > 0 && timesBlinked == timesToBlink) {
     blinkSegmentsContinuouslyOff();
     timesToBlink = -1;
-    bilinkSegmentsAnAmountOnEndFunc();
+    blinkSegmentsAnAmountOnEndFunc();
   }
 }
 
@@ -74,7 +74,7 @@ void CustomDisplayBehavior::dotBlinkCheck() {
   if (timesDotToBlink > 0 && timesDotBlinked >= timesDotToBlink) {
     blinkDotsContinuouslyOff();
     timesDotToBlink = -1;
-    bilinkDotsAnAmountOnEndFunc();
+    blinkDotsAnAmountOnEndFunc();
   }
 
   if(millis()-dotBlinkAnAmountLongDelayContinuosStart>=dotBlinkAnAmountLongDelayContinuos&&dotBlinkAnAmountLongDelayContinuosAmount>=0&&isDotBlinkAnAmountLongDelayContinuos==true)
@@ -142,10 +142,10 @@ void CustomDisplayBehavior::changeSegmentsContinuos(uint8_t segmentsToBlink, uns
   m_onTime=onTime;
 }
 
-void CustomDisplayBehavior::bilinkSegmentsAnAmount(uint8_t segmentsToBlink, unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
+void CustomDisplayBehavior::blinkSegmentsAnAmount(uint8_t segmentsToBlink, unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
   timesBlinked = 0;
   timesToBlink = amount;
-  bilinkSegmentsAnAmountOnEndFunc = onEnd;
+  blinkSegmentsAnAmountOnEndFunc = onEnd;
   blinkSegmentsContinuouslyOn(segmentsToBlink, offTime, onTime);
 }
 
@@ -184,7 +184,7 @@ void CustomDisplayBehavior::blinkDotsContinuouslyOff() {
 void CustomDisplayBehavior::blinkDotsAnAmount( unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
   timesDotBlinked = 0;
   timesDotToBlink = amount;
-  bilinkDotsAnAmountOnEndFunc = onEnd;
+  blinkDotsAnAmountOnEndFunc = onEnd;
   blinkDotsContinuouslyOn(offTime, onTime);
 }
 
@@ -214,21 +214,29 @@ void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments
   std::function<void()> 
   scrollAsyncFunc = [&]() 
   {
-   if(scrollCycles>segmentsToScroll.size()-1) {scrollCycles=0;scrollFullCycles++;}
-   if(scrollFullCycles>=amount&&amount>=0) {scrollSegmentsContinuouslyOff();return;}
+    Serial.print("start");
+   if(scrollCycles>segmentsToScroll.size()-1) {Serial.print("reset"); scrollCycles=0;scrollFullCycles++;}
+   if(scrollFullCycles>=amount&&amount>=0) {Serial.println("scrollED full cycles");  scrollSegmentsContinuouslyOff();return;}
     uint8_t segmentsToDisplay[4];
+    Serial.print("\n");
     for(int i=0;i<4;i++)
     {
+      Serial.print(scrollCycles+i);
+      Serial.print(", ");
       segmentsToDisplay[i]=segmentsToScroll[scrollCycles+i<segmentsToScroll.size()?scrollCycles+i:((scrollCycles+i)-segmentsToScroll.size())];
     }
+    Serial.println("before set segments");
     setSegments(segmentsToDisplay);
+    Serial.println("before ++");
     scrollCycles++;
+    Serial.println("end");
   };
   scrollAsyncId= Async.registerCallback(millisForOneMove, -1, scrollAsyncFunc);
 }
 
 void CustomDisplayBehavior::scrollSegmentsContinuouslyOff()
 {
+  
   Async.deleteCallBack(scrollAsyncId);
 }
 
@@ -237,5 +245,5 @@ void CustomDisplayBehavior::stopAllActivities()
   dotBlinkAnAmountLongDelayContinuos=-1;dotBlinkAnAmountLongDelayContinuosStart; 
   timesBlinked = 0; timesToBlink = -1;timesDotBlinked = 0; timesDotToBlink = -1;
   isBlinking = false; isContinuouslyBlinking = false; dotIsBlinking=false;dotIsContinuouslyBlinking = false; dotIsOn=false;isDotBlinkAnAmountLongDelayContinuos=false;
-  Async.deleteCallBack(scrollAsyncId);
+  scrollSegmentsContinuouslyOff();
 }

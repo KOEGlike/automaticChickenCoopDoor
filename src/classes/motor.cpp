@@ -26,7 +26,7 @@ void Motor::begin()
 void Motor::moveSteps(long steps)
 {
   m_interface->setState(m_interface->getState()+steps);
-  m_stepper.move(m_interface->getCalibrationState().upIsClocwise?steps:-steps);
+  m_stepper.move(m_interface->getCalibrationState().upIsClockwise?steps:-steps);
 }
 
 float Motor::getState()

@@ -61,13 +61,13 @@ struct DisplayUiConfig
 
 struct MotorCalibrationState
 {
-  MotorCalibrationState(bool upIsClocwise, long movementLengthInSteps)
+  MotorCalibrationState(bool upIsClockwise, long movementLengthInSteps)
   {
-    this->upIsClocwise = upIsClocwise;
+    this->upIsClockwise = upIsClockwise;
     this->movementLengthInSteps = movementLengthInSteps;
   }
   MotorCalibrationState(){};
-  bool upIsClocwise = true;
+  bool upIsClockwise = true;
   long movementLengthInSteps=0;
 };
 
