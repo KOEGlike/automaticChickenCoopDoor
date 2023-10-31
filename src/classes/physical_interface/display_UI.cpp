@@ -153,7 +153,7 @@ void DisplayUI::startCalibration()
 {
   Serial.println("startCalibration");
   if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing);
-  m_interface->getMotor()->calibrator.start();
+  m_interface->getMotor()->calibrator.start(); 
 }
 
 void DisplayUI::switchDoorState()
@@ -161,6 +161,7 @@ void DisplayUI::switchDoorState()
   if(!isOn)return;
   if(m_interface->getMotor()->calibrator.isCalibrating())return;
   m_interface->getMotor()->changeState(m_interface->getMotor()->getState()>=0.5?0:1);
+  
 }
 
 
