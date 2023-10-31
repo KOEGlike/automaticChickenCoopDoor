@@ -1,6 +1,37 @@
 #include "display_UI.hpp"
 #include <vector>
 
+
+
+//lower txt
+const  uint8_t LOWER_txt[6]={
+SEG_F|SEG_E|SEG_D,//L
+SEG_C|SEG_D|SEG_E|SEG_G,//o
+SEG_E|SEG_D|SEG_C, SEG_D|SEG_C, //w
+SEG_A|SEG_F|SEG_G|SEG_E|SEG_D,//E
+SEG_G|SEG_E//r
+};
+
+//upper txt
+const uint8_t UPPER_txt[5]={
+SEG_F|SEG_E|SEG_D|SEG_C|SEG_B,//U
+SEG_A|SEG_B|SEG_E|SEG_F|SEG_G,//P
+SEG_A|SEG_B|SEG_E|SEG_F|SEG_G,//P
+SEG_A|SEG_F|SEG_G|SEG_E|SEG_D,//E
+SEG_G|SEG_E//r
+};
+
+//finished txt
+const uint8_t FINISHED_txt[7]={
+SEG_A|SEG_F|SEG_G|SEG_E,//F
+SEG_F|SEG_E,//I
+SEG_E|SEG_G|SEG_C,//n
+SEG_F|SEG_E,//I
+SEG_A|SEG_F|SEG_G|SEG_C|SEG_D,//S
+SEG_A|SEG_F|SEG_G|SEG_E|SEG_D,//E
+SEG_E|SEG_G|SEG_C|SEG_D|SEG_B//d
+};
+
 DisplayUI::DisplayUI(ChickenDoorInterface *interface,DisplayUiConfig *config): 
     button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
     button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
@@ -151,9 +182,12 @@ void DisplayUI::setCalibrationState()
 
 void DisplayUI::startCalibration()
 {
+  bool firstIsBottom=true;
   Serial.println("startCalibration");
   if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing);
-  m_interface->getMotor()->calibrator.start(); 
+  m_interface->getMotor()->calibrator.start(firstIsBottom); 
+  display.stopAllActivities();
+  display.scrollSegmentsAnAmount(firstIsBottom?std::vector<uint8_t>{LOWER_txt, LOWER_txt + sizeof LOWER_txt / sizeof LOWER_txt[0]}:std::vector<uint8_t>{UPPER_txt, UPPER_txt + sizeof UPPER_txt / sizeof UPPER_txt[0]}, 300, 1);
 }
 
 void DisplayUI::switchDoorState()
