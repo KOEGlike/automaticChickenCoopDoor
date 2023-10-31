@@ -1,10 +1,10 @@
 #include "display_UI.hpp"
 #include <vector>
-
+#include <array>
 
 
 //lower txt
-const  uint8_t LOWER_txt[6]={
+const std::vector<uint8_t>LOWER_txt{
 SEG_F|SEG_E|SEG_D,//L
 SEG_C|SEG_D|SEG_E|SEG_G,//o
 SEG_E|SEG_D|SEG_C, SEG_D|SEG_C, //w
@@ -13,7 +13,7 @@ SEG_G|SEG_E//r
 };
 
 //upper txt
-const uint8_t UPPER_txt[5]={
+const std::vector<uint8_t> UPPER_txt{
 SEG_F|SEG_E|SEG_D|SEG_C|SEG_B,//U
 SEG_A|SEG_B|SEG_E|SEG_F|SEG_G,//P
 SEG_A|SEG_B|SEG_E|SEG_F|SEG_G,//P
@@ -22,7 +22,7 @@ SEG_G|SEG_E//r
 };
 
 //finished txt
-const uint8_t FINISHED_txt[7]={
+const std::vector<uint8_t> FINISHED_txt{
 SEG_A|SEG_F|SEG_G|SEG_E,//F
 SEG_F|SEG_E,//I
 SEG_E|SEG_G|SEG_C,//n
@@ -187,7 +187,9 @@ void DisplayUI::startCalibration()
   if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing);
   m_interface->getMotor()->calibrator.start(firstIsBottom); 
   display.stopAllActivities();
-  display.scrollSegmentsAnAmount(firstIsBottom?std::vector<uint8_t>{LOWER_txt, LOWER_txt + sizeof LOWER_txt / sizeof LOWER_txt[0]}:std::vector<uint8_t>{UPPER_txt, UPPER_txt + sizeof UPPER_txt / sizeof UPPER_txt[0]}, 300, 1);
+  std::vector<uint8_t> txtVec;
+  auto txt=firstIsBottom?LOWER_txt:UPPER_txt;
+  display.scrollSegmentsAnAmount(txtVec, 300, 1);
 }
 
 void DisplayUI::switchDoorState()

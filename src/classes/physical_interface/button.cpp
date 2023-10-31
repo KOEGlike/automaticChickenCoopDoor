@@ -65,6 +65,7 @@ void ButtonManager_t::check()
 
         if ( btnPtr->pressedForMillis >= btnPtr->debounceInMillis) 
         {
+            
             if (btnPtr->pressedForMillis < btnPtr->millisForLongPress&&btnPtr->pressed==false) 
             { 
                 btnPtr->m_press();
