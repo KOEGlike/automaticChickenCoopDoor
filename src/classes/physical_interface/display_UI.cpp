@@ -7,7 +7,7 @@
 const std::vector<uint8_t>LOWER_txt{
 SEG_F|SEG_E|SEG_D,//L
 SEG_C|SEG_D|SEG_E|SEG_G,//o
-SEG_E|SEG_D|SEG_C, SEG_D|SEG_C, //w
+SEG_E|SEG_D|SEG_C, SEG_E|SEG_D|SEG_C, //w
 SEG_A|SEG_F|SEG_G|SEG_E|SEG_D,//E
 SEG_G|SEG_E//r
 };
@@ -188,7 +188,7 @@ void DisplayUI::startCalibration()
   m_interface->getMotor()->calibrator.start(firstIsBottom); 
   display.stopAllActivities();
   std::vector<uint8_t> txtVec;
-  auto txt=firstIsBottom?LOWER_txt:UPPER_txt;
+  txtVec=firstIsBottom?LOWER_txt:UPPER_txt;
   display.scrollSegmentsAnAmount(txtVec, 300, 1);
 }
 
