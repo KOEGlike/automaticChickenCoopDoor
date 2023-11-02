@@ -54,6 +54,11 @@ void MotorCalibrator::start(bool firstSetIsBottom)
   }
 }
 
+long MotorCalibrator::getCurrentStep()
+{
+  return m_currentStep;
+}
+
 
 void MotorCalibrator::turn(int amountOfSteps,bool isClockwise)
 {

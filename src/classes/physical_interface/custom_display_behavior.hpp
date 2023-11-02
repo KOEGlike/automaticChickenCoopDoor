@@ -29,7 +29,7 @@ class CustomDisplayBehavior : public TM1637Display {
     void blinkDotsAnAmountThenDelayContinuously(unsigned int amount, unsigned long longOffTime = 50,unsigned long offTime = 50, unsigned long onTime = 50);
     void blinkDotsAnAmountThenDelayContinuouslyChangeAmount(unsigned int amount);
 
-    void scrollSegmentsAnAmount(std::vector<uint8_t> segments, unsigned long millisForOneMove, int amount);
+    void scrollSegmentsAnAmount(std::vector<uint8_t> segments, unsigned long millisForOneMove, int amount,  std::function<void()> onEnd = []() {});
     void scrollSegmentsContinuouslyOff();
 
     

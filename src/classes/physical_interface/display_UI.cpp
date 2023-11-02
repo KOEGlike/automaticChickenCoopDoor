@@ -189,7 +189,7 @@ void DisplayUI::startCalibration()
   display.stopAllActivities();
   std::vector<uint8_t> txtVec;
   txtVec=firstIsBottom?LOWER_txt:UPPER_txt;
-  display.scrollSegmentsAnAmount(txtVec, 300, 1);
+  display.scrollSegmentsAnAmount(txtVec, 300, 1, [&](){display.clear();});
 }
 
 void DisplayUI::switchDoorState()

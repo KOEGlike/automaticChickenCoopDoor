@@ -207,7 +207,7 @@ void CustomDisplayBehavior::check() {
   blinkCheck();
 }
 
-void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments, unsigned long millisForOneMove, int amount)
+void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments, unsigned long millisForOneMove, int amount, std::function<void()> onEnd)
 {
   scrollCycles=0;
   segmentsToScroll=segments;
@@ -216,7 +216,7 @@ void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments
   scrollAsyncFunc = [&]() 
   {
    if(scrollCycles>segmentsToScroll.size()-1) {scrollCycles=0;}
-   if(scrollCycles/scrollAmount>=scrollAmount-1&&scrollAmount>=0&&scrollCycles>segmentsToScroll.size()-4) {scrollSegmentsContinuouslyOff();return;}
+   if(scrollCycles/scrollAmount>=scrollAmount-1&&scrollAmount>=0&&scrollCycles>segmentsToScroll.size()-4) {onEnd(); scrollSegmentsContinuouslyOff(); return;}
     uint8_t segmentsToDisplay[4];
     for(int i=0;i<4;i++)
     {
