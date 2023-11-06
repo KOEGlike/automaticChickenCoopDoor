@@ -190,6 +190,7 @@ void DisplayUI::startCalibration()
   std::vector<uint8_t> txtVec;
   txtVec=firstIsBottom?LOWER_txt:UPPER_txt;
   display.scrollSegmentsAnAmount(txtVec, 300, 1, [&](){display.clear();});
+  display.showNumberDec(0,true);
 }
 
 void DisplayUI::switchDoorState()
