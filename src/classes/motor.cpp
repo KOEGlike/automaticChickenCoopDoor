@@ -99,11 +99,14 @@ void MotorCalibrator::setSecondState()
 void MotorCalibrator::setState()
 {
   if(m_isDone==true)return;
+  Serial.println(m_firstIsSet);
   if(m_firstIsSet==false)
   {
+    Serial.println("first");
     setFirstState();
   }
   else{
+    Serial.println("second");
     setSecondState();
   }
 }

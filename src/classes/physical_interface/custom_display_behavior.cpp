@@ -216,11 +216,10 @@ void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments
   scrollAsyncFunc = [&]() 
   {
    if(scrollCycles>segmentsToScroll.size()-1) {scrollCycles=0;}
-   if(scrollCycles/scrollAmount>=scrollAmount-1&&scrollAmount>=0&&scrollCycles>segmentsToScroll.size()-4) {onEnd(); scrollSegmentsContinuouslyOff(); return;}
+   if(scrollCycles/scrollAmount>=scrollAmount-1&&scrollAmount>=0&&scrollCycles>segmentsToScroll.size()-4) { scrollSegmentsContinuouslyOff(); return;}
     uint8_t segmentsToDisplay[4];
     for(int i=0;i<4;i++)
     {
-      Serial.print(scrollCycles+i);
       segmentsToDisplay[i]=segmentsToScroll[scrollCycles+i<segmentsToScroll.size()?scrollCycles+i:((scrollCycles+i)-segmentsToScroll.size())];
     }
     setSegments(segmentsToDisplay);

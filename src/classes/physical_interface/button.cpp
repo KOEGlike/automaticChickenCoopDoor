@@ -72,37 +72,30 @@ void ButtonManager_t::check()
             } 
             else if(btnPtr->pressed == true&&btnPtr->pressedForMillis >= btnPtr->millisForLongPress)
             {
-                bool wasMultiplePress=false;
+                bool wasMultiplePress=true;
                 for(auto linkId : btnPtr->linkIds)
                 {
-                    bool allPressed=true;
                     for(auto button: buttonLinks[linkId].buttonPtrs)
                     {   
                         if(button->millisForLongPress-button->pressedForMillis<=buttonLinks[linkId].maxDelta&&button->pressed==true)
                         {
-                            allPressed=true;                        
+                            wasMultiplePress=true;                        
                         }
                         else
                         {
-                            allPressed=false;
+                            wasMultiplePress=false;
                         }
 
-                        if(allPressed==false)
-                        {
-                            break;
-                        }
+                        if(wasMultiplePress==false) break;
                     }
-                    if(allPressed==true)
+                    if(wasMultiplePress==true) {
+                    buttonLinks[linkId].onPress();
+                    for(auto button: buttonLinks[linkId].buttonPtrs)
                     {
-                        buttonLinks[linkId].onPress();
-                        wasMultiplePress=true;
-                        for(auto button: buttonLinks[linkId].buttonPtrs)
-                        {
-                            button->pressed=false;
-                            button->pressedForMillis=0;
-                        }
-                        break;
-                    }
+                        button->pressed=false;
+                         button->pressedForMillis=0;
+                    } 
+                    break;}
                 }
                 if(wasMultiplePress==false)
                 {

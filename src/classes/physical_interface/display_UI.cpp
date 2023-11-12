@@ -178,6 +178,15 @@ void DisplayUI::setCalibrationState()
 {
   if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing)return;
   m_interface->getMotor()->calibrator.setState();
+  Serial.println("cal22");
+}
+
+void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
+{
+  if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing)return;
+  m_interface->getMotor()->calibrator.turn(steps, isClockwise);
+  display.showNumberDec(m_interface->getMotor()->calibrator.getCurrentStep());
+   Serial.println("cal11");
 }
 
 void DisplayUI::startCalibration()
@@ -189,8 +198,8 @@ void DisplayUI::startCalibration()
   display.stopAllActivities();
   std::vector<uint8_t> txtVec;
   txtVec=firstIsBottom?LOWER_txt:UPPER_txt;
-  display.scrollSegmentsAnAmount(txtVec, 300, 1, [&](){display.clear();});
-  display.showNumberDec(0,true);
+  display.scrollSegmentsAnAmount(txtVec, 300, 1, [&](){display.showNumberDec(m_interface->getMotor()->calibrator.getCurrentStep());});
+  Serial.println("cal");
 }
 
 void DisplayUI::switchDoorState()
@@ -198,7 +207,6 @@ void DisplayUI::switchDoorState()
   if(!isOn)return;
   if(m_interface->getMotor()->calibrator.isCalibrating())return;
   m_interface->getMotor()->changeState(m_interface->getMotor()->getState()>=0.5?0:1);
-  
 }
 
 
@@ -206,7 +214,7 @@ void DisplayUI::btn1ShortFunc()
 {
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
-    m_interface->getMotor()->calibrator.turn(5, false);
+    calibrationTurn(5, false);
     return;
   }
   if(isEditing)
@@ -220,7 +228,7 @@ void DisplayUI::btn1LongFunc()
 {
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
-    m_interface->getMotor()->calibrator.turn(10, false);
+   calibrationTurn(10, false);
     return;
   }
   if(isEditing)
@@ -234,7 +242,7 @@ void DisplayUI::btn2ShortFunc()
 {
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
-    m_interface->getMotor()->calibrator.turn(5, true);
+    calibrationTurn(5, true);
     return;
   }
   if(isEditing)
@@ -248,7 +256,7 @@ void DisplayUI::btn2LongFunc()
 {
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
-    m_interface->getMotor()->calibrator.turn(10, true);
+    calibrationTurn(10, true);
     return;
   }
   if(isEditing)
@@ -260,6 +268,7 @@ void DisplayUI::btn2LongFunc()
 
 void DisplayUI::btnPwrShortFunc()
 {
+  Serial.println("btnPwrShortFunc");
   if(isEditing)
   {
     changeCurrentChangingTime();

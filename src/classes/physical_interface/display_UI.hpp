@@ -48,6 +48,7 @@ class DisplayUI
 		
 		void startCalibration();
 		void setCalibrationState();
+		void calibrationTurn(uint steps, bool isClockwise);
 
 		void btn1ShortFunc();
 		void btn2ShortFunc();
