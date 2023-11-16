@@ -16,7 +16,7 @@ class Button {
         int m_pin;
         std::function<void()> m_longPress, m_press;
         bool pressed = false,wasHighBefore=true;
-        unsigned long millisForLongPress = 300, debounceInMillis = 3, pressedForMillis = 0, pressStartInMillies=0;
+        unsigned long millisForLongPress = 300, debounceInMillis = 6, pressedForMillis = 0, pressStartInMillies=0;
 };
 
 struct ButtonLinkStruct{

@@ -1,7 +1,7 @@
 #include "motor.hpp"	
 #include <cmath>
 Motor::Motor(MotorConfig *config, MotorInterface *interface): 
-m_stepper{config->steps, config->dir, config->step, config->enable}, 
+m_stepper{config->steps, config->dir, config->step, config->enable,config->m0, config->m1,config->m2}, 
 m_interface{interface}, calibrator{this}
 {}
 
@@ -19,7 +19,7 @@ void Motor::changeState(float percentage)
 
 void Motor::begin()
 {
- m_stepper.begin(120);
+ m_stepper.begin(motorRpm, 32);
  m_stepper.enable();
 }
 

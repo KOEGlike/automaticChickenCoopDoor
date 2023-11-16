@@ -35,6 +35,7 @@ class Motor
     friend class MotorCalibrator;
     MotorCalibrator calibrator;
   protected:
+    const uint16_t motorRpm=200;
     A4988 m_stepper;
     MotorInterface *m_interface;
 };

@@ -93,14 +93,17 @@ std::function<void()> settingStateOpen, settingStateClosed, finishedCalibrating;
 
 struct MotorConfig
 {
-  MotorConfig(uint8_t stepsAmount ,uint8_t dirPin, uint8_t stepPin, uint8_t enablePin)
+  MotorConfig(uint8_t stepsAmount ,uint8_t dirPin, uint8_t stepPin, uint8_t enablePin, uint8_t m0, uint8_t m1, uint8_t m2)
   {
     dir = dirPin;
     step = stepPin;
     steps = stepsAmount;
     enable = enablePin;
+    this->m0=m0;
+    this->m1=m1;
+    this->m2=m2;
   }
-uint8_t steps, dir, step,   enable;
+uint8_t steps, dir, step, enable, m0, m1, m2;
 };
 
 

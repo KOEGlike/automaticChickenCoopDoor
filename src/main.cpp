@@ -4,17 +4,20 @@
 #include "classes/physical_interface/button.hpp"
 
 DisplayUiConfig displayUiConfig{
-  16,//clk
-  15,//dio
-  4,//btn1 (left)
-  6,//bnt2 (right)
-  5//btn pwr
+  10,//clk
+  11,//dio
+  8,//btn1 (left)
+  9,//bnt2 (right)
+  3//btn pwr
   };
 MotorConfig motorConfig{
   200,//stepper motor steps amount
-  10,//dir pin
-  12,//step pin
-  13//enable pin 
+  4,//dir pin
+  5,//step pin
+  7,//enable pin
+  17,//m0
+  16,//m1
+  15//m2
   };
 
 ChickenDoor door(&displayUiConfig, &motorConfig);
@@ -29,3 +32,4 @@ void loop()
 {
   Async.check();
 }
+
