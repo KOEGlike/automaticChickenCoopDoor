@@ -74,7 +74,7 @@ void MotorCalibrator::setFirstState()
   if(m_isDone==true)return;
   m_firstIsSet=true;
   m_motor->m_interface->setState(m_firstSetIsBottom?0:1);
-  m_currentStep=0;
+  first=m_currentStep;
   if(m_firstSetIsBottom)
   {
     m_motor->m_interface->settingStateOpen();
@@ -89,7 +89,7 @@ void MotorCalibrator::setSecondState()
 {
   if(m_isDone==true)return;
   if(m_firstIsSet==false)return;
-  m_upIsClockwise=m_currentStep>=0?true:false;
+  m_upIsClockwise=m_currentStep>=first?true:false;
   m_motor->m_interface->setState(m_firstSetIsBottom?1:0);
   m_motor->m_interface->setCalibrationState(MotorCalibrationState(m_upIsClockwise, m_firstSetIsBottom?m_currentStep:-m_currentStep));
   m_isDone=true;
