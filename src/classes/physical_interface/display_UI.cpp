@@ -206,6 +206,7 @@ void DisplayUI::switchDoorState()
 {
   if(!isOn)return;
   if(m_interface->getMotor()->calibrator.isCalibrating())return;
+  Serial.println(m_interface->getMotor()->getState());
   m_interface->getMotor()->changeState(m_interface->getMotor()->getState()>=0.5?0:1);
 }
 

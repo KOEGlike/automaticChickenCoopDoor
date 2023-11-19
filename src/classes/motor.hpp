@@ -20,8 +20,8 @@ class MotorCalibrator{
     friend class Motor;
   protected:
     Motor *m_motor;
-    long  m_currentStep, first;
-    bool m_upIsClockwise=true, m_firstSetIsBottom, m_isDone=true, m_firstIsSet=false;
+    int  m_currentStep, first;
+    bool  m_firstSetIsBottom, m_isDone=true, m_firstIsSet=false;
 };
 
 class Motor

@@ -21,15 +21,11 @@ class ChickenDoor{
     std::function<tmElements_t( )> getCurrentTime=[&](){tmElements_t t; breakTime(now(), t); return t ;};
     std::function<Motor*()> getMotor=[&](){return &motor;};
     
-    std::function<uint()> getMotorState=[&](){return motorState;};
-    std::function<void(uint)> setMotorState=[&](uint state){ motorState=state;};
-    std::function<MotorCalibrationState()> getMotorCalibrationState=[&](){return motorCalibrationState;};
-    std::function<void(MotorCalibrationState )> setMotorCalibrationState=[&](MotorCalibrationState state){motorCalibrationState=state;};
+    std::function<MotorState*()> getMotorStatePtr=[&](){return &motorState;};
     std::function<void()> settingStateOpen=[](){}, settingStateClosed=[](){}, finishedCalibrating=[](){};
 
     MoveTimes moveTimes;
-    MotorCalibrationState motorCalibrationState;
-    uint motorState;
+    MotorState motorState;
     ChickenDoorInterface interface;
     MotorInterface motorInterface;
 

@@ -12,9 +12,10 @@ bool MotorCalibrator::isCalibrating()
 
 void Motor::changeState(float percentage)
 {
-  percentage=percentage>1?1:percentage;
-  percentage=percentage<0?0:percentage;
-  moveSteps(std::floor(m_interface->getCalibrationState().movementLengthInSteps*percentage)-m_interface->getState());
+  int closed_step=m_interface->getMotorStatePtr()->calibrationState.bottomStep, open_step=m_interface->getMotorStatePtr()->calibrationState.topStep, current_step=m_interface->getMotorStatePtr()->currentStep;
+  int number_of_steps=open_step-closed_step;
+  int steps_to_move=std::floor(number_of_steps*percentage);
+  moveSteps(steps_to_move-current_step );
 }
 
 void Motor::begin()
@@ -25,13 +26,18 @@ void Motor::begin()
 
 void Motor::moveSteps(long steps)
 {
-  m_interface->setState(m_interface->getState()+steps);
-  m_stepper.move(m_interface->getCalibrationState().upIsClockwise?steps:-steps);
+  int bottomStep=m_interface->getMotorStatePtr()->calibrationState.bottomStep, topStep=m_interface->getMotorStatePtr()->calibrationState.topStep, currentStep=m_interface->getMotorStatePtr()->currentStep;
+  //steps=currentStep-steps<bottomStep?currentStep-bottomStep:steps;
+ // steps=currentStep+steps>topStep?topStep-currentStep:steps;
+  m_interface->getMotorStatePtr()->currentStep=currentStep+steps;
+  m_stepper.move(steps);
 }
 
 float Motor::getState()
 {
-  return m_interface->getState();
+  int closed_step=m_interface->getMotorStatePtr()->calibrationState.bottomStep, open_step=m_interface->getMotorStatePtr()->calibrationState.topStep, current_step=m_interface->getMotorStatePtr()->currentStep;
+  int number_of_steps=open_step-closed_step;
+  return (float)current_step/number_of_steps;
 }
 
 MotorCalibrator::MotorCalibrator(Motor *motor){
@@ -73,7 +79,6 @@ void MotorCalibrator::setFirstState()
 {
   if(m_isDone==true)return;
   m_firstIsSet=true;
-  m_motor->m_interface->setState(m_firstSetIsBottom?0:1);
   first=m_currentStep;
   if(m_firstSetIsBottom)
   {
@@ -89,9 +94,8 @@ void MotorCalibrator::setSecondState()
 {
   if(m_isDone==true)return;
   if(m_firstIsSet==false)return;
-  m_upIsClockwise=m_currentStep>=first?true:false;
-  m_motor->m_interface->setState(m_firstSetIsBottom?1:0);
-  m_motor->m_interface->setCalibrationState(MotorCalibrationState(m_upIsClockwise, m_firstSetIsBottom?m_currentStep:-m_currentStep));
+
+  *m_motor->m_interface->getMotorStatePtr() =MotorState{MotorCalibrationState{m_firstSetIsBottom?first:m_currentStep, m_firstSetIsBottom?m_currentStep:first}, m_currentStep};
   m_isDone=true;
   m_motor->m_interface->finishedCalibrating();
 }

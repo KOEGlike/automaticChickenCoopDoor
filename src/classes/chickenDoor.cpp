@@ -5,7 +5,7 @@ ChickenDoor::ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorCon
 moveTimes{12,12,12,12},
 interface{getTimes, updateTimes, updateCurrentTime, getCurrentTime, getMotor},
 displayUI{&interface,displayUiConfig},
-motorInterface{getMotorState, setMotorState, getMotorCalibrationState, setMotorCalibrationState, settingStateClosed, settingStateOpen, finishedCalibrating},
+motorInterface{getMotorStatePtr, settingStateClosed, settingStateOpen, finishedCalibrating},
 motor{motorConfig, &motorInterface}
 {
 }

@@ -61,33 +61,39 @@ struct DisplayUiConfig
 
 struct MotorCalibrationState
 {
-  MotorCalibrationState(bool upIsClockwise, long movementLengthInSteps)
+  MotorCalibrationState(int botomStep, int topStep)
   {
-    this->upIsClockwise = upIsClockwise;
-    this->movementLengthInSteps = movementLengthInSteps;
+   
+    this->bottomStep = botomStep;
+    this->topStep = topStep;
   }
   MotorCalibrationState(){};
-  bool upIsClockwise = true;
-  long movementLengthInSteps=0;
+  
+  int bottomStep, topStep;
 };
 
+struct MotorState
+{
+  MotorState(MotorCalibrationState calibrationState, int currentStep)
+  {
+    this->calibrationState = calibrationState;
+    this->currentStep = currentStep;
+  }
+  MotorState(){};
+  MotorCalibrationState calibrationState;
+  int currentStep;
+};
 
 struct MotorInterface
 {
-MotorInterface(std::function<uint()> getStateFunc,std::function<void(uint)> setStateFunc,std::function<MotorCalibrationState()> getCalibrationStateFunc,std::function<void(MotorCalibrationState )> setCalibrationStateFunc,std::function<void()> settingStateClosedFunc,std::function<void()> settingStateOpenFunc,std::function<void()>finishedCalibratingfunc)
+MotorInterface(std::function<MotorState*()> getMotorStatePtr,std::function<void()> settingStateClosedFunc,std::function<void()> settingStateOpenFunc,std::function<void()>finishedCalibratingfunc)
 {
-  getState = getStateFunc;
-  setState = setStateFunc;
-  getCalibrationState = getCalibrationStateFunc;
-  setCalibrationState = setCalibrationStateFunc;
+  this->getMotorStatePtr=getMotorStatePtr;
   settingStateOpen=settingStateOpenFunc;
   settingStateClosed=settingStateClosedFunc;
   finishedCalibrating=finishedCalibratingfunc;
 }
-std::function<uint()> getState;
-std::function<void(uint)> setState;
-std::function<MotorCalibrationState()> getCalibrationState;
-std::function<void(MotorCalibrationState )> setCalibrationState;
+std::function<MotorState*()> getMotorStatePtr;
 std::function<void()> settingStateOpen, settingStateClosed, finishedCalibrating;
 };
 
