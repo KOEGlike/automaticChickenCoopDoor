@@ -17,6 +17,7 @@ class MotorCalibrator{
     void setState();
     long getCurrentStep();
     bool isCalibrating();
+    bool firstIsSet();
     friend class Motor;
   protected:
     Motor *m_motor;

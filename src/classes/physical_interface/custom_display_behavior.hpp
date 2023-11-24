@@ -40,7 +40,7 @@ class CustomDisplayBehavior : public TM1637Display {
     int timesBlinked = 0, timesToBlink = -1,timesDotBlinked = 0, timesDotToBlink = -1, scrollCycles=0, scrollAmount=0;
     bool isBlinking = false, isContinuouslyBlinking = false, dotIsBlinking=false,dotIsContinuouslyBlinking = false, dotIsOn=false,isDotBlinkAnAmountLongDelayContinuos=false;
     uint8_t segmentsThatBlink;
-    std::function<void()> blinkSegmentsAnAmountOnEndFunc = []() {},blinkDotsAnAmountOnEndFunc= []() {};
+    std::function<void()> blinkSegmentsAnAmountOnEndFunc = []() {},blinkDotsAnAmountOnEndFunc= []() {}, scrollSegmentsOnEnd=[](){};
     std::vector<uint8_t> segmentsToScroll;
     void dotBlinkCheck();
     void blinkCheck();

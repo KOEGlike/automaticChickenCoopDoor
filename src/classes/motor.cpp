@@ -107,3 +107,8 @@ void MotorCalibrator::setState()
     setSecondState();
   }
 }
+
+bool MotorCalibrator::firstIsSet()
+{
+  return m_firstIsSet;
+}

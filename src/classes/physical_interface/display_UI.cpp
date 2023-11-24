@@ -272,6 +272,8 @@ void DisplayUI::btnPwrShortFunc()
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
     setCalibrationState();
+    if(m_interface->getMotor()->calibrator.firstIsSet())display.scrollSegmentsAnAmount(UPPER_txt, 300, 1, [&](){display.showNumberDec(m_interface->getMotor()->calibrator.getCurrentStep());});
+    if(!m_interface->getMotor()->calibrator.isCalibrating())display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1, [&](){display.clear();});
     return;
   }
   switchDoorState();
