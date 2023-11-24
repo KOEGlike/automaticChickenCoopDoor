@@ -15,7 +15,7 @@ void Motor::changeState(float percentage)
   int closed_step=m_interface->getMotorStatePtr()->calibrationState.bottomStep, open_step=m_interface->getMotorStatePtr()->calibrationState.topStep, current_step=m_interface->getMotorStatePtr()->currentStep;
   int number_of_steps=open_step-closed_step;
   int steps_to_move=std::floor(number_of_steps*percentage);
-  moveSteps(steps_to_move-current_step );
+  moveSteps(steps_to_move-current_step +closed_step);
 }
 
 void Motor::begin()
@@ -27,8 +27,6 @@ void Motor::begin()
 void Motor::moveSteps(long steps)
 {
   int bottomStep=m_interface->getMotorStatePtr()->calibrationState.bottomStep, topStep=m_interface->getMotorStatePtr()->calibrationState.topStep, currentStep=m_interface->getMotorStatePtr()->currentStep;
-  //steps=currentStep-steps<bottomStep?currentStep-bottomStep:steps;
- // steps=currentStep+steps>topStep?topStep-currentStep:steps;
   m_interface->getMotorStatePtr()->currentStep=currentStep+steps;
   m_stepper.move(steps);
 }
@@ -37,7 +35,8 @@ float Motor::getState()
 {
   int closed_step=m_interface->getMotorStatePtr()->calibrationState.bottomStep, open_step=m_interface->getMotorStatePtr()->calibrationState.topStep, current_step=m_interface->getMotorStatePtr()->currentStep;
   int number_of_steps=open_step-closed_step;
-  return (float)current_step/number_of_steps;
+  float percentage=(current_step-closed_step)/number_of_steps;
+  return percentage;
 }
 
 MotorCalibrator::MotorCalibrator(Motor *motor){
@@ -65,14 +64,12 @@ long MotorCalibrator::getCurrentStep()
   return m_currentStep;
 }
 
-
 void MotorCalibrator::turn(int amountOfSteps,bool isClockwise)
 {
   if(m_isDone==true)return;
   m_currentStep+=isClockwise?amountOfSteps:-amountOfSteps;
   m_motor->m_stepper.move(isClockwise?amountOfSteps:-amountOfSteps);
 }
-
 
 
 void MotorCalibrator::setFirstState()
@@ -94,7 +91,6 @@ void MotorCalibrator::setSecondState()
 {
   if(m_isDone==true)return;
   if(m_firstIsSet==false)return;
-
   *m_motor->m_interface->getMotorStatePtr() =MotorState{MotorCalibrationState{m_firstSetIsBottom?first:m_currentStep, m_firstSetIsBottom?m_currentStep:first}, m_currentStep};
   m_isDone=true;
   m_motor->m_interface->finishedCalibrating();
@@ -103,14 +99,11 @@ void MotorCalibrator::setSecondState()
 void MotorCalibrator::setState()
 {
   if(m_isDone==true)return;
-  Serial.println(m_firstIsSet);
   if(m_firstIsSet==false)
   {
-    Serial.println("first");
     setFirstState();
   }
   else{
-    Serial.println("second");
     setSecondState();
   }
 }

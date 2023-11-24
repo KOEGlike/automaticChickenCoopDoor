@@ -178,7 +178,6 @@ void DisplayUI::setCalibrationState()
 {
   if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing)return;
   m_interface->getMotor()->calibrator.setState();
-  Serial.println("cal22");
 }
 
 void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
@@ -186,27 +185,23 @@ void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
   if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing)return;
   m_interface->getMotor()->calibrator.turn(steps, isClockwise);
   display.showNumberDec(m_interface->getMotor()->calibrator.getCurrentStep());
-   Serial.println("cal11");
 }
 
 void DisplayUI::startCalibration()
 {
   bool firstIsBottom=true;
-  Serial.println("startCalibration");
   if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing);
   m_interface->getMotor()->calibrator.start(firstIsBottom); 
   display.stopAllActivities();
   std::vector<uint8_t> txtVec;
   txtVec=firstIsBottom?LOWER_txt:UPPER_txt;
   display.scrollSegmentsAnAmount(txtVec, 300, 1, [&](){display.showNumberDec(m_interface->getMotor()->calibrator.getCurrentStep());});
-  Serial.println("cal");
 }
 
 void DisplayUI::switchDoorState()
 {
   if(!isOn)return;
   if(m_interface->getMotor()->calibrator.isCalibrating())return;
-  Serial.println(m_interface->getMotor()->getState());
   m_interface->getMotor()->changeState(m_interface->getMotor()->getState()>=0.5?0:1);
 }
 
@@ -269,7 +264,6 @@ void DisplayUI::btn2LongFunc()
 
 void DisplayUI::btnPwrShortFunc()
 {
-  Serial.println("btnPwrShortFunc");
   if(isEditing)
   {
     changeCurrentChangingTime();

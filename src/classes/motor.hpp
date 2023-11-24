@@ -20,7 +20,7 @@ class MotorCalibrator{
     friend class Motor;
   protected:
     Motor *m_motor;
-    int  m_currentStep, first;
+    int  m_currentStep=0, first;
     bool  m_firstSetIsBottom, m_isDone=true, m_firstIsSet=false;
 };
 
@@ -29,12 +29,12 @@ class Motor
   public:
     Motor(MotorConfig *config, MotorInterface *interface);
     void changeState(float procentage);
-    void moveSteps(long steps);
     float getState();
     void begin();
     friend class MotorCalibrator;
     MotorCalibrator calibrator;
   protected:
+    void moveSteps(long steps);
     const uint16_t motorRpm=200;
     A4988 m_stepper;
     MotorInterface *m_interface;
