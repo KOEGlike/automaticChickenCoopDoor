@@ -57,6 +57,7 @@ void MotorCalibrator::start(bool firstSetIsBottom)
   {
     m_motor->m_interface->settingStateOpen();
   }
+  Serial.println("started");
 }
 
 long MotorCalibrator::getCurrentStep()
@@ -85,6 +86,7 @@ void MotorCalibrator::setFirstState()
   {
     m_motor->m_interface->settingStateClosed();
   }
+  Serial.println("first set");
 }
 
 void MotorCalibrator::setSecondState()
@@ -94,6 +96,7 @@ void MotorCalibrator::setSecondState()
   *m_motor->m_interface->getMotorStatePtr() =MotorState{MotorCalibrationState{m_firstSetIsBottom?first:m_currentStep, m_firstSetIsBottom?m_currentStep:first}, m_currentStep};
   m_isDone=true;
   m_motor->m_interface->finishedCalibrating();
+  Serial.println("second set");
 }
 
 void MotorCalibrator::setState()

@@ -50,8 +50,8 @@ void DisplayUI::begin()
   button1.begin();
   button2.begin();
   buttonPwr.begin();
-  ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){startCalibration();});
-  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){editingToggle();});
+  ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){startCalibration();Serial.println("calib");});
+  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){editingToggle();Serial.println("time");});
 }
 
 void DisplayUI::defaultForShowNumber(int num)
@@ -193,9 +193,7 @@ void DisplayUI::startCalibration()
   if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing);
   m_interface->getMotor()->calibrator.start(firstIsBottom); 
   display.stopAllActivities();
-  std::vector<uint8_t> txtVec;
-  txtVec=firstIsBottom?LOWER_txt:UPPER_txt;
-  display.scrollSegmentsAnAmount(txtVec, 300, 1, [&](){display.showNumberDec(m_interface->getMotor()->calibrator.getCurrentStep());});
+  display.scrollSegmentsAnAmount(LOWER_txt, 300, 1, [&](){display.showNumberDec(m_interface->getMotor()->calibrator.getCurrentStep());});
 }
 
 void DisplayUI::switchDoorState()
@@ -208,9 +206,11 @@ void DisplayUI::switchDoorState()
 
 void DisplayUI::btn1ShortFunc()
 {
+  Serial.println("btn1 short");
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
     calibrationTurn(5, false);
+    Serial.println("-");
     return;
   }
   if(isEditing)
@@ -236,9 +236,11 @@ void DisplayUI::btn1LongFunc()
 
 void DisplayUI::btn2ShortFunc()
 {
+  Serial.println("btn2 short");
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
     calibrationTurn(5, true);
+    Serial.println("+");
     return;
   }
   if(isEditing)
@@ -264,6 +266,7 @@ void DisplayUI::btn2LongFunc()
 
 void DisplayUI::btnPwrShortFunc()
 {
+  Serial.println("Pwr short");
   if(isEditing)
   {
     changeCurrentChangingTime();
@@ -272,8 +275,8 @@ void DisplayUI::btnPwrShortFunc()
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
     setCalibrationState();
-    if(m_interface->getMotor()->calibrator.firstIsSet())display.scrollSegmentsAnAmount(UPPER_txt, 300, 1, [&](){display.showNumberDec(m_interface->getMotor()->calibrator.getCurrentStep());});
-    if(!m_interface->getMotor()->calibrator.isCalibrating())display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1, [&](){display.clear();});
+    if(m_interface->getMotor()->calibrator.firstIsSet())display.scrollSegmentsAnAmount(UPPER_txt, 300, 1);
+    if(!m_interface->getMotor()->calibrator.isCalibrating())display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1);
     return;
   }
   switchDoorState();
@@ -281,5 +284,6 @@ void DisplayUI::btnPwrShortFunc()
 
 void DisplayUI::btnPwrLongFunc()
 {
+  Serial.println("Pwr long");
   onOffToggle();
 }

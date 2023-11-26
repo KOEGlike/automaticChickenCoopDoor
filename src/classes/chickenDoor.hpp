@@ -8,6 +8,8 @@
 #include <functional>
 #include <Arduino.h>
 #include <TimeAlarms.h>
+#include <Preferences.h>
+#include <TimeAlarms.h>
 
 class ChickenDoor{
   public:

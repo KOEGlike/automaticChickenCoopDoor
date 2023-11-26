@@ -54,7 +54,6 @@ void ButtonManager_t::check()
         } 
         else 
         {
-            btnPtr->pressedForMillis = millis() - btnPtr->pressStartInMillies;
             if (btnPtr->pressed == false&&btnPtr->wasHighBefore) 
             {
                 btnPtr->pressStartInMillies = millis();
@@ -62,6 +61,7 @@ void ButtonManager_t::check()
                 btnPtr->pressed = true;
             }
         }
+        if(btnPtr->pressed) {btnPtr->pressedForMillis = millis() - btnPtr->pressStartInMillies;}
 
         if ( btnPtr->pressedForMillis >= btnPtr->debounceInMillis) 
         {
@@ -95,7 +95,8 @@ void ButtonManager_t::check()
                         button->pressed=false;
                          button->pressedForMillis=0;
                     } 
-                    break;}
+                    break;
+                    }
                 }
                 if(wasMultiplePress==false)
                 {
