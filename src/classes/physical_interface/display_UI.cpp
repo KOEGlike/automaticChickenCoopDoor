@@ -193,7 +193,7 @@ void DisplayUI::startCalibration()
   if(!isOn||!m_interface->getMotor()->calibrator.isCalibrating()||isEditing);
   m_interface->getMotor()->calibrator.start(firstIsBottom); 
   display.stopAllActivities();
-  display.scrollSegmentsAnAmount(LOWER_txt, 300, 1, [&](){display.showNumberDec(m_interface->getMotor()->calibrator.getCurrentStep());});
+  display.scrollSegmentsAnAmount(LOWER_txt, 300, 1);
 }
 
 void DisplayUI::switchDoorState()
