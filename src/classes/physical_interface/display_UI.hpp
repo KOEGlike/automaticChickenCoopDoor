@@ -40,6 +40,7 @@ class DisplayUI
 		int  digitValueRouter(int state);
 		void setTimeRouter(int digits, int state);
 		void dotTimingRouter(int state);
+		void textValueRouter(int state);
 
 		void mutateCurrentSegment(int amount);
 		void moveCursor(bool forward);

@@ -18,8 +18,8 @@ class ChickenDoor{
   protected:
   bool isOpen=false;
     std::function<MoveTimes()> getTimes=[&](){return moveTimes; };
-    std::function<void(MoveTimes )> updateTimes= [&](MoveTimes m_moveTimes){moveTimes=m_moveTimes; };
-    std::function<void(tmElements_t )> updateCurrentTime=[&](tmElements_t time){setTime(makeTime(time));};
+    std::function<void(MoveTimes )> updateTimes= [&](MoveTimes m_moveTimes){moveTimes=m_moveTimes; Serial.println(moveTimes.openTime.Hour); Serial.println(moveTimes.openTime.Minute); Serial.println(moveTimes.closeTime.Hour); Serial.println(moveTimes.closeTime.Minute);};
+    std::function<void(tmElements_t )> updateCurrentTime=[&](tmElements_t time){setTime(makeTime(time)); Serial.println(time.Hour); Serial.println(time.Minute);};
     std::function<tmElements_t( )> getCurrentTime=[&](){tmElements_t t; breakTime(now(), t); return t ;};
     std::function<Motor*()> getMotor=[&](){return &motor;};
     

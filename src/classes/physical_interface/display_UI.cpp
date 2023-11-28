@@ -14,7 +14,7 @@ SEG_G|SEG_E//r
 
 //upper txt
 const std::vector<uint8_t> UPPER_txt{
-SEG_F|SEG_E|SEG_D|SEG_C|SEG_B,//U
+SEG_E|SEG_D|SEG_C,//U
 SEG_A|SEG_B|SEG_E|SEG_F|SEG_G,//P
 SEG_A|SEG_B|SEG_E|SEG_F|SEG_G,//P
 SEG_A|SEG_F|SEG_G|SEG_E|SEG_D,//E
@@ -30,6 +30,31 @@ SEG_F|SEG_E,//I
 SEG_A|SEG_F|SEG_G|SEG_C|SEG_D,//S
 SEG_A|SEG_F|SEG_G|SEG_E|SEG_D,//E
 SEG_E|SEG_G|SEG_C|SEG_D|SEG_B//d
+};
+
+const std::vector<uint8_t> CURRENT_txt{
+SEG_D|SEG_E|SEG_G,//c
+SEG_E|SEG_D|SEG_C,//U
+SEG_G|SEG_E,//r
+SEG_G|SEG_E,//r
+SEG_A|SEG_F|SEG_G|SEG_E|SEG_D,//E
+SEG_E|SEG_G|SEG_C,//n
+SEG_F|SEG_G|SEG_E|SEG_D,//T
+};
+
+const std::vector<uint8_t> OPEN_txt{
+SEG_C|SEG_D|SEG_E|SEG_G,//o
+SEG_A|SEG_B|SEG_E|SEG_F|SEG_G,//P
+SEG_A|SEG_F|SEG_G|SEG_E|SEG_D,//E
+SEG_E|SEG_G|SEG_C//n
+};
+
+const std::vector<uint8_t> CLOSE_txt{
+SEG_D|SEG_E|SEG_G,//c
+SEG_F| SEG_E|SEG_D|SEG_C,//L
+SEG_C|SEG_D|SEG_E|SEG_G,//o
+SEG_A|SEG_F|SEG_G|SEG_C|SEG_D,//S
+SEG_A|SEG_F|SEG_G|SEG_E|SEG_D//E
 };
 
 DisplayUI::DisplayUI(ChickenDoorInterface *interface,DisplayUiConfig *config): 
@@ -50,8 +75,8 @@ void DisplayUI::begin()
   button1.begin();
   button2.begin();
   buttonPwr.begin();
-  ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){startCalibration();Serial.println("calib");});
-  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){editingToggle();Serial.println("time");});
+  ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){startCalibration();});
+  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){editingToggle();});
 }
 
 void DisplayUI::defaultForShowNumber(int num)
@@ -145,10 +170,30 @@ void DisplayUI::editingToggle()
     times=m_interface->getTimes();
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defaultForShowNumber(digits.getDigits());
-    dotTimingRouter(currentChangingTime.getState()); 
+    dotTimingRouter(currentChangingTime.getState());  
+    textValueRouter(currentChangingTime.getState());
+}
+
+void DisplayUI::textValueRouter(int state)
+{
+  display.stopAllActivities();
+  std::vector<uint8_t> txt;
+  switch(state) {
+
+    case 0:txt=CURRENT_txt;
+      break;
+    case 1:txt=OPEN_txt;
+      break;
+    case 2:txt=CLOSE_txt;
+     break;
+  }
+  display.scrollSegmentsAnAmount(txt, 300, 1, [&](){
+    dotTimingRouter(currentChangingTime.getState());currentSelectedSegment.setState(0);
+    digits.setDigits(digitValueRouter(currentChangingTime.getState()));
+    defaultForShowNumber(digits.getDigits());
     display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
-    display.blinkDotsAnAmountThenDelayContinuously(1, offTime*offLongMult,offTime*offShortMult,onTime*onTimeMult)  ; 
-    
+    display.blinkDotsAnAmountThenDelayContinuously(1, offTime*offLongMult,offTime*offShortMult,onTime*onTimeMult)  ;
+    });
 }
 
 void DisplayUI::moveCursor(bool forward)
@@ -166,11 +211,8 @@ void DisplayUI::changeCurrentChangingTime()
   
   setTimeRouter(digits.getDigits(), currentChangingTime.getState());
   currentChangingTime.add();
-  dotTimingRouter(currentChangingTime.getState());    
-  currentSelectedSegment.setState(0);
-  digits.setDigits(digitValueRouter(currentChangingTime.getState()));
-  defaultForShowNumber(digits.getDigits());
-  display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
+  textValueRouter(currentChangingTime.getState());
+  if(currentChangingTime.getState()==2) editingToggle();
 
 }
 
@@ -206,11 +248,9 @@ void DisplayUI::switchDoorState()
 
 void DisplayUI::btn1ShortFunc()
 {
-  Serial.println("btn1 short");
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
     calibrationTurn(5, false);
-    Serial.println("-");
     return;
   }
   if(isEditing)
@@ -236,11 +276,9 @@ void DisplayUI::btn1LongFunc()
 
 void DisplayUI::btn2ShortFunc()
 {
-  Serial.println("btn2 short");
   if(m_interface->getMotor()->calibrator.isCalibrating())
   {
     calibrationTurn(5, true);
-    Serial.println("+");
     return;
   }
   if(isEditing)
@@ -266,7 +304,6 @@ void DisplayUI::btn2LongFunc()
 
 void DisplayUI::btnPwrShortFunc()
 {
-  Serial.println("Pwr short");
   if(isEditing)
   {
     changeCurrentChangingTime();
@@ -284,6 +321,5 @@ void DisplayUI::btnPwrShortFunc()
 
 void DisplayUI::btnPwrLongFunc()
 {
-  Serial.println("Pwr long");
   onOffToggle();
 }
