@@ -212,7 +212,7 @@ void DisplayUI::changeCurrentChangingTime()
   setTimeRouter(digits.getDigits(), currentChangingTime.getState());
   currentChangingTime.add();
   textValueRouter(currentChangingTime.getState());
-  if(currentChangingTime.getState()==2) editingToggle();
+  if(currentChangingTime.getState()==0) editingToggle();
 
 }
 

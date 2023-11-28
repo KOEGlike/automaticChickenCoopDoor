@@ -35,6 +35,7 @@ float Motor::getState()
 {
   int closed_step=m_interface->getMotorStatePtr()->calibrationState.bottomStep, open_step=m_interface->getMotorStatePtr()->calibrationState.topStep, current_step=m_interface->getMotorStatePtr()->currentStep;
   int number_of_steps=open_step-closed_step;
+  if(number_of_steps==0){return  1;}
   float percentage=(current_step-closed_step)/number_of_steps;
   return percentage;
 }
