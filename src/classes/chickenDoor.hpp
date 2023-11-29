@@ -32,10 +32,13 @@ class ChickenDoor{
     MotorInterface motorInterface;
 
     Motor motor;
-
+    Preferences pref;
     DisplayUI displayUI;
 
-    
+    void saveMoveTimesToMemory(MoveTimes moveTimes);
+    void loadMoveTimesFromMemory();
+    void saveMotorStateToMemory(MotorState motorState);
+    void loadMotorStateFromMemory();
 };
 
 #endif
