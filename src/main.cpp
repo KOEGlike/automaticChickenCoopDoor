@@ -2,6 +2,7 @@
 #include "classes/async_handler.hpp"
 #include "classes/interfaces.hpp"
 #include "classes/physical_interface/button.hpp"
+#include "classes/WiFiHandler.hpp"
 
 DisplayUiConfig displayUiConfig{
   10,//clk
@@ -20,11 +21,19 @@ MotorConfig motorConfig{
   15//m2
   };
 
+const char* ssid = "REPLACE_WITH_YOUR_SSID";
+const char* password = "REPLACE_WITH_YOUR_PASSWORD";
+const char* ipGeoLoacationKey = "REPLACE_WITH_YOUR_PASSWORD";
+
 ChickenDoor door(&displayUiConfig, &motorConfig);
+
+
 
 void setup() {
   Serial.begin(115200);
   ButtonManager.begin();
+  WiFi.begin(ssid, password);
+  WiFiHandler.begin(ssid, password, ipGeoLoacationKey);
   door.begin();
 }
 
