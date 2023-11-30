@@ -18,13 +18,25 @@ class ChickenDoor{
   protected:
   bool isOpen=false;
     std::function<MoveTimes()> getTimes=[&](){return moveTimes; };
-    std::function<void(MoveTimes )> updateTimes= [&](MoveTimes m_moveTimes){moveTimes=m_moveTimes; Serial.println(moveTimes.openTime.Hour); Serial.println(moveTimes.openTime.Minute); Serial.println(moveTimes.closeTime.Hour); Serial.println(moveTimes.closeTime.Minute);};
-    std::function<void(tmElements_t )> updateCurrentTime=[&](tmElements_t time){setTime(makeTime(time)); Serial.println(time.Hour); Serial.println(time.Minute);};
-    std::function<tmElements_t( )> getCurrentTime=[&](){tmElements_t t; breakTime(now(), t); return t ;};
-    std::function<Motor*()> getMotor=[&](){return &motor;};
+    std::function<void(MoveTimes )> updateTimes= [&](MoveTimes m_moveTimes){moveTimes=m_moveTimes; saveMoveTimesToMemory(moveTimes);};
     
+    std::function<void(tmElements_t )> updateCurrentTime=[&]
+    (tmElements_t time)
+    {
+    setTime(makeTime(time)); 
+    autoTime=time.Hour==0&&time.Minute==0?true:false; 
+    pref.putBool("autoTime", autoTime);
+    };
+    
+    std::function<tmElements_t( )> getCurrentTime=[&](){tmElements_t t; breakTime(now(), t); return t ;};
+    
+    std::function<Motor*()> getMotor=[&](){return &motor;};
+    std::function<void()> updateMotorState=[&](){saveMotorStateToMemory(motorState);};
+
     std::function<MotorState*()> getMotorStatePtr=[&](){return &motorState;};
-    std::function<void()> settingStateOpen=[](){}, settingStateClosed=[](){}, finishedCalibrating=[](){};
+    std::function<void()> settingStateOpen=[](){}, settingStateClosed=[](){}, finishedCalibrating=[&](){saveMotorStateToMemory(motorState);};
+
+    bool sunsetMode, autoTime=true;
 
     MoveTimes moveTimes;
     MotorState motorState;

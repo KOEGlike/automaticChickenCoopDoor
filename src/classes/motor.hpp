@@ -2,6 +2,7 @@
 #define MOTOR_HPP
 
 #include <A4988.h>
+#include<DRV8825.h>
 #include "interfaces.hpp"
 
 class Motor;
@@ -37,7 +38,7 @@ class Motor
   protected:
     void moveSteps(long steps);
     const uint16_t motorRpm=200;
-    A4988 m_stepper;
+    DRV8825 m_stepper;
     MotorInterface *m_interface;
 };
 

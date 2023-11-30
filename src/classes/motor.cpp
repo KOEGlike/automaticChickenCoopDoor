@@ -28,7 +28,9 @@ void Motor::moveSteps(long steps)
 {
   int bottomStep=m_interface->getMotorStatePtr()->calibrationState.bottomStep, topStep=m_interface->getMotorStatePtr()->calibrationState.topStep, currentStep=m_interface->getMotorStatePtr()->currentStep;
   m_interface->getMotorStatePtr()->currentStep=currentStep+steps;
+  m_interface->update();
   m_stepper.move(steps);
+
 }
 
 float Motor::getState()

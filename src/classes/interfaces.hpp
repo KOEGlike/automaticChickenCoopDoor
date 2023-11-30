@@ -86,15 +86,16 @@ struct MotorState
 
 struct MotorInterface
 {
-MotorInterface(std::function<MotorState*()> getMotorStatePtr,std::function<void()> settingStateClosedFunc,std::function<void()> settingStateOpenFunc,std::function<void()>finishedCalibratingfunc)
+MotorInterface(std::function<MotorState*()> getMotorStatePtr,std::function<void()> update,std::function<void()> settingStateClosedFunc,std::function<void()> settingStateOpenFunc,std::function<void()>finishedCalibratingfunc)
 {
   this->getMotorStatePtr=getMotorStatePtr;
+  this->update=update;
   settingStateOpen=settingStateOpenFunc;
   settingStateClosed=settingStateClosedFunc;
   finishedCalibrating=finishedCalibratingfunc;
 }
 std::function<MotorState*()> getMotorStatePtr;
-std::function<void()> settingStateOpen, settingStateClosed, finishedCalibrating;
+std::function<void()> settingStateOpen, settingStateClosed, finishedCalibrating, update;
 };
 
 struct MotorConfig
