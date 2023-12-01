@@ -4,18 +4,22 @@
 #include "interfaces.hpp"
 #include <TimeLib.h>
 #include <WiFi.h>
+#include <HTTPClient.h>
+#include <string.h>
 
 class WiFiHandler_t
 {
   public:
-    WiFiHandler_t ();
-    void begin(const char* ssid,const char* password,const char* ipGeoLoacationKey);
+    void begin(char ssid[],char password[],char ipGeoLoacationKey[]);
     MoveTimes sunsetTimes();
-    tmElements_t gmtTime();
+    tmElements_t UTCTime();
     tmElements_t ipTime();
   private:
     char* m_ssid, *m_password, *m_ipGeoLocationKey;
-
+    float m_lat=0, m_lng=0;
+    tmElements_t convertShityStringTimeNotationFronSunsetApi(std::string shityFormat);
+    void setLocation();
+    String ipGeolocReqest();
 };
 
 inline WiFiHandler_t WiFiHandler;

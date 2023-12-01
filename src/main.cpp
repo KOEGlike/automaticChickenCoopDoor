@@ -4,6 +4,8 @@
 #include "classes/physical_interface/button.hpp"
 #include "classes/WiFiHandler.hpp"
 
+//Powered by SunriseSunset.io
+
 DisplayUiConfig displayUiConfig{
   10,//clk
   11,//dio
@@ -21,9 +23,9 @@ MotorConfig motorConfig{
   15//m2
   };
 
-const char* ssid = "REPLACE_WITH_YOUR_SSID";
-const char* password = "REPLACE_WITH_YOUR_PASSWORD";
-const char* ipGeoLoacationKey = "REPLACE_WITH_YOUR_PASSWORD";
+char ssid[] = "nova sepsi";
+char password[] = "MarciFanni";
+char ipGeoLoacationKey[] = "0656d8aed024425599c985770726c7fb";
 
 ChickenDoor door(&displayUiConfig, &motorConfig);
 
@@ -31,10 +33,11 @@ ChickenDoor door(&displayUiConfig, &motorConfig);
 
 void setup() {
   Serial.begin(115200);
-  ButtonManager.begin();
-  WiFi.begin(ssid, password);
   WiFiHandler.begin(ssid, password, ipGeoLoacationKey);
+  ButtonManager.begin();
   door.begin();
+  Alarm.delay(2000);
+  WiFiHandler.sunsetTimes();
 }
 
 void loop() 
