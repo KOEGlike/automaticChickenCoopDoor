@@ -36,8 +36,7 @@ void setup() {
   WiFiHandler.begin(ssid, password, ipGeoLoacationKey);
   ButtonManager.begin();
   door.begin();
-  Alarm.delay(2000);
-  WiFiHandler.sunsetTimes();
+  WiFiHandler.ipTime();
 }
 
 void loop() 

@@ -28,7 +28,6 @@ MoveTimes WiFiHandler_t::sunsetTimes()
 {
   HTTPClient http;
   std::string path ="https://api.sunrisesunset.io/json?lat="+std::to_string(m_lat)+"&lng="+std::to_string(m_lng);
-  Serial.println(path.c_str());
   http.begin(path.c_str());
   int httpCode = http.GET();
   if(httpCode < 0)
@@ -40,7 +39,6 @@ MoveTimes WiFiHandler_t::sunsetTimes()
   
   String payload = http.getString();
   http.end();
-  Serial.println(payload);
   StaticJsonDocument<512> json;
   DeserializationError error = deserializeJson(json, payload);
   if(error)
@@ -90,6 +88,8 @@ void WiFiHandler_t::setLocation()
   }
   m_lat=json["latitude"];
   m_lng=json["longitude"];
+  Serial.println(m_lat);
+  Serial.println(m_lng);
 }
 
 String WiFiHandler_t::ipGeolocReqest()
@@ -107,6 +107,7 @@ String WiFiHandler_t::ipGeolocReqest()
   
   String payload = http.getString();
   http.end();
+  Serial.println(payload);
   return payload;
 }
 
@@ -122,6 +123,9 @@ tmElements_t WiFiHandler_t::ipTime()
     return tm;
   }
   breakTime(json["time_zone"]["current_time_unix"], tm);
+  tm.Hour=tm.Hour+json["time_zone"]["offset"].as<uint8_t>();
+  Serial.println(tm.Hour);
+  Serial.println(tm.Minute);
   return tm;
 }
 
@@ -137,6 +141,5 @@ tmElements_t WiFiHandler_t::UTCTime()
     return tm;
   }
   breakTime(json["time_zone"]["current_time_unix"], tm); 
-  tm.Hour=tm.Hour-json["time_zone"]["offset"].as<uint8_t>();
   return tm;
 }
