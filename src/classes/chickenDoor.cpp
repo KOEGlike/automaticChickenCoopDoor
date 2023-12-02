@@ -18,19 +18,33 @@ void ChickenDoor::begin()
   motor.begin();
   loadMotorStateFromMemory();
   loadMoveTimesFromMemory();
+  if(sunsetMode)
+    moveTimes=WiFiHandler.sunsetTimes();
 }
 
-
+time_t ChickenDoor::syncFunc()
+{
+  if(autoTime)return makeTime(WiFiHandler.ipTime());
+  tmElements_t tm=WiFiHandler.UTCTime();
+  tm.Hour+=offset;
+  return makeTime(tm);
+}
 
 void ChickenDoor::saveMoveTimesToMemory(MoveTimes moveTimes)
 {
   pref.putULong("openTime", makeTime(moveTimes.openTime));
   pref.putULong("closeTime", makeTime(moveTimes.closeTime));
   
-  if(moveTimes.openTime.Hour==0 && moveTimes.openTime.Minute==0 && moveTimes.closeTime.Hour&&moveTimes.closeTime.Minute) 
+  if(moveTimes.openTime.Hour==0 && moveTimes.openTime.Minute==0 && moveTimes.closeTime.Hour&&moveTimes.closeTime.Minute)
+  { 
+    pref.putBool("sunsetMode", true);
     sunsetMode=true;
+  }  
   else  
+  {
+    pref.putBool("sunsetMode", false);
     sunsetMode=false;
+  }
 }
 
 void ChickenDoor::loadMoveTimesFromMemory()
@@ -40,20 +54,9 @@ void ChickenDoor::loadMoveTimesFromMemory()
   breakTime( pref.getULong("closeTime", 0),coloseTime);
   moveTimes=MoveTimes{openTime, coloseTime};
   
-  if(moveTimes.openTime.Hour==0 && moveTimes.openTime.Minute==0 && moveTimes.closeTime.Hour==0&&moveTimes.closeTime.Minute==0) 
-    sunsetMode=true;
-  else  
-    sunsetMode=false;
-
-  //print to serial all info in moveTimes
-  Serial.println("openTime");
-  Serial.println(moveTimes.openTime. Hour);
-  Serial.println(moveTimes.openTime. Minute);
-  Serial.println("closeTime");
-  Serial.println(moveTimes.closeTime. Hour);
-  Serial.println(moveTimes.closeTime. Minute);
-  Serial.println("sunsetMode");
-  Serial.println(sunsetMode);
+  sunsetMode=pref.getBool("sunsetMode", true);
+  autoTime=pref.getBool("autoTime", true);
+  offset=pref.getInt("offset", 0);
 }
 
 void ChickenDoor::saveMotorStateToMemory(MotorState motorState)
@@ -66,11 +69,4 @@ void ChickenDoor::saveMotorStateToMemory(MotorState motorState)
 void ChickenDoor::loadMotorStateFromMemory()
 {
   motorState=MotorState{MotorCalibrationState{pref.getInt("bottomStep", 0), pref.getInt("topStep", 0)},pref.getInt("currentStep", 0)};
-  //print to serial all info in motorState
-  Serial.println("bottomStep");
-  Serial.println(motorState.calibrationState.bottomStep);
-  Serial.println("topStep");
-  Serial.println(motorState.calibrationState.topStep);
-  Serial.println("currentStep");
-  Serial.println(motorState.currentStep);
 }

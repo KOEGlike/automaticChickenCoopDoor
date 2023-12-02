@@ -6,6 +6,7 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <string.h>
+#include <ArduinoJson.h>
 
 class WiFiHandler_t
 {
@@ -19,7 +20,8 @@ class WiFiHandler_t
     float m_lat=0, m_lng=0;
     tmElements_t convertShityStringTimeNotationFronSunsetApi(std::string shityFormat);
     void setLocation();
-    String ipGeolocReqest();
+    //String ipGeolocReqest();
+    StaticJsonDocument<1536> ipGeolocReqest(); 
 };
 
 inline WiFiHandler_t WiFiHandler;

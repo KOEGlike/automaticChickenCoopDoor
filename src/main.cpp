@@ -29,14 +29,17 @@ char ipGeoLoacationKey[] = "0656d8aed024425599c985770726c7fb";
 
 ChickenDoor door(&displayUiConfig, &motorConfig);
 
-
+time_t syncFunc()
+{
+  return door.syncFunc();
+}
 
 void setup() {
   Serial.begin(115200);
   WiFiHandler.begin(ssid, password, ipGeoLoacationKey);
   ButtonManager.begin();
   door.begin();
-  WiFiHandler.ipTime();
+ setSyncProvider(syncFunc);
 }
 
 void loop() 

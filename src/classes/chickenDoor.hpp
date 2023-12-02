@@ -10,10 +10,12 @@
 #include <TimeAlarms.h>
 #include <Preferences.h>
 #include <TimeAlarms.h>
+#include "WiFiHandler.hpp"
 
 class ChickenDoor{
   public:
     ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig);
+    time_t syncFunc();
     void begin();
   protected:
   bool isOpen=false;
@@ -24,8 +26,18 @@ class ChickenDoor{
     (tmElements_t time)
     {
     setTime(makeTime(time)); 
-    autoTime=time.Hour==0&&time.Minute==0?true:false; 
-    pref.putBool("autoTime", autoTime);
+    if(time.Hour==0&&time.Minute==0)
+    {
+      pref.putBool("autoTime", true);
+      autoTime=true;
+    }
+    else
+    {
+      autoTime=false;
+      offset=time.Hour-WiFiHandler.UTCTime().Hour;
+      pref.putBool("autoTime", false);
+      pref.putInt("offset", offset);
+    }
     };
     
     std::function<tmElements_t( )> getCurrentTime=[&](){tmElements_t t; breakTime(now(), t); return t ;};
@@ -36,7 +48,8 @@ class ChickenDoor{
     std::function<MotorState*()> getMotorStatePtr=[&](){return &motorState;};
     std::function<void()> settingStateOpen=[](){}, settingStateClosed=[](){}, finishedCalibrating=[&](){saveMotorStateToMemory(motorState);};
 
-    bool sunsetMode, autoTime=true;
+    bool sunsetMode=true, autoTime=true;
+    uint8_t offset=0;
 
     MoveTimes moveTimes;
     MotorState motorState;
@@ -51,6 +64,8 @@ class ChickenDoor{
     void loadMoveTimesFromMemory();
     void saveMotorStateToMemory(MotorState motorState);
     void loadMotorStateFromMemory();
+
+    
 };
 
 #endif

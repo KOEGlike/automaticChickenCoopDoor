@@ -78,23 +78,17 @@ tmElements_t WiFiHandler_t::convertShityStringTimeNotationFronSunsetApi(std::str
 
 void WiFiHandler_t::setLocation()
 {
-  StaticJsonDocument<1536> json;
-  DeserializationError error = deserializeJson(json, ipGeolocReqest());
-  if(error)
-  {
-    Serial.print("deserializeJson() failed: ");
-    Serial.println(error.c_str());
-    return;
-  }
+  StaticJsonDocument<1536> json=ipGeolocReqest();
   m_lat=json["latitude"];
   m_lng=json["longitude"];
   Serial.println(m_lat);
   Serial.println(m_lng);
 }
 
-String WiFiHandler_t::ipGeolocReqest()
+StaticJsonDocument<1536> WiFiHandler_t::ipGeolocReqest()
 {
   HTTPClient http;
+  StaticJsonDocument<1536> json;
   std::string path="https://api.ipgeolocation.io/ipgeo?apiKey="+std::string{m_ipGeoLocationKey};
   http.begin(path.c_str());
   int httpCode = http.GET();
@@ -102,26 +96,26 @@ String WiFiHandler_t::ipGeolocReqest()
   {
     Serial.println("Error on HTTP request");
     Serial.println(httpCode);
-    return "";
+  return json;
   }
-  
+      
   String payload = http.getString();
   http.end();
-  Serial.println(payload);
-  return payload;
-}
 
-tmElements_t WiFiHandler_t::ipTime()
-{
-  tmElements_t tm; tm.Hour=0; tm.Minute=0;
-  StaticJsonDocument<1536> json;
-  DeserializationError error = deserializeJson(json, ipGeolocReqest());
+  DeserializationError error = deserializeJson(json, payload);
   if(error)
   {
     Serial.print("deserializeJson() failed: ");
     Serial.println(error.c_str());
-    return tm;
   }
+
+  return json;
+}; 
+
+tmElements_t WiFiHandler_t::ipTime()
+{
+  tmElements_t tm; tm.Hour=0; tm.Minute=0;
+  StaticJsonDocument<1536> json=ipGeolocReqest();
   breakTime(json["time_zone"]["current_time_unix"], tm);
   tm.Hour=tm.Hour+json["time_zone"]["offset"].as<uint8_t>();
   Serial.println(tm.Hour);
@@ -132,14 +126,7 @@ tmElements_t WiFiHandler_t::ipTime()
 tmElements_t WiFiHandler_t::UTCTime()
 {
   tmElements_t tm; tm.Hour=0; tm.Minute=0;
-  StaticJsonDocument<1536> json;
-  DeserializationError error = deserializeJson(json, ipGeolocReqest());
-  if(error)
-  {
-    Serial.print("deserializeJson() failed: ");
-    Serial.println(error.c_str());
-    return tm;
-  }
+  StaticJsonDocument<1536> json=ipGeolocReqest();
   breakTime(json["time_zone"]["current_time_unix"], tm); 
   return tm;
 }
