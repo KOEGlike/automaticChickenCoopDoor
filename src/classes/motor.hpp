@@ -30,7 +30,7 @@ class Motor
 {
   public:
     Motor(MotorConfig *config, MotorInterface *interface);
-    void changeState(float procentage);
+    void changeState(float percentage);
     float getState();
     void begin();
     friend class MotorCalibrator;

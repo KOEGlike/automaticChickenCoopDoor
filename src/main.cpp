@@ -25,7 +25,7 @@ MotorConfig motorConfig{
 
 char ssid[] = "nova sepsi";
 char password[] = "MarciFanni";
-char ipGeoLoacationKey[] = "0656d8aed024425599c985770726c7fb";
+char ipGeoLocationKey[] = "0656d8aed024425599c985770726c7fb";
 
 ChickenDoor door(&displayUiConfig, &motorConfig);
 
@@ -36,7 +36,7 @@ time_t syncFunc()
 
 void setup() {
   Serial.begin(115200);
-  WiFiHandler.begin(ssid, password, ipGeoLoacationKey);
+  WiFiHandler.begin(ssid, password, ipGeoLocationKey);
   ButtonManager.begin();
   door.begin();
  setSyncProvider(syncFunc);
@@ -46,4 +46,3 @@ void loop()
 {
   Async.check();
 }
-

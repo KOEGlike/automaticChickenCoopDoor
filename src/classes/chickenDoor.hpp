@@ -15,6 +15,19 @@
 class ChickenDoor{
   public:
     ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig);
+
+    void changeDoorState(float percentage);
+    MoveTimes getMoveTimes();
+    void updateMoveTimes(MoveTimes moveTimes);
+    void updateCurrentTime(tmElements_t time);
+
+    MotorCalibrator getMotorCalibrator();
+    MotorState getMotorState();
+    void updateMotorState(MotorState motorState);
+
+    bool getSunsetMode();
+    bool getAutoTime();
+
     time_t syncFunc();
     void begin();
   protected:

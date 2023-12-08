@@ -6,11 +6,11 @@
 #include <Arduino.h> 
 #include <string>
 
-void WiFiHandler_t::begin(char ssid[],char password[],char ipGeoLoacationKey[])
+void WiFiHandler_t::begin(char ssid[],char password[],char ipGeoLocationKey[])
 {
  m_ssid=ssid;
  m_password=password;
- m_ipGeoLocationKey=ipGeoLoacationKey;
+ m_ipGeoLocationKey=ipGeoLocationKey;
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
@@ -49,12 +49,12 @@ MoveTimes WiFiHandler_t::sunsetTimes()
   }
   
   std::string sunset = json["results"]["sunset"], sunrise=json["results"]["sunrise"];
-  MoveTimes times {convertShityStringTimeNotationFronSunsetApi(sunrise),convertShityStringTimeNotationFronSunsetApi(sunset)};
+  MoveTimes times {convertShityStringTimeNotationFromSunsetApi(sunrise),convertShityStringTimeNotationFromSunsetApi(sunset)};
   return times;
 
 }
 
-tmElements_t WiFiHandler_t::convertShityStringTimeNotationFronSunsetApi(std::string shityFormat)
+tmElements_t WiFiHandler_t::convertShityStringTimeNotationFromSunsetApi(std::string shityFormat)
 {
   uint8_t hour=0,minute=0;
   while(shityFormat[0]!=':')
@@ -78,14 +78,14 @@ tmElements_t WiFiHandler_t::convertShityStringTimeNotationFronSunsetApi(std::str
 
 void WiFiHandler_t::setLocation()
 {
-  StaticJsonDocument<1536> json=ipGeolocReqest();
+  StaticJsonDocument<1536> json=ipGeolocationRequest();
   m_lat=json["latitude"];
   m_lng=json["longitude"];
   Serial.println(m_lat);
   Serial.println(m_lng);
 }
 
-StaticJsonDocument<1536> WiFiHandler_t::ipGeolocReqest()
+StaticJsonDocument<1536> WiFiHandler_t::ipGeolocationRequest()
 {
   HTTPClient http;
   StaticJsonDocument<1536> json;
@@ -115,7 +115,7 @@ StaticJsonDocument<1536> WiFiHandler_t::ipGeolocReqest()
 tmElements_t WiFiHandler_t::ipTime()
 {
   tmElements_t tm; tm.Hour=0; tm.Minute=0;
-  StaticJsonDocument<1536> json=ipGeolocReqest();
+  StaticJsonDocument<1536> json=ipGeolocationRequest();
   breakTime(json["time_zone"]["current_time_unix"], tm);
   tm.Hour=tm.Hour+json["time_zone"]["offset"].as<uint8_t>();
   Serial.println(tm.Hour);
@@ -126,7 +126,7 @@ tmElements_t WiFiHandler_t::ipTime()
 tmElements_t WiFiHandler_t::UTCTime()
 {
   tmElements_t tm; tm.Hour=0; tm.Minute=0;
-  StaticJsonDocument<1536> json=ipGeolocReqest();
+  StaticJsonDocument<1536> json=ipGeolocationRequest();
   breakTime(json["time_zone"]["current_time_unix"], tm); 
   return tm;
 }

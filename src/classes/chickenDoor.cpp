@@ -49,10 +49,10 @@ void ChickenDoor::saveMoveTimesToMemory(MoveTimes moveTimes)
 
 void ChickenDoor::loadMoveTimesFromMemory()
 {
-  tmElements_t openTime, coloseTime;
+  tmElements_t openTime, closeTime;
   breakTime( pref.getULong("openTime", 0),openTime);
-  breakTime( pref.getULong("closeTime", 0),coloseTime);
-  moveTimes=MoveTimes{openTime, coloseTime};
+  breakTime( pref.getULong("closeTime", 0),closeTime);
+  moveTimes=MoveTimes{openTime, closeTime};
   
   sunsetMode=pref.getBool("sunsetMode", true);
   autoTime=pref.getBool("autoTime", true);
