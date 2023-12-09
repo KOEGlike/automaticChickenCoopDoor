@@ -122,3 +122,9 @@ bool ChickenDoor::getAutoTime()
 {
 
 }
+
+void ChickenDoor::updateMotorState(MotorState state)
+{
+  motorState=state;
+  saveMotorStateToMemory(state);
+}

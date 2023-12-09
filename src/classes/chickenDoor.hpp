@@ -39,7 +39,6 @@ class ChickenDoor{
     std::function<tmElements_t( )> getCurrentTime=[&](){tmElements_t t; breakTime(now(), t); return t ;};
     
     std::function<Motor*()> getMotor=[&](){return &motor;};
-    std::function<void()> updateMotorState=[&](){saveMotorStateToMemory(motorState);};
 
     std::function<MotorState*()> getMotorStatePtr=[&](){return &motorState;};
     std::function<void()> settingStateOpen=[](){}, settingStateClosed=[](){}, finishedCalibrating=[&](){saveMotorStateToMemory(motorState);};

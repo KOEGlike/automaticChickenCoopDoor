@@ -4,6 +4,7 @@
 #include <A4988.h>
 #include<DRV8825.h>
 #include "interfaces.hpp"
+#include "chickenDoor.hpp"
 
 class Motor;
 class MotorConfig;
@@ -29,7 +30,7 @@ class MotorCalibrator{
 class Motor
 {
   public:
-    Motor(MotorConfig *config, MotorInterface *interface);
+    Motor(ChickenDoor*door);
     void changeState(float percentage);
     float getState();
     void begin();
