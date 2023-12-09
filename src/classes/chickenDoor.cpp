@@ -3,10 +3,9 @@
 
 ChickenDoor::ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig):
 moveTimes{12,12,12,12},
-interface{getTimes, updateTimes, updateCurrentTime, getCurrentTime, getMotor},
-displayUI{&interface,displayUiConfig},
-motorInterface{getMotorStatePtr, updateMotorState ,settingStateClosed, settingStateOpen, finishedCalibrating},
-motor{motorConfig, &motorInterface}
+displayUI{this,displayUiConfig},
+motor{this,motorConfig},
+calibrator{&motor}
 {
 }
 
@@ -30,7 +29,7 @@ time_t ChickenDoor::syncFunc()
   return makeTime(tm);
 }
 
-void ChickenDoor::saveMoveTimesToMemory(MoveTimes moveTimes)
+void ChickenDoor::saveMoveTimesToMemory()
 {
   pref.putULong("openTime", makeTime(moveTimes.openTime));
   pref.putULong("closeTime", makeTime(moveTimes.closeTime));
@@ -59,7 +58,7 @@ void ChickenDoor::loadMoveTimesFromMemory()
   offset=pref.getInt("offset", 0);
 }
 
-void ChickenDoor::saveMotorStateToMemory(MotorState motorState)
+void ChickenDoor::saveMotorStateToMemory()
 {
   pref.putInt("bottomStep", motorState.calibrationState.bottomStep);
   pref.putInt("topStep", motorState.calibrationState.topStep);
@@ -73,12 +72,13 @@ void ChickenDoor::loadMotorStateFromMemory()
 
 void ChickenDoor::changeDoorState(float percentage)
 {
-
+   motor.changeState(percentage);
 }
 
 void ChickenDoor::updateMoveTimes(MoveTimes moveTimes)
 {
-  
+  this->moveTimes=moveTimes;
+  saveMoveTimesToMemory();
 }
 
 void ChickenDoor::updateCurrentTime(tmElements_t time)
@@ -100,31 +100,33 @@ void ChickenDoor::updateCurrentTime(tmElements_t time)
 
 MoveTimes ChickenDoor::getMoveTimes()
 {
-
+  return moveTimes;
 }
 
-MotorCalibrator ChickenDoor::getMotorCalibrator()
-{
-
-}
 
 MotorState ChickenDoor::getMotorState()
 {
-
+  return motorState;
 }
 
 bool ChickenDoor::getSunsetMode()
 {
-
+  return sunsetMode;
 }
 
 bool ChickenDoor::getAutoTime()
 {
-
+  return autoTime;
 }
 
 void ChickenDoor::updateMotorState(MotorState state)
 {
   motorState=state;
-  saveMotorStateToMemory(state);
+  saveMotorStateToMemory();
+}
+
+void ChickenDoor::addToCurrentStep(int step)
+{
+  motorState.currentStep+=step;
+  pref.putInt("currentStep", motorState.currentStep);
 }

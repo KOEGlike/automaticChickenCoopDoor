@@ -24,28 +24,6 @@ struct MoveTimes
 
 
 
-struct ChickenDoorInterface
-{
-  ChickenDoorInterface(std::function<MoveTimes()> getFunc,
-  std::function<void(MoveTimes )> updateFunc,
-  std::function<void(tmElements_t)> updateCurrentTimeFunc,
-  std::function<tmElements_t()> getCurrentTimeFunc,
-  std::function<Motor*()> getMotorFunc)
-  {
-    getTimes = getFunc;
-    updateTimes = updateFunc;
-    updateCurrentTime = updateCurrentTimeFunc;
-    getCurrentTime = getCurrentTimeFunc;
-    getMotor = getMotorFunc;
-  }
-  std::function<MoveTimes()> getTimes;
-  std::function<void(MoveTimes )> updateTimes;
-  std::function<void(tmElements_t )> updateCurrentTime;
-  std::function<tmElements_t()> getCurrentTime;
-  std::function<Motor*()> getMotor;
-};
-
-
 struct DisplayUiConfig
 {
   DisplayUiConfig(uint8_t clk, uint8_t dio, uint8_t btn1, uint8_t btn2, uint8_t btn3)
@@ -61,10 +39,10 @@ struct DisplayUiConfig
 
 struct MotorCalibrationState
 {
-  MotorCalibrationState(int botomStep, int topStep)
+  MotorCalibrationState(int bottomStep, int topStep)
   {
    
-    this->bottomStep = botomStep;
+    this->bottomStep = bottomStep;
     this->topStep = topStep;
   }
   MotorCalibrationState(){};
@@ -84,19 +62,6 @@ struct MotorState
   int currentStep;
 };
 
-struct MotorInterface
-{
-MotorInterface(std::function<MotorState*()> getMotorStatePtr,std::function<void()> update,std::function<void()> settingStateClosedFunc,std::function<void()> settingStateOpenFunc,std::function<void()>finishedCalibratingfunc)
-{
-  this->getMotorStatePtr=getMotorStatePtr;
-  this->update=update;
-  settingStateOpen=settingStateOpenFunc;
-  settingStateClosed=settingStateClosedFunc;
-  finishedCalibrating=finishedCalibratingfunc;
-}
-std::function<MotorState*()> getMotorStatePtr;
-std::function<void()> settingStateOpen, settingStateClosed, finishedCalibrating, update;
-};
 
 struct MotorConfig
 {

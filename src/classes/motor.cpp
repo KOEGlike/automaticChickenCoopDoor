@@ -1,9 +1,10 @@
 #include "motor.hpp"	
 #include <cmath>
-Motor::Motor(MotorConfig *config, MotorInterface *interface): 
-m_stepper{config->steps, config->dir, config->step, config->enable,config->m0, config->m1,config->m2}, 
-m_interface{interface}, calibrator{this}
-{}
+Motor::Motor(ChickenDoor*door, MotorConfig* config): 
+m_stepper{config->steps, config->dir, config->step, config->enable,config->m0, config->m1,config->m2}
+{
+  m_door=door;
+}
 
 bool MotorCalibrator::isCalibrating()
 {
@@ -12,7 +13,8 @@ bool MotorCalibrator::isCalibrating()
 
 void Motor::changeState(float percentage)
 {
-  int closed_step=m_interface->getMotorStatePtr()->calibrationState.bottomStep, open_step=m_interface->getMotorStatePtr()->calibrationState.topStep, current_step=m_interface->getMotorStatePtr()->currentStep;
+  MotorState state{m_door->getMotorState()};
+  int closed_step=state.calibrationState.bottomStep, open_step=state.calibrationState.topStep, current_step=state.currentStep;
   int number_of_steps=open_step-closed_step;
   int steps_to_move=std::floor(number_of_steps*percentage);
   moveSteps(steps_to_move-current_step +closed_step);
@@ -26,16 +28,17 @@ void Motor::begin()
 
 void Motor::moveSteps(long steps)
 {
-  int bottomStep=m_interface->getMotorStatePtr()->calibrationState.bottomStep, topStep=m_interface->getMotorStatePtr()->calibrationState.topStep, currentStep=m_interface->getMotorStatePtr()->currentStep;
-  m_interface->getMotorStatePtr()->currentStep=currentStep+steps;
-  m_interface->update();
+  MotorState state{m_door->getMotorState()};
+  int bottomStep=state.calibrationState.bottomStep, topStep=state.calibrationState.topStep, currentStep=state.currentStep;
+  m_door->addToCurrentStep(steps);
   m_stepper.move(steps);
 
 }
 
 float Motor::getState()
 {
-  int closed_step=m_interface->getMotorStatePtr()->calibrationState.bottomStep, open_step=m_interface->getMotorStatePtr()->calibrationState.topStep, current_step=m_interface->getMotorStatePtr()->currentStep;
+  MotorState state{m_door->getMotorState()};
+  int closed_step=state.calibrationState.bottomStep, open_step=state.calibrationState.topStep, current_step=state.currentStep;
   int number_of_steps=open_step-closed_step;
   if(number_of_steps==0){return  1;}
   float percentage=(current_step-closed_step)/number_of_steps;
@@ -52,14 +55,6 @@ void MotorCalibrator::start(bool firstSetIsBottom)
   m_isDone=false;
   m_currentStep=0;
   m_firstSetIsBottom=firstSetIsBottom;
-  if(firstSetIsBottom)
-  {
-    m_motor->m_interface->settingStateClosed();
-  }
-  else
-  {
-    m_motor->m_interface->settingStateOpen();
-  }
   Serial.println("started");
 }
 
@@ -81,14 +76,6 @@ void MotorCalibrator::setFirstState()
   if(m_isDone==true)return;
   m_firstIsSet=true;
   first=m_currentStep;
-  if(m_firstSetIsBottom)
-  {
-    m_motor->m_interface->settingStateOpen();
-  }
-  else
-  {
-    m_motor->m_interface->settingStateClosed();
-  }
   Serial.println("first set");
 }
 
@@ -96,9 +83,8 @@ void MotorCalibrator::setSecondState()
 {
   if(m_isDone==true)return;
   if(m_firstIsSet==false)return;
-  *m_motor->m_interface->getMotorStatePtr() =MotorState{MotorCalibrationState{m_firstSetIsBottom?first:m_currentStep, m_firstSetIsBottom?m_currentStep:first}, m_currentStep};
+  m_motor->m_door->updateMotorState(MotorState{MotorCalibrationState{m_firstSetIsBottom?first:m_currentStep, m_firstSetIsBottom?m_currentStep:first}, m_currentStep}) ;
   m_isDone=true;
-  m_motor->m_interface->finishedCalibrating();
   Serial.println("second set");
 }
 

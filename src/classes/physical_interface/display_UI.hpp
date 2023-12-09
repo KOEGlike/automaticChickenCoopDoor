@@ -15,17 +15,22 @@
 #include "counter.hpp"
 #include "../async_handler.hpp"
 #include "../interfaces.hpp"
+#include "../chickenDoor.hpp"
+
+class DisplayUiConfig;
+class ChickenDoor;
+class MoveTimes;
 
 class DisplayUI
 {
   public:
-    DisplayUI(ChickenDoorInterface *interface, DisplayUiConfig *config );
+    DisplayUI(ChickenDoor *door, DisplayUiConfig *config );
 		void begin();
   protected:
 		unsigned int offTime=100, onTime=100;
 		uint8_t offShortMult=4, offLongMult=15, onTimeMult=4;
 
-		ChickenDoorInterface *m_interface;
+		ChickenDoor *m_door;
 		MoveTimes times;
 		bool isOn=false, isEditing=false;
 
@@ -64,6 +69,8 @@ class DisplayUI
 		Button button1;
 		Button button2;
 		Button buttonPwr;
+
+		tmElements_t getTimeInElements();
 
 };
 

@@ -8,6 +8,8 @@
 #include <string.h>
 #include <ArduinoJson.h>
 
+class MoveTimes;
+
 class WiFiHandler_t
 {
   public:

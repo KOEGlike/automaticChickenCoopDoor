@@ -55,5 +55,9 @@
   "idf.adapterTargetName": "esp32s3",
   "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"
+  ],
+  "cSpell.words": [
+    "FOURDIGITTIME",
+    "Millies"
   ]
 }

@@ -8,7 +8,7 @@
 
 class Motor;
 class MotorConfig;
-class MotorInterface;
+class ChickenDoor;
 class MotorCalibrator{
   public:
     MotorCalibrator(Motor *motor);
@@ -30,17 +30,17 @@ class MotorCalibrator{
 class Motor
 {
   public:
-    Motor(ChickenDoor*door);
+    Motor(ChickenDoor*door, MotorConfig* config);
     void changeState(float percentage);
     float getState();
     void begin();
     friend class MotorCalibrator;
-    MotorCalibrator calibrator;
+    
   protected:
     void moveSteps(long steps);
     const uint16_t motorRpm=200;
     DRV8825 m_stepper;
-    MotorInterface *m_interface;
+    ChickenDoor*m_door;
 };
 
 #endif
