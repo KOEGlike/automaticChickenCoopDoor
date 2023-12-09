@@ -23,7 +23,6 @@ class ChickenDoor{
 
     MotorCalibrator getMotorCalibrator();
     MotorState getMotorState();
-    void updateMotorState(MotorState motorState);
 
     bool getSunsetMode();
     bool getAutoTime();
@@ -31,27 +30,11 @@ class ChickenDoor{
     time_t syncFunc();
     void begin();
   protected:
-  bool isOpen=false;
+    void updateMotorState(MotorState motorState);
+    bool isOpen=false;
     std::function<MoveTimes()> getTimes=[&](){return moveTimes; };
     std::function<void(MoveTimes )> updateTimes= [&](MoveTimes m_moveTimes){moveTimes=m_moveTimes; saveMoveTimesToMemory(moveTimes);};
     
-    std::function<void(tmElements_t )> updateCurrentTime=[&]
-    (tmElements_t time)
-    {
-    setTime(makeTime(time)); 
-    if(time.Hour==0&&time.Minute==0)
-    {
-      pref.putBool("autoTime", true);
-      autoTime=true;
-    }
-    else
-    {
-      autoTime=false;
-      offset=time.Hour-WiFiHandler.UTCTime().Hour;
-      pref.putBool("autoTime", false);
-      pref.putInt("offset", offset);
-    }
-    };
     
     std::function<tmElements_t( )> getCurrentTime=[&](){tmElements_t t; breakTime(now(), t); return t ;};
     

@@ -70,3 +70,55 @@ void ChickenDoor::loadMotorStateFromMemory()
 {
   motorState=MotorState{MotorCalibrationState{pref.getInt("bottomStep", 0), pref.getInt("topStep", 0)},pref.getInt("currentStep", 0)};
 }
+
+void ChickenDoor::changeDoorState(float percentage)
+{
+
+}
+
+void ChickenDoor::updateMoveTimes(MoveTimes moveTimes)
+{
+  
+}
+
+void ChickenDoor::updateCurrentTime(tmElements_t time)
+{
+  setTime(makeTime(time)); 
+  if(time.Hour==0&&time.Minute==0)
+  {
+    pref.putBool("autoTime", true);
+    autoTime=true;
+   }
+  else
+  {
+    autoTime=false;
+    offset=time.Hour-WiFiHandler.UTCTime().Hour;
+    pref.putBool("autoTime", false);
+    pref.putInt("offset", offset);
+  }
+}
+
+MoveTimes ChickenDoor::getMoveTimes()
+{
+
+}
+
+MotorCalibrator ChickenDoor::getMotorCalibrator()
+{
+
+}
+
+MotorState ChickenDoor::getMotorState()
+{
+
+}
+
+bool ChickenDoor::getSunsetMode()
+{
+
+}
+
+bool ChickenDoor::getAutoTime()
+{
+
+}
