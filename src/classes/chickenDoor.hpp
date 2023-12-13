@@ -1,7 +1,4 @@
-#ifndef CHICKEN_DOOR_HPP
-#define CHICKEN_DOOR_HPP
-
-
+#pragma once
 
 #include "physical_interface/display_UI.hpp"
 #include "interfaces.hpp"
@@ -13,6 +10,7 @@
 #include <Preferences.h>
 #include <TimeAlarms.h>
 #include "WiFiHandler.hpp"
+#include "times_manager.hpp"
 
 class Motor;
 class MoveTimes;
@@ -33,40 +31,17 @@ class ChickenDoor{
     void changeDoorState(float percentage);
     float getDoorOpennessInPercentage();
     MotorState getMotorState();
-
-    MoveTimes getMoveTimes();
-    void updateMoveTimes(MoveTimes moveTimes);
-    void updateCurrentTime(tmElements_t time);
-    
-    void addToCurrentStep(int step); 
-    void updateMotorState(MotorState motorState);
-
-    bool getSunsetMode();
-    bool getAutoTime();
-
+    TimesManager timesManager;
     time_t syncFunc();
     void begin();
-
+    Motor motor;
     MotorCalibrator calibrator;
-
-    
   protected:
    
-    bool sunsetMode=true, autoTime=true;
-    uint8_t offset=0;
-
-    MoveTimes moveTimes;
-    MotorState motorState;
-
-    Motor motor;
-    Preferences pref;
+    TimeState timeState;
     DisplayUI displayUI;
 
-    void saveMoveTimesToMemory();
-    void loadMoveTimesFromMemory();
-    void saveMotorStateToMemory();
-    void loadMotorStateFromMemory();
+    
     
 };
 
-#endif

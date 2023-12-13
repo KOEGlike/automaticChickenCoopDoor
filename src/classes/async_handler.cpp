@@ -9,7 +9,7 @@ callbackData::callbackData(long delayInMillis,uint32_t timesToRepeat, std::funct
     delay=delayInMillis;
     times=timesToRepeat;
     callback=callBack;
-    onend=onEnd;
+    this->onEnd=onEnd;
     
   }
 
@@ -41,7 +41,7 @@ void AsyncHandler::check()
   {
     if(callbacks[id].timesCalled>=callbacks[id].times&&callbacks[id].times>=0)
     {
-      callbacks[id].onend();
+      callbacks[id].onEnd();
       deleteCallBack(id);
     }
     else if(millis()-callbacks[id].lastCalled>=callbacks[id].delay)

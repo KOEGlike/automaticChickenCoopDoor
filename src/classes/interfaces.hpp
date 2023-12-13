@@ -1,11 +1,9 @@
-#ifndef UI_INTERFACES
-#define UI_INTERFACES
+#pragma once
 
 #include <functional>
 #include <TimeLib.h>
-#include "motor.hpp"
 
-class Motor;
+
 
 struct MoveTimes
 {
@@ -78,6 +76,16 @@ struct MotorConfig
 uint8_t steps, dir, step, enable, m0, m1, m2;
 };
 
+struct TimeState
+{
+  TimeState(MoveTimes movetimes, bool sunsetMode, bool autoTime, int offset):moveTimes{movetimes}
+  {
+    this->offset = offset;
+    this->sunsetMode = sunsetMode;
+    this->autoTime = autoTime;
+  }
 
-
-#endif
+  MoveTimes moveTimes;
+  bool sunsetMode, autoTime;
+  int offset;
+};

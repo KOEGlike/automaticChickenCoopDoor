@@ -57,16 +57,18 @@ SEG_A|SEG_F|SEG_G|SEG_C|SEG_D,//S
 SEG_A|SEG_F|SEG_G|SEG_E|SEG_D//E
 };
 
-DisplayUI::DisplayUI(ChickenDoor *door,DisplayUiConfig *config): 
+DisplayUI::DisplayUI(TimesManager *timesManager,Motor* motor,MotorCalibrator* calibrator, DisplayUiConfig *config): 
     button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
     button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
     buttonPwr{config->btn3Pin, [&](){btnPwrShortFunc();}, [&](){btnPwrLongFunc();}},
     display(config->clkPin, config->dioPin),
     currentSelectedSegment(4), 
     currentChangingTime(3),
-    times(door->getMoveTimes())
+    times(timesManager->getTimeState().moveTimes)
 {
-  m_door=door;
+  this->calibrator=calibrator;
+  this->timesManager=timesManager;
+  this->motor=motor;
 }
 
 void DisplayUI::begin()
@@ -105,17 +107,17 @@ void DisplayUI::setTimeRouter(int digits, int state)
   tmElements_t currentTime;
     currentTime.Hour=digits/100;
     currentTime.Minute=digits%100;
-    m_door->updateCurrentTime(currentTime);
+    timesManager->updateCurrentTime(currentTime);
     break;
   case 1:
     times.openTime.Minute=digits%100;
     times.openTime.Hour=digits/100;
-    m_door->updateMoveTimes(times);
+    timesManager->updateMoveTimes(times);
     break;
   case 2:
     times.closeTime.Minute=digits%100;
     times.closeTime.Hour=digits/100;
-    m_door->updateMoveTimes(times);
+    timesManager->updateMoveTimes(times);
     break;
   }
 }
@@ -135,7 +137,7 @@ void DisplayUI::mutateCurrentSegment(int amount)
 
 void DisplayUI::onOffToggle()
 {
-  if(m_door->calibrator.isCalibrating()||isEditing)return;
+  if(calibrator->isCalibrating()||isEditing)return;
   
   if(isOn){
     isOn=false;
@@ -151,14 +153,14 @@ void DisplayUI::onOffToggle()
 
 void DisplayUI::editingToggle()
 {
-  if(m_door->calibrator.isCalibrating()||!isOn)return;
+  if(calibrator->isCalibrating()||!isOn)return;
 
   if(isEditing)
   {
     isEditing=false;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-   m_door->updateMoveTimes(times);
+   timesManager->updateMoveTimes(times);
     display.stopAllActivities();
     display.clear();
     return;
@@ -167,7 +169,7 @@ void DisplayUI::editingToggle()
     isEditing=true;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-    times=m_door->getMoveTimes();
+    times=timesManager->getTimeState().moveTimes;
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defaultForShowNumber(digits.getDigits());
     dotTimingRouter(currentChangingTime.getState());  
@@ -198,7 +200,7 @@ void DisplayUI::textValueRouter(int state)
 
 void DisplayUI::moveCursor(bool forward)
 {
-  if(isOn==false||!isEditing||m_door->calibrator.isCalibrating())return;
+  if(isOn==false||!isEditing||calibrator->isCalibrating())return;
   
   currentSelectedSegment.add(forward?1:-1);
   display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
@@ -207,7 +209,7 @@ void DisplayUI::moveCursor(bool forward)
 
 void DisplayUI::changeCurrentChangingTime()
 {
-  if(isOn==false||m_door->calibrator.isCalibrating()||!isEditing)return;
+  if(isOn==false||calibrator->isCalibrating()||!isEditing)return;
   
   setTimeRouter(digits.getDigits(), currentChangingTime.getState());
   currentChangingTime.add();
@@ -218,22 +220,22 @@ void DisplayUI::changeCurrentChangingTime()
 
 void DisplayUI::setCalibrationState()
 {
-  if(!isOn||!m_door->calibrator.isCalibrating()||isEditing)return;
-  m_door->calibrator.setState();
+  if(!isOn||!calibrator->isCalibrating()||isEditing)return;
+  calibrator->setState();
 }
 
 void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
 {
-  if(!isOn||!m_door->calibrator.isCalibrating()||isEditing)return;
-  m_door->calibrator.turn(steps, isClockwise);
-  display.showNumberDec(m_door->calibrator.getCurrentStep());
+  if(!isOn||!calibrator->isCalibrating()||isEditing)return;
+  calibrator->turn(steps, isClockwise);
+  display.showNumberDec(calibrator->getCurrentStep());
 }
 
 void DisplayUI::startCalibration()
 {
   bool firstIsBottom=true;
-  if(!isOn||!m_door->calibrator.isCalibrating()||isEditing);
-  m_door->calibrator.start(firstIsBottom); 
+  if(!isOn||!calibrator->isCalibrating()||isEditing);
+  calibrator->start(firstIsBottom); 
   display.stopAllActivities();
   display.scrollSegmentsAnAmount(LOWER_txt, 300, 1);
 }
@@ -241,14 +243,14 @@ void DisplayUI::startCalibration()
 void DisplayUI::switchDoorState()
 {
   if(!isOn)return;
-  if(m_door->calibrator.isCalibrating())return;
-  m_door->changeDoorState(m_door->getDoorOpennessInPercentage()>=0.5?0:1);
+  if(calibrator->isCalibrating())return;
+  motor->changeState(motor->getState() >=0.5?0:1);
 }
 
 
 void DisplayUI::btn1ShortFunc()
 {
-  if(m_door->calibrator.isCalibrating())
+  if(calibrator->isCalibrating())
   {
     calibrationTurn(5, false);
     return;
@@ -262,7 +264,7 @@ void DisplayUI::btn1ShortFunc()
 
 void DisplayUI::btn1LongFunc()
 {
-  if(m_door->calibrator.isCalibrating())
+  if(calibrator->isCalibrating())
   {
    calibrationTurn(10, false);
     return;
@@ -276,7 +278,7 @@ void DisplayUI::btn1LongFunc()
 
 void DisplayUI::btn2ShortFunc()
 {
-  if(m_door->calibrator.isCalibrating())
+  if(calibrator->isCalibrating())
   {
     calibrationTurn(5, true);
     return;
@@ -290,7 +292,7 @@ void DisplayUI::btn2ShortFunc()
 
 void DisplayUI::btn2LongFunc()
 {
-  if(m_door->calibrator.isCalibrating())
+  if(calibrator->isCalibrating())
   {
     calibrationTurn(10, true);
     return;
@@ -309,11 +311,11 @@ void DisplayUI::btnPwrShortFunc()
     changeCurrentChangingTime();
     return;
   }
-  if(m_door->calibrator.isCalibrating())
+  if(calibrator->isCalibrating())
   {
     setCalibrationState();
-    if(m_door->calibrator.firstIsSet())display.scrollSegmentsAnAmount(UPPER_txt, 300, 1);
-    if(!m_door->calibrator.isCalibrating())display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1);
+    if(calibrator->firstIsSet())display.scrollSegmentsAnAmount(UPPER_txt, 300, 1);
+    if(!calibrator->isCalibrating())display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1);
     return;
   }
   switchDoorState();

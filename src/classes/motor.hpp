@@ -1,10 +1,8 @@
-#ifndef MOTOR_HPP
-#define MOTOR_HPP
+#pragma once
 
 #include <A4988.h>
 #include<DRV8825.h>
 #include "interfaces.hpp"
-#include "chickenDoor.hpp"
 
 class Motor;
 class MotorConfig;
@@ -30,17 +28,16 @@ class MotorCalibrator{
 class Motor
 {
   public:
-    Motor(ChickenDoor*door, MotorConfig* config);
+    Motor(MotorConfig* config);
     void changeState(float percentage);
     float getState();
     void begin();
+    MotorState getMotorState();
     friend class MotorCalibrator;
     
   protected:
     void moveSteps(long steps);
     const uint16_t motorRpm=200;
     DRV8825 m_stepper;
-    ChickenDoor*m_door;
+    MotorState motorState;
 };
-
-#endif

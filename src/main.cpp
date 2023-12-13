@@ -3,6 +3,7 @@
 #include "classes/interfaces.hpp"
 #include "classes/physical_interface/button.hpp"
 #include "classes/WiFiHandler.hpp"
+#include "classes/memory_manager.hpp"
 
 //Powered by SunriseSunset.io
 
@@ -36,10 +37,11 @@ time_t syncFunc()
 
 void setup() {
   Serial.begin(115200);
+  MemoryManager.begin();
   WiFiHandler.begin(ssid, password, ipGeoLocationKey);
   ButtonManager.begin();
   door.begin();
- setSyncProvider(syncFunc);
+  setSyncProvider(syncFunc);
 }
 
 void loop() 

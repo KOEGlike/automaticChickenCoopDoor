@@ -1,5 +1,4 @@
-#ifndef DISPLAY_UI_HPP
-#define DISPLAY_UI_HPP
+#pragma once
 
 #include <TimeLib.h>
 #include <Arduino.h>
@@ -8,14 +7,14 @@
 
 #include <math.h>
 
-
+#include "../times_manager.hpp"
 #include "button.hpp"
 #include "custom_display_behavior.hpp"
 #include "four_digit_time.hpp"
 #include "counter.hpp"
 #include "../async_handler.hpp"
 #include "../interfaces.hpp"
-#include "../chickenDoor.hpp"
+#include "../motor.hpp"
 
 class DisplayUiConfig;
 class ChickenDoor;
@@ -24,15 +23,18 @@ class MoveTimes;
 class DisplayUI
 {
   public:
-    DisplayUI(ChickenDoor *door, DisplayUiConfig *config );
+    DisplayUI(TimesManager *timesManager,Motor*motor,MotorCalibrator* calibrator, DisplayUiConfig *config );
 		void begin();
   protected:
 		unsigned int offTime=100, onTime=100;
 		uint8_t offShortMult=4, offLongMult=15, onTimeMult=4;
 
-		ChickenDoor *m_door;
 		MoveTimes times;
 		bool isOn=false, isEditing=false;
+
+		TimesManager *timesManager;
+		MotorCalibrator* calibrator;
+		Motor* motor;
 
 		FourDigitTime digits;
 		StateCounter currentSelectedSegment;
@@ -73,5 +75,3 @@ class DisplayUI
 		tmElements_t getTimeInElements();
 
 };
-
-#endif
