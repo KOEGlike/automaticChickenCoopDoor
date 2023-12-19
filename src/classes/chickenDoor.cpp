@@ -25,15 +25,3 @@ time_t ChickenDoor::syncFunc()
   tm.Hour+=TimesManager.getTimeState().offset;
   return makeTime(tm);
 }
-
-void ChickenDoor::changeDoorState(float percentage)
-{
-   motor.changeState(percentage);
-}
-
-
-
-MotorState ChickenDoor::getMotorState()
-{
-  return motor.getMotorState();
-}

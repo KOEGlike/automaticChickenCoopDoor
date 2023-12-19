@@ -28,9 +28,7 @@ class ChickenDoor{
 
     ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig);
 
-    void changeDoorState(float percentage);
-    float getDoorOpennessInPercentage();
-    MotorState getMotorState();
+    
     time_t syncFunc();
     void begin();
     Motor motor;

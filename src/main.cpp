@@ -4,6 +4,8 @@
 #include "classes/physical_interface/button.hpp"
 #include "classes/WiFiHandler.hpp"
 #include "classes/memory_manager.hpp"
+#include <TimeAlarms.h>
+#include "classes/times_manager.hpp"
 
 //Powered by SunriseSunset.io
 
@@ -38,6 +40,10 @@ time_t syncFunc()
 void setup() {
   Serial.begin(115200);
   MemoryManager.begin();
+  const MoveTimes times=TimesManager.getTimeState().moveTimes;
+  const int idOpen=Alarm.alarmRepeat(makeTime(times.openTime),[]() {door.motor.changeState(1);});
+  const int idClose=Alarm.alarmRepeat(makeTime(times.closeTime),[]() {door.motor.changeState(0); TimesManager.updateMoveTimes(WiFiHandler.sunsetTimes());});
+  TimesManager.begin(idClose, idClose);
   WiFiHandler.begin(ssid, password, ipGeoLocationKey);
   ButtonManager.begin();
   door.begin();
