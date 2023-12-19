@@ -31,14 +31,10 @@ class ChickenDoor{
     void changeDoorState(float percentage);
     float getDoorOpennessInPercentage();
     MotorState getMotorState();
-    TimesManager timesManager;
     time_t syncFunc();
     void begin();
     Motor motor;
-    MotorCalibrator calibrator;
   protected:
-   
-    TimeState timeState;
     DisplayUI displayUI;
 
     

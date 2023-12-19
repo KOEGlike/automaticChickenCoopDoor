@@ -34,7 +34,7 @@ class Motor
     void begin();
     MotorState getMotorState();
     friend class MotorCalibrator;
-    
+    MotorCalibrator calibrator;
   protected:
     void moveSteps(long steps);
     const uint16_t motorRpm=200;

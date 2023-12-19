@@ -10,9 +10,9 @@
 DisplayUiConfig displayUiConfig{
   10,//clk
   11,//dio
-  8,//btn1 (left)
-  9,//bnt2 (right)
-  3//btn pwr
+  9,//btn1 (left)
+  11,//bnt2 (right)
+  10//btn pwr
   };
 MotorConfig motorConfig{
   200,//stepper motor steps amount

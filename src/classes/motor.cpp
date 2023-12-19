@@ -3,7 +3,8 @@
 #include "memory_manager.hpp"
 
 Motor::Motor(MotorConfig* config): 
-m_stepper{config->steps, config->dir, config->step, config->enable,config->m0, config->m1,config->m2}
+m_stepper{config->steps, config->dir, config->step, config->enable,config->m0, config->m1,config->m2},
+calibrator{this}
 {
 }
 

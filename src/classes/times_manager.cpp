@@ -1,33 +1,41 @@
 #include "times_manager.hpp"
 #include "WiFiHandler.hpp"
 
-TimesManager::TimesManager(TimeState* timeState)
+TimesManager_t::TimesManager_t():timeState{MoveTimes{12,12,12,12}, true, true, 0}
+{}
+
+void TimesManager_t::updateMoveTimes(MoveTimes moveTimes)
 {
-  this->timeState = timeState; 
+ timeState.moveTimes=moveTimes;
+  MemoryManager.saveTimeStateToMemory(timeState);
 }
 
-void TimesManager::updateMoveTimes(MoveTimes moveTimes)
+void TimesManager_t::updateTimeSate(TimeState timeState)
 {
- timeState->moveTimes=moveTimes;
-  MemoryManager.saveTimeStateToMemory(*timeState);
+  this->timeState=timeState;
 }
 
-void TimesManager::updateCurrentTime(tmElements_t time)
+void TimesManager_t::updateCurrentTime(tmElements_t time)
 {
   setTime(makeTime(time)); 
   if(time.Hour==0&&time.Minute==0)
   {
-   timeState->autoTime=true;
+   timeState.autoTime=true;
    }
   else
   {
-   timeState->autoTime=false;
-   timeState->offset=time.Hour-WiFiHandler.UTCTime().Hour;
+   timeState.autoTime=false;
+   timeState.offset=time.Hour-WiFiHandler.UTCTime().Hour;
   }
-  MemoryManager.saveTimeStateToMemory(*timeState);
+  MemoryManager.saveTimeStateToMemory(timeState);
 }
 
-TimeState TimesManager::getTimeState()
+TimeState TimesManager_t::getTimeState()
 {
-  return *timeState;
+  return timeState;
+}
+
+void TimesManager_t::updateAlarm(MoveTimes times)
+{
+
 }

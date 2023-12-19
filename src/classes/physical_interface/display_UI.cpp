@@ -57,17 +57,16 @@ SEG_A|SEG_F|SEG_G|SEG_C|SEG_D,//S
 SEG_A|SEG_F|SEG_G|SEG_E|SEG_D//E
 };
 
-DisplayUI::DisplayUI(TimesManager *timesManager,Motor* motor,MotorCalibrator* calibrator, DisplayUiConfig *config): 
+DisplayUI::DisplayUI(Motor* motor, DisplayUiConfig *config): 
     button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
     button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
     buttonPwr{config->btn3Pin, [&](){btnPwrShortFunc();}, [&](){btnPwrLongFunc();}},
     display(config->clkPin, config->dioPin),
     currentSelectedSegment(4), 
     currentChangingTime(3),
-    times(timesManager->getTimeState().moveTimes)
+    times(TimesManager.getTimeState().moveTimes)
 {
-  this->calibrator=calibrator;
-  this->timesManager=timesManager;
+  
   this->motor=motor;
 }
 
@@ -107,17 +106,17 @@ void DisplayUI::setTimeRouter(int digits, int state)
   tmElements_t currentTime;
     currentTime.Hour=digits/100;
     currentTime.Minute=digits%100;
-    timesManager->updateCurrentTime(currentTime);
+    TimesManager.updateCurrentTime(currentTime);
     break;
   case 1:
     times.openTime.Minute=digits%100;
     times.openTime.Hour=digits/100;
-    timesManager->updateMoveTimes(times);
+    TimesManager.updateMoveTimes(times);
     break;
   case 2:
     times.closeTime.Minute=digits%100;
     times.closeTime.Hour=digits/100;
-    timesManager->updateMoveTimes(times);
+    TimesManager.updateMoveTimes(times);
     break;
   }
 }
@@ -137,7 +136,7 @@ void DisplayUI::mutateCurrentSegment(int amount)
 
 void DisplayUI::onOffToggle()
 {
-  if(calibrator->isCalibrating()||isEditing)return;
+  if(motor->calibrator.isCalibrating()||isEditing)return;
   
   if(isOn){
     isOn=false;
@@ -153,14 +152,14 @@ void DisplayUI::onOffToggle()
 
 void DisplayUI::editingToggle()
 {
-  if(calibrator->isCalibrating()||!isOn)return;
+  if(motor->calibrator.isCalibrating()||!isOn)return;
 
   if(isEditing)
   {
     isEditing=false;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-   timesManager->updateMoveTimes(times);
+   TimesManager.updateMoveTimes(times);
     display.stopAllActivities();
     display.clear();
     return;
@@ -169,7 +168,7 @@ void DisplayUI::editingToggle()
     isEditing=true;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-    times=timesManager->getTimeState().moveTimes;
+    times=TimesManager.getTimeState().moveTimes;
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defaultForShowNumber(digits.getDigits());
     dotTimingRouter(currentChangingTime.getState());  
@@ -200,7 +199,7 @@ void DisplayUI::textValueRouter(int state)
 
 void DisplayUI::moveCursor(bool forward)
 {
-  if(isOn==false||!isEditing||calibrator->isCalibrating())return;
+  if(isOn==false||!isEditing||motor->calibrator.isCalibrating())return;
   
   currentSelectedSegment.add(forward?1:-1);
   display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
@@ -209,7 +208,7 @@ void DisplayUI::moveCursor(bool forward)
 
 void DisplayUI::changeCurrentChangingTime()
 {
-  if(isOn==false||calibrator->isCalibrating()||!isEditing)return;
+  if(isOn==false||motor->calibrator.isCalibrating()||!isEditing)return;
   
   setTimeRouter(digits.getDigits(), currentChangingTime.getState());
   currentChangingTime.add();
@@ -220,22 +219,22 @@ void DisplayUI::changeCurrentChangingTime()
 
 void DisplayUI::setCalibrationState()
 {
-  if(!isOn||!calibrator->isCalibrating()||isEditing)return;
-  calibrator->setState();
+  if(!isOn||!motor->calibrator.isCalibrating()||isEditing)return;
+  motor->calibrator.setState();
 }
 
 void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
 {
-  if(!isOn||!calibrator->isCalibrating()||isEditing)return;
-  calibrator->turn(steps, isClockwise);
-  display.showNumberDec(calibrator->getCurrentStep());
+  if(!isOn||!motor->calibrator.isCalibrating()||isEditing)return;
+  motor->calibrator.turn(steps, isClockwise);
+  display.showNumberDec(motor->calibrator.getCurrentStep());
 }
 
 void DisplayUI::startCalibration()
 {
   bool firstIsBottom=true;
-  if(!isOn||!calibrator->isCalibrating()||isEditing);
-  calibrator->start(firstIsBottom); 
+  if(!isOn||!motor->calibrator.isCalibrating()||isEditing);
+  motor->calibrator.start(firstIsBottom); 
   display.stopAllActivities();
   display.scrollSegmentsAnAmount(LOWER_txt, 300, 1);
 }
@@ -243,14 +242,14 @@ void DisplayUI::startCalibration()
 void DisplayUI::switchDoorState()
 {
   if(!isOn)return;
-  if(calibrator->isCalibrating())return;
+  if(motor->calibrator.isCalibrating())return;
   motor->changeState(motor->getState() >=0.5?0:1);
 }
 
 
 void DisplayUI::btn1ShortFunc()
 {
-  if(calibrator->isCalibrating())
+  if(motor->calibrator.isCalibrating())
   {
     calibrationTurn(5, false);
     return;
@@ -264,7 +263,7 @@ void DisplayUI::btn1ShortFunc()
 
 void DisplayUI::btn1LongFunc()
 {
-  if(calibrator->isCalibrating())
+  if(motor->calibrator.isCalibrating())
   {
    calibrationTurn(10, false);
     return;
@@ -278,7 +277,7 @@ void DisplayUI::btn1LongFunc()
 
 void DisplayUI::btn2ShortFunc()
 {
-  if(calibrator->isCalibrating())
+  if(motor->calibrator.isCalibrating())
   {
     calibrationTurn(5, true);
     return;
@@ -292,7 +291,7 @@ void DisplayUI::btn2ShortFunc()
 
 void DisplayUI::btn2LongFunc()
 {
-  if(calibrator->isCalibrating())
+  if(motor->calibrator.isCalibrating())
   {
     calibrationTurn(10, true);
     return;
@@ -311,11 +310,11 @@ void DisplayUI::btnPwrShortFunc()
     changeCurrentChangingTime();
     return;
   }
-  if(calibrator->isCalibrating())
+  if(motor->calibrator.isCalibrating())
   {
     setCalibrationState();
-    if(calibrator->firstIsSet())display.scrollSegmentsAnAmount(UPPER_txt, 300, 1);
-    if(!calibrator->isCalibrating())display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1);
+    if(motor->calibrator.firstIsSet())display.scrollSegmentsAnAmount(UPPER_txt, 300, 1);
+    if(!motor->calibrator.isCalibrating())display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1);
     return;
   }
   switchDoorState();
@@ -324,4 +323,11 @@ void DisplayUI::btnPwrShortFunc()
 void DisplayUI::btnPwrLongFunc()
 {
   onOffToggle();
+}
+
+tmElements_t DisplayUI::getTimeInElements()
+{
+  tmElements_t time;
+  breakTime(now(), time);
+  return time;
 }

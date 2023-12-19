@@ -15,6 +15,7 @@
 #include "../async_handler.hpp"
 #include "../interfaces.hpp"
 #include "../motor.hpp"
+#include "../times_manager.hpp"
 
 class DisplayUiConfig;
 class ChickenDoor;
@@ -23,7 +24,7 @@ class MoveTimes;
 class DisplayUI
 {
   public:
-    DisplayUI(TimesManager *timesManager,Motor*motor,MotorCalibrator* calibrator, DisplayUiConfig *config );
+    DisplayUI(Motor*motor, DisplayUiConfig *config );
 		void begin();
   protected:
 		unsigned int offTime=100, onTime=100;
@@ -32,8 +33,6 @@ class DisplayUI
 		MoveTimes times;
 		bool isOn=false, isEditing=false;
 
-		TimesManager *timesManager;
-		MotorCalibrator* calibrator;
 		Motor* motor;
 
 		FourDigitTime digits;

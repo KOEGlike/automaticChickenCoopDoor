@@ -4,15 +4,17 @@
 #include "memory_manager.hpp"
 #include <time.h>
 
-class TimesManager
+class TimesManager_t
 {
   public:
-    TimesManager(TimeState *timeState);
-    
+    TimesManager_t();
     TimeState getTimeState();
     void updateTimeSate(TimeState timeState);
     void updateMoveTimes(MoveTimes moveTimes);
     void updateCurrentTime(tmElements_t time);
   private:
-    TimeState *timeState;
+    TimeState timeState;
+    void updateAlarm(MoveTimes times);
 };
+
+inline TimesManager_t TimesManager;
