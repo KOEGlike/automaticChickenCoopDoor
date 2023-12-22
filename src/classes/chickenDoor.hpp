@@ -27,9 +27,6 @@ class ChickenDoor{
     friend class Motor;
 
     ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig);
-
-    
-    time_t syncFunc();
     void begin();
     Motor motor;
   protected:

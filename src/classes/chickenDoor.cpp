@@ -17,11 +17,3 @@ void ChickenDoor::begin()
   if(TimesManager.getTimeState().sunsetMode)
     TimesManager.getTimeState().moveTimes=WiFiHandler.sunsetTimes();
 }
-
-time_t ChickenDoor::syncFunc()
-{
-  if(TimesManager.getTimeState().autoTime)return makeTime(WiFiHandler.ipTime());
-  tmElements_t tm=WiFiHandler.UTCTime();
-  tm.Hour+=TimesManager.getTimeState().offset;
-  return makeTime(tm);
-}

@@ -34,20 +34,26 @@ ChickenDoor door(&displayUiConfig, &motorConfig);
 
 time_t syncFunc()
 {
-  return door.syncFunc();
+  return TimesManager.syncFunc();
+}
+
+void TimesManagerSetup()
+{
+  const int idOpen=Alarm.alarmRepeat(0,[&]() {door.motor.changeState(1);});
+  const int idClose=Alarm.alarmRepeat(0,[&]() {door.motor.changeState(0); Serial.println("close"); if(TimesManager.getTimeState().sunsetMode) TimesManager.updateMoveTimes(WiFiHandler.sunsetTimes());});
+  TimesManager.begin(idClose, idClose);
 }
 
 void setup() {
   Serial.begin(115200);
   MemoryManager.begin();
-  const MoveTimes times=TimesManager.getTimeState().moveTimes;
-  const int idOpen=Alarm.alarmRepeat(makeTime(times.openTime),[]() {door.motor.changeState(1);});
-  const int idClose=Alarm.alarmRepeat(makeTime(times.closeTime),[]() {door.motor.changeState(0); TimesManager.updateMoveTimes(WiFiHandler.sunsetTimes());});
-  TimesManager.begin(idClose, idClose);
   WiFiHandler.begin(ssid, password, ipGeoLocationKey);
+   setSyncProvider(syncFunc);
+  setSyncInterval(30);
+  TimesManagerSetup();
   ButtonManager.begin();
   door.begin();
-  setSyncProvider(syncFunc);
+ 
 }
 
 void loop() 

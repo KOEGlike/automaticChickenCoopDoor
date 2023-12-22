@@ -13,6 +13,7 @@ class TimesManager_t
     void updateTimeSate(TimeState timeState);
     void updateMoveTimes(MoveTimes moveTimes);
     void updateCurrentTime(tmElements_t time);
+    time_t syncFunc();
   private:
     TimeState timeState;
     void updateAlarm();

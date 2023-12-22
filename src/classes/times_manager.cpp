@@ -2,13 +2,33 @@
 #include "WiFiHandler.hpp"
 #include <TimeAlarms.h>
 
-TimesManager_t::TimesManager_t():timeState{MoveTimes{12,12,12,12}, true, true, 0}
+TimesManager_t::TimesManager_t():timeState{MoveTimes{0,0,14,39}, false, true,0}
 {}
 
 void TimesManager_t::begin(int openAlarmId, int closeAlarmId)
 {
   this->openAlarmId=openAlarmId;
   this->closeAlarmId=closeAlarmId;
+  //timeState=MemoryManager.loadTimeStateFromMemory();
+  if(timeState.sunsetMode)
+  {
+    timeState .moveTimes=WiFiHandler.sunsetTimes();
+  }
+  updateAlarm();
+  Serial.println(timeState.moveTimes.openTime.Hour);
+  Serial.println(timeState.moveTimes.openTime.Minute);
+  Serial.println(timeState.moveTimes.closeTime.Hour);
+  Serial.println(timeState.moveTimes.closeTime.Minute);
+  TimeElements tm;
+  breakTime(now(), tm);
+  Serial.println(tm.Hour);
+  Serial.println(tm.Minute);
+  breakTime(Alarm.read(openAlarmId), tm);
+  Serial.println(tm.Hour);
+  Serial.println(tm.Minute);
+  breakTime(Alarm.read(closeAlarmId), tm);
+  Serial.println(tm.Hour);
+  Serial.println(tm.Minute);
 }
 
 void TimesManager_t::updateMoveTimes(MoveTimes moveTimes)
@@ -49,4 +69,12 @@ void TimesManager_t::updateAlarm()
 {
   Alarm.write(openAlarmId, makeTime(timeState.moveTimes .openTime));
   Alarm.write(closeAlarmId, makeTime(timeState.moveTimes .openTime));
+}
+
+time_t TimesManager_t::syncFunc()
+{
+  if(timeState.autoTime)return makeTime(WiFiHandler.ipTime());
+  tmElements_t tm=WiFiHandler.UTCTime();
+  tm.Hour+=timeState.offset;
+  return makeTime(tm);
 }
