@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <TimeLib.h>
-
+#include <cstring>
 
 
 struct MoveTimes
@@ -88,4 +88,15 @@ struct TimeState
   MoveTimes moveTimes;
   bool sunsetMode, autoTime;
   int offset;
+};
+
+struct WiFiConfig
+{
+  WiFiConfig(char ssid[32], char password[63], char ipGeolocationAPIkey[64])
+  {
+    strcpy(this->ssid, ssid);
+    strcpy(this->password, password);
+    strcpy(this->ipGeolocationAPIkey, ipGeolocationAPIkey);
+  }
+  char ssid[32], password[63], ipGeolocationAPIkey[64];
 };

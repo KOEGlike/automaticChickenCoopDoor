@@ -26,34 +26,26 @@ MotorConfig motorConfig{
   15//m2
   };
 
-char ssid[] = "nova sepsi";
-char password[] = "MarciFanni";
-char ipGeoLocationKey[] = "0656d8aed024425599c985770726c7fb";
 
-ChickenDoor door(&displayUiConfig, &motorConfig);
+WiFiConfig wifiConfig{
+  strdup("nova sepsi"), //ssid
+  strdup("MarciFanni"), //password
+  strdup("0656d8aed024425599c985770726c7fb")//ipGeoLocationKey
+  };
+
+ChickenDoor door(&displayUiConfig, &motorConfig, &wifiConfig);
 
 time_t syncFunc()
 {
-  return TimesManager.syncFunc();
-}
-
-void TimesManagerSetup()
-{
-  const int idOpen=Alarm.alarmRepeat(0,[&]() {door.motor.changeState(1);});
-  const int idClose=Alarm.alarmRepeat(0,[&]() {door.motor.changeState(0); Serial.println("close"); if(TimesManager.getTimeState().sunsetMode) TimesManager.updateMoveTimes(WiFiHandler.sunsetTimes());});
-  TimesManager.begin(idClose, idClose);
+  return door.TimesManager.syncFunc();
 }
 
 void setup() {
   Serial.begin(115200);
-  MemoryManager.begin();
-  WiFiHandler.begin(ssid, password, ipGeoLocationKey);
-   setSyncProvider(syncFunc);
-  setSyncInterval(30);
-  TimesManagerSetup();
-  ButtonManager.begin();
   door.begin();
- 
+  setSyncProvider(syncFunc);
+  setSyncInterval(30);
+  ButtonManager.begin();
 }
 
 void loop() 

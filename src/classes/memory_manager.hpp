@@ -14,5 +14,3 @@ class MemoryManager_t{
     Preferences pref;
 
 };
-
-inline MemoryManager_t MemoryManager;

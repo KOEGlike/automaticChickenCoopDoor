@@ -6,14 +6,15 @@
 #include <Arduino.h> 
 #include <string>
 
-void WiFiHandler_t::begin(char ssid[],char password[],char ipGeoLocationKey[])
+WiFiHandler_t::WiFiHandler_t(WiFiConfig *wifiConfig)
 {
- m_ssid=ssid;
- m_password=password;
- m_ipGeoLocationKey=ipGeoLocationKey;
+  this->wifiConfig = wifiConfig;
+}
 
+void WiFiHandler_t::begin()
+{
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  WiFi.begin(wifiConfig->ssid, wifiConfig->password);
   WiFi.setAutoReconnect(true);
 
   while (WiFi.status() != WL_CONNECTED)
@@ -89,7 +90,7 @@ StaticJsonDocument<1536> WiFiHandler_t::ipGeolocationRequest()
 {
   HTTPClient http;
   StaticJsonDocument<1536> json;
-  std::string path="https://api.ipgeolocation.io/ipgeo?apiKey="+std::string{m_ipGeoLocationKey};
+  std::string path="https://api.ipgeolocation.io/ipgeo?apiKey="+std::string{wifiConfig->ipGeolocationAPIkey};
   http.begin(path.c_str());
   int httpCode = http.GET();
   if(httpCode < 0)

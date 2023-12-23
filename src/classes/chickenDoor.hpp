@@ -12,13 +12,6 @@
 #include "WiFiHandler.hpp"
 #include "times_manager.hpp"
 
-class Motor;
-class MoveTimes;
-class DisplayUiConfig;
-class MotorConfig;
-class MotorState;
-class MotorCalibrator;
-class DisplayUI;
 
 class ChickenDoor{
   
@@ -26,9 +19,12 @@ class ChickenDoor{
   public:
     friend class Motor;
 
-    ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig);
+    ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig, WiFiConfig *wifiConfig);
     void begin();
     Motor motor;
+    WiFiHandler_t WiFiHandler;
+    TimesManager_t TimesManager;
+    MemoryManager_t MemoryManager;
   protected:
     DisplayUI displayUI;
 

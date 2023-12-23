@@ -3,11 +3,11 @@
 #include "interfaces.hpp"
 #include "memory_manager.hpp"
 #include <time.h>
-
+#include "WiFiHandler.hpp"
 class TimesManager_t
 {
   public:
-    TimesManager_t();
+    TimesManager_t(WiFiHandler_t* WiFiHandler, MemoryManager_t* MemoryManager);
     TimeState getTimeState();
     void begin(int openAlarmId, int closeAlarmId);
     void updateTimeSate(TimeState timeState);
@@ -18,6 +18,8 @@ class TimesManager_t
     TimeState timeState;
     void updateAlarm();
     int openAlarmId, closeAlarmId;
+    WiFiHandler_t* WiFiHandler;
+    MemoryManager_t* MemoryManager;
 };
 
-inline TimesManager_t TimesManager;
+  

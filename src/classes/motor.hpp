@@ -3,6 +3,7 @@
 #include <A4988.h>
 #include<DRV8825.h>
 #include "interfaces.hpp"
+#include "memory_manager.hpp"
 
 class Motor;
 class MotorConfig;
@@ -28,7 +29,7 @@ class MotorCalibrator{
 class Motor
 {
   public:
-    Motor(MotorConfig* config);
+    Motor(MemoryManager_t* MemoryManager,MotorConfig* config);
     void changeState(float percentage);
     float getState();
     void begin();
@@ -40,4 +41,5 @@ class Motor
     const uint16_t motorRpm=200;
     DRV8825 m_stepper;
     MotorState motorState;
+    MemoryManager_t* MemoryManager;
 };

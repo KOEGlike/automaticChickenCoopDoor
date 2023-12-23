@@ -1,5 +1,4 @@
-#ifndef WIFI_HANDLER_HPP
-#define WIFI_HANDLER_HPP
+#pragma once
 
 #include "interfaces.hpp"
 #include <TimeLib.h>
@@ -13,18 +12,15 @@ class MoveTimes;
 class WiFiHandler_t
 {
   public:
-    void begin(char ssid[],char password[],char ipGeoLocationKey[]);
+    WiFiHandler_t(WiFiConfig *wifiConfig);
+    void begin();
     MoveTimes sunsetTimes();
     tmElements_t UTCTime();
     tmElements_t ipTime();
   private:
-    char* m_ssid, *m_password, *m_ipGeoLocationKey;
     float m_lat=0, m_lng=0;
     tmElements_t convertShityStringTimeNotationFromSunsetApi(std::string shityFormat);
     void setLocation();
-    StaticJsonDocument<1536> ipGeolocationRequest(); 
+    StaticJsonDocument<1536> ipGeolocationRequest();
+    WiFiConfig *wifiConfig;
 };
-
-inline WiFiHandler_t WiFiHandler;
-
-#endif

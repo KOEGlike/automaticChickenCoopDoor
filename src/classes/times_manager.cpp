@@ -1,18 +1,20 @@
 #include "times_manager.hpp"
-#include "WiFiHandler.hpp"
 #include <TimeAlarms.h>
 
-TimesManager_t::TimesManager_t():timeState{MoveTimes{0,0,14,39}, false, true,0}
-{}
+TimesManager_t::TimesManager_t(WiFiHandler_t* WiFiHandler, MemoryManager_t* MemoryManager):timeState{MoveTimes{0,0,14,39}, false, true,0}
+{
+  this->WiFiHandler=WiFiHandler;
+  this->MemoryManager=MemoryManager;
+}
 
 void TimesManager_t::begin(int openAlarmId, int closeAlarmId)
 {
   this->openAlarmId=openAlarmId;
   this->closeAlarmId=closeAlarmId;
-  //timeState=MemoryManager.loadTimeStateFromMemory();
+  timeState=MemoryManager->loadTimeStateFromMemory();
   if(timeState.sunsetMode)
   {
-    timeState .moveTimes=WiFiHandler.sunsetTimes();
+    timeState .moveTimes=WiFiHandler->sunsetTimes();
   }
   updateAlarm();
   Serial.println(timeState.moveTimes.openTime.Hour);
@@ -34,14 +36,14 @@ void TimesManager_t::begin(int openAlarmId, int closeAlarmId)
 void TimesManager_t::updateMoveTimes(MoveTimes moveTimes)
 {
  timeState.moveTimes=moveTimes;
-  MemoryManager.saveTimeStateToMemory(timeState);
+  MemoryManager->saveTimeStateToMemory(timeState);
   updateAlarm();
 }
 
 void TimesManager_t::updateTimeSate(TimeState timeState)
 {
   this->timeState=timeState;
-  MemoryManager.saveTimeStateToMemory(timeState);
+  MemoryManager->saveTimeStateToMemory(timeState);
   updateAlarm();
 }
 
@@ -55,9 +57,9 @@ void TimesManager_t::updateCurrentTime(tmElements_t time)
   else
   {
    timeState.autoTime=false;
-   timeState.offset=time.Hour-WiFiHandler.UTCTime().Hour;
+   timeState.offset=time.Hour-WiFiHandler->UTCTime().Hour;
   }
-  MemoryManager.saveTimeStateToMemory(timeState);
+  MemoryManager->saveTimeStateToMemory(timeState);
 }
 
 TimeState TimesManager_t::getTimeState()
@@ -73,8 +75,8 @@ void TimesManager_t::updateAlarm()
 
 time_t TimesManager_t::syncFunc()
 {
-  if(timeState.autoTime)return makeTime(WiFiHandler.ipTime());
-  tmElements_t tm=WiFiHandler.UTCTime();
+  if(timeState.autoTime)return makeTime(WiFiHandler->ipTime());
+  tmElements_t tm=WiFiHandler->UTCTime();
   tm.Hour+=timeState.offset;
   return makeTime(tm);
 }
