@@ -6,8 +6,6 @@
 #include "memory_manager.hpp"
 
 class Motor;
-class MotorConfig;
-class ChickenDoor;
 class MotorCalibrator{
   public:
     MotorCalibrator(Motor *motor);

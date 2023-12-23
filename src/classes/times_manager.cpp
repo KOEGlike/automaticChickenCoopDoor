@@ -75,6 +75,7 @@ void TimesManager_t::updateAlarm()
 
 time_t TimesManager_t::syncFunc()
 {
+  Serial.println("sync");
   if(timeState.autoTime)return makeTime(WiFiHandler->ipTime());
   tmElements_t tm=WiFiHandler->UTCTime();
   tm.Hour+=timeState.offset;

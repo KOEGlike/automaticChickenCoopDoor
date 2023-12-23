@@ -9,6 +9,7 @@ class ButtonManager_t;
 class Button {
     public:
         Button(int pin, std::function<void()> press , std::function<void()> longPress);
+        ~Button();
         void begin();
         friend class ButtonManager_t;
     protected:
@@ -37,6 +38,7 @@ class ButtonManager_t {
         ~ButtonManager_t();
         void link(std::vector<Button*> buttons, std::function<void()> onPress, int maxDelta=40);
         void addButton(Button* button);
+        void removeButton(Button* button);
         void check();
         void begin();
     protected:

@@ -14,21 +14,15 @@
 
 
 class ChickenDoor{
-  
-
   public:
     friend class Motor;
-
     ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig, WiFiConfig *wifiConfig);
     void begin();
     Motor motor;
     WiFiHandler_t WiFiHandler;
     TimesManager_t TimesManager;
-    MemoryManager_t MemoryManager;
   protected:
     DisplayUI displayUI;
-
-    
-    
+    MemoryManager_t MemoryManager;
 };
 

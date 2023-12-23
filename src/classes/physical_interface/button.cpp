@@ -8,6 +8,10 @@ Button::Button(int pin, std::function<void()> press, std::function<void()> longP
     m_press = press;
 }
 
+Button::~Button() {
+    ButtonManager.removeButton(this);
+}
+
 void Button::begin() {
     pinMode(m_pin, INPUT_PULLUP);
     ButtonManager.addButton(this);
@@ -120,4 +124,26 @@ std::vector<uint> ButtonManager_t::sortVectorOfIntsThatAreLinkIdsByTheNumberOfBu
 {
     std::sort(linkIds.begin(), linkIds.end(),[&](uint linkId1,uint linkId2){return( buttonLinks[linkId1].buttonPtrs.size()>buttonLinks[linkId2].buttonPtrs.size());});
     return linkIds;
+}
+
+int getIndex(std::vector<uint> v, uint K) 
+{ 
+    auto it = find(v.begin(), v.end(), K); 
+    int index = it - v.begin();
+    return  index ;
+} 
+
+
+void ButtonManager_t::removeButton(Button* button)
+{
+    std::vector<uint> links=button->linkIds;
+    for(auto link : links)
+    {
+        for(auto button : buttonLinks[link].buttonPtrs)
+        {
+            int index=getIndex(button->linkIds, link);
+            button->linkIds.erase(button->linkIds.begin()+index);
+        }
+        buttonLinks.erase(link);
+    }
 }
