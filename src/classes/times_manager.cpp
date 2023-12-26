@@ -11,14 +11,17 @@ void TimesManager_t::begin(int openAlarmId, int closeAlarmId)
 {
   this->openAlarmId=openAlarmId;
   this->closeAlarmId=closeAlarmId;
-  timeState=MemoryManager->loadTimeStateFromMemory();
+  //timeState=MemoryManager->loadTimeStateFromMemory();
   if(timeState.sunsetMode)
   {
     timeState .moveTimes=WiFiHandler->sunsetTimes();
   }
+  setTime(makeTime(WiFiHandler->ipTime()));
   updateAlarm();
+  Serial.println(timeState.moveTimes.openTime.Day);
   Serial.println(timeState.moveTimes.openTime.Hour);
   Serial.println(timeState.moveTimes.openTime.Minute);
+  Serial.println(timeState.moveTimes.closeTime.Day);
   Serial.println(timeState.moveTimes.closeTime.Hour);
   Serial.println(timeState.moveTimes.closeTime.Minute);
   TimeElements tm;
@@ -28,9 +31,11 @@ void TimesManager_t::begin(int openAlarmId, int closeAlarmId)
   breakTime(Alarm.read(openAlarmId), tm);
   Serial.println(tm.Hour);
   Serial.println(tm.Minute);
+
   breakTime(Alarm.read(closeAlarmId), tm);
   Serial.println(tm.Hour);
   Serial.println(tm.Minute);
+ 
 }
 
 void TimesManager_t::updateMoveTimes(MoveTimes moveTimes)

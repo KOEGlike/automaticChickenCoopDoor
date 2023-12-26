@@ -102,9 +102,11 @@ int DisplayUI::digitValueRouter(int state)
 
 void DisplayUI::setTimeRouter(int digits, int state)
 {
+  tmElements_t currentTime;
+  currentTime.Day=1;
   switch(state) {
   case 0:
-  tmElements_t currentTime;
+  
     currentTime.Hour=digits/100;
     currentTime.Minute=digits%100;
     TimesManager->updateCurrentTime(currentTime);

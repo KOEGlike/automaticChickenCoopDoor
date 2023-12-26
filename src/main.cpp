@@ -52,3 +52,38 @@ void loop()
 {
   Async.check();
 }
+
+
+/*
+
+#include <TimeLib.h>
+#include <TimeAlarms.h>
+#include <Arduino.h>
+
+void alarm_callback()
+{
+  Serial.println("did something");
+}
+
+void setup()
+{
+    Serial.begin(115200);
+    Alarm.delay(100);
+    tmElements_t tm;
+    setTime(13, 5, 0, 25, 12, 2023);
+    //breakTime(now(), tm);
+    tm.Day=1;
+    
+    tm.Hour=7;
+    tm.Minute=34;
+    int alarmID=Alarm.alarmRepeat(0, alarm_callback);
+    Alarm.write(alarmID,makeTime(tm));
+    breakTime(Alarm.read(alarmID),tm);
+    Serial.println(tm.Hour);
+    Serial.println(tm.Minute);
+}
+
+void loop()
+{
+
+}*/
