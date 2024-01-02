@@ -15,8 +15,9 @@ void ChickenDoor::begin()
   
   WiFiHandler.begin();
   MemoryManager.begin();
-  const int idOpen=Alarm.alarmRepeat(0,[&]() {motor.changeState(1);});
-  const int idClose=Alarm.alarmRepeat(0,[&]() {motor.changeState(0); Serial.println("close"); if(TimesManager.getTimeState().sunsetMode) TimesManager.updateMoveTimes(WiFiHandler.sunsetTimes());});
+  setTime(SECS_PER_YEAR);
+  const int idOpen=Alarm.alarmRepeat(1,[&]() {motor.changeState(1);});
+  const int idClose=Alarm.alarmRepeat(1,[&]() {motor.changeState(0); Serial.println("close"); if(TimesManager.getTimeState().sunsetMode) TimesManager.updateMoveTimes(WiFiHandler.sunsetTimes());});
   TimesManager.begin(idClose, idClose);
   displayUI.begin();
   motor.begin();

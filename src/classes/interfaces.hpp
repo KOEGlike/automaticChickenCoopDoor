@@ -10,12 +10,22 @@ struct MoveTimes
   MoveTimes(tmElements_t openDoorTime, tmElements_t closeDoorTime)
   {
     openTime = openDoorTime;
-    closeTime = closeDoorTime ;
+    closeTime = closeDoorTime;
+    closeTime.Day=0; openTime.Day=0;
+    closeTime.Second=1; openTime.Second=1;
+    closeTime.Year=0; openTime.Year=0;
+    closeTime.Month=0; openTime.Month=0;
+    closeTime.Wday=0; openTime.Wday=0;
   }
   MoveTimes(uint8_t openHour, uint8_t openMin, uint8_t closeHour, uint8_t closeMin)
   {
     openTime.Hour = openHour; openTime.Minute = openMin; 
     closeTime.Hour = closeHour; closeTime.Minute = closeMin;
+    closeTime.Day=0; openTime.Day=0;
+    closeTime.Second=1; openTime.Second=1;
+    closeTime.Year=0; openTime.Year=0;
+    closeTime.Month=0; openTime.Month=0;
+    closeTime.Wday=0; openTime.Wday=0;
   }
   tmElements_t  openTime, closeTime;
 };

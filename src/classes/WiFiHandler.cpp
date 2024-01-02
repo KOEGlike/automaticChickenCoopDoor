@@ -82,8 +82,6 @@ void WiFiHandler_t::setLocation()
   StaticJsonDocument<1536> json=ipGeolocationRequest();
   m_lat=json["latitude"];
   m_lng=json["longitude"];
-  Serial.println(m_lat);
-  Serial.println(m_lng);
 }
 
 StaticJsonDocument<1536> WiFiHandler_t::ipGeolocationRequest()
@@ -119,8 +117,6 @@ tmElements_t WiFiHandler_t::ipTime()
   StaticJsonDocument<1536> json=ipGeolocationRequest();
   breakTime(json["time_zone"]["current_time_unix"], tm);
   tm.Hour=tm.Hour+json["time_zone"]["offset"].as<uint8_t>();
-  Serial.println(tm.Hour);
-  Serial.println(tm.Minute);
   return tm;
 }
 
