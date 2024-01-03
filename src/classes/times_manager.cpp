@@ -1,7 +1,7 @@
 #include "times_manager.hpp"
 #include <TimeAlarms.h>
 
-TimesManager_t::TimesManager_t(WiFiHandler_t* WiFiHandler, MemoryManager_t* MemoryManager):timeState{MoveTimes{1,1,14,39}, false, true,0}
+TimesManager_t::TimesManager_t(WiFiHandler_t* WiFiHandler, MemoryManager_t* MemoryManager):timeState{MoveTimes{0,0,21,47}, false, true,0}
 {
   this->WiFiHandler=WiFiHandler;
   this->MemoryManager=MemoryManager;
@@ -11,6 +11,7 @@ void TimesManager_t::begin(int openAlarmId, int closeAlarmId)
 {
   this->openAlarmId=openAlarmId;
   this->closeAlarmId=closeAlarmId;
+  
   //timeState=MemoryManager->loadTimeStateFromMemory();
   if(timeState.sunsetMode)
   {
@@ -18,15 +19,7 @@ void TimesManager_t::begin(int openAlarmId, int closeAlarmId)
   }
   setTime(makeTime(WiFiHandler->ipTime()));
   updateAlarm();
-  TimeElements tm;
-  breakTime(Alarm.read(openAlarmId), tm);
-  Serial.println(Alarm.read(openAlarmId));
-  Serial.println(tm.Hour);
-  Serial.println(tm.Minute);
-  breakTime(Alarm.read(closeAlarmId), tm);
-  Serial.println(Alarm.read(closeAlarmId));
-  Serial.println(tm.Hour);
-  Serial.println(tm.Minute);
+  
 }
 
 void TimesManager_t::updateMoveTimes(MoveTimes moveTimes)
@@ -65,9 +58,9 @@ TimeState TimesManager_t::getTimeState()
 
 void TimesManager_t::updateAlarm()
 {
-  Alarm.write(openAlarmId, makeTime(timeState. moveTimes .openTime));
-  Serial.println(makeTime(timeState. moveTimes .openTime));
-  Alarm.write(closeAlarmId, makeTime(timeState. moveTimes .closeTime));
+  Alarm.write(openAlarmId, AlarmHMS(timeState.moveTimes.openTime.Hour, timeState.moveTimes.openTime.Minute, timeState.moveTimes.openTime.Second));
+  Alarm.write(closeAlarmId, AlarmHMS(timeState.moveTimes.closeTime.Hour, timeState.moveTimes.closeTime.Minute, timeState.moveTimes.closeTime.Second));
+  Serial.println(Alarm.getNextTrigger());
 }
 
 time_t TimesManager_t::syncFunc()

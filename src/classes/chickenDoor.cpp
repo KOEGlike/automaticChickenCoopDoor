@@ -12,13 +12,12 @@ displayUI{&TimesManager,&motor ,displayUiConfig}
 
 void ChickenDoor::begin()
 {
-  
   WiFiHandler.begin();
   MemoryManager.begin();
   setTime(SECS_PER_YEAR);
-  const int idOpen=Alarm.alarmRepeat(1,[&]() {motor.changeState(1);});
+  const int idOpen=Alarm.alarmRepeat(1,[&]() {motor.changeState(1); Serial.println("open");});
   const int idClose=Alarm.alarmRepeat(1,[&]() {motor.changeState(0); Serial.println("close"); if(TimesManager.getTimeState().sunsetMode) TimesManager.updateMoveTimes(WiFiHandler.sunsetTimes());});
-  TimesManager.begin(idClose, idClose);
+  TimesManager.begin(idOpen, idClose);
   displayUI.begin();
   motor.begin();
 }
