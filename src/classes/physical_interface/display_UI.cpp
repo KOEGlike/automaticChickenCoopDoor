@@ -57,18 +57,18 @@ SEG_A|SEG_F|SEG_G|SEG_C|SEG_D,//S
 SEG_A|SEG_F|SEG_G|SEG_E|SEG_D//E
 };
 
-DisplayUI::DisplayUI(TimesManager_t* TimesManager,Motor* motor, DisplayUiConfig *config): 
+DisplayUI::DisplayUI(TimesManager* timesManager,Motor* motor, DisplayUiConfig *config): 
     button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
     button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
     buttonPwr{config->btn3Pin, [&](){btnPwrShortFunc();}, [&](){btnPwrLongFunc();}},
     display(config->clkPin, config->dioPin),
     currentSelectedSegment(4), 
     currentChangingTime(3),
-    times(TimesManager->getTimeState().moveTimes)
+    times(timesManager->getTimeState().moveTimes)
 {
   
   this->motor=motor;
-  this->TimesManager=TimesManager;
+  this->timesManager=timesManager;
 }
 
 void DisplayUI::begin()
@@ -109,17 +109,17 @@ void DisplayUI::setTimeRouter(int digits, int state)
   
     currentTime.Hour=digits/100;
     currentTime.Minute=digits%100;
-    TimesManager->updateCurrentTime(currentTime);
+    timesManager->updateCurrentTime(currentTime);
     break;
   case 1:
     times.openTime.Minute=digits%100;
     times.openTime.Hour=digits/100;
-    TimesManager->updateMoveTimes(times);
+    timesManager->updateMoveTimes(times);
     break;
   case 2:
     times.closeTime.Minute=digits%100;
     times.closeTime.Hour=digits/100;
-    TimesManager->updateMoveTimes(times);
+    timesManager->updateMoveTimes(times);
     break;
   }
 }
@@ -162,7 +162,7 @@ void DisplayUI::editingToggle()
     isEditing=false;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-   TimesManager->updateMoveTimes(times);
+   timesManager->updateMoveTimes(times);
     display.stopAllActivities();
     display.clear();
     return;
@@ -171,7 +171,7 @@ void DisplayUI::editingToggle()
     isEditing=true;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-    times=TimesManager->getTimeState().moveTimes;
+    times=timesManager->getTimeState().moveTimes;
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defaultForShowNumber(digits.getDigits());
     dotTimingRouter(currentChangingTime.getState());  

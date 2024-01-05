@@ -9,10 +9,10 @@
 
 class MoveTimes;
 
-class WiFiHandler_t
+class WiFiHandler
 {
   public:
-    WiFiHandler_t(WiFiConfig *wifiConfig);
+    WiFiHandler(WiFiConfig *wifiConfig);
     void begin();
     MoveTimes sunsetTimes();
     tmElements_t UTCTime();

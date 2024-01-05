@@ -24,7 +24,7 @@ class MoveTimes;
 class DisplayUI
 {
   public:
-    DisplayUI(TimesManager_t* TimesManager,Motor*motor, DisplayUiConfig *config );
+    DisplayUI(TimesManager* timesManager,Motor*motor, DisplayUiConfig *config );
 		void begin();
   protected:
 		unsigned int offTime=100, onTime=100;
@@ -34,7 +34,7 @@ class DisplayUI
 		bool isOn=false, isEditing=false;
 
 		Motor* motor;
-		TimesManager_t* TimesManager;
+		TimesManager* timesManager;
 
 		FourDigitTime digits;
 		StateCounter currentSelectedSegment;

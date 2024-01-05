@@ -4,11 +4,12 @@
 #include "memory_manager.hpp"
 #include <time.h>
 #include "WiFi_handler.hpp"
-class TimesManager_t
+class TimesManager
 {
   public:
-    TimesManager_t(WiFiHandler_t* WiFiHandler, MemoryManager_t* MemoryManager);
+    TimesManager(WiFiHandler* wifiHandler, MemoryManager_t* MemoryManager);
     TimeState getTimeState();
+    time_t getTimeUntilNextAction();
     void begin(int openAlarmId, int closeAlarmId);
     void updateTimeSate(TimeState timeState);
     void updateMoveTimes(MoveTimes moveTimes);
@@ -18,7 +19,7 @@ class TimesManager_t
     TimeState timeState;
     void updateAlarm();
     int openAlarmId, closeAlarmId;
-    WiFiHandler_t* WiFiHandler;
+    WiFiHandler* wifiHandler;
     MemoryManager_t* MemoryManager;
 };
 

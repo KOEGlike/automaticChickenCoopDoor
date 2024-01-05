@@ -10,11 +10,11 @@
 //Powered by SunriseSunset.io
 
 DisplayUiConfig displayUiConfig{
-  10,//clk
-  11,//dio
-  9,//btn1 (left)
-  11,//bnt2 (right)
-  10//btn pwr
+  GPIO_NUM_10,//clk
+  GPIO_NUM_11,//dio
+  GPIO_NUM_9,//btn1 (left)
+  GPIO_NUM_11,//bnt2 (right)
+  GPIO_NUM_10//btn pwr
   };
 MotorConfig motorConfig{
   200,//stepper motor steps amount
@@ -37,7 +37,7 @@ ChickenDoor door(&displayUiConfig, &motorConfig, &wifiConfig);
 
 time_t syncFunc()
 {
-  return door.TimesManager.syncFunc();
+  return door.timesManager.syncFunc();
 }
 
 void setup() {

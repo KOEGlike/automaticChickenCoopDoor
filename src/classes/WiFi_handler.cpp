@@ -6,12 +6,12 @@
 #include <Arduino.h> 
 #include <string>
 
-WiFiHandler_t::WiFiHandler_t(WiFiConfig *wifiConfig)
+WiFiHandler::WiFiHandler(WiFiConfig *wifiConfig)
 {
   this->wifiConfig = wifiConfig;
 }
 
-void WiFiHandler_t::begin()
+void WiFiHandler::begin()
 {
   WiFi.mode(WIFI_STA);
   WiFi.begin(wifiConfig->ssid, wifiConfig->password);
@@ -25,7 +25,7 @@ void WiFiHandler_t::begin()
   
 }
 
-MoveTimes WiFiHandler_t::sunsetTimes()
+MoveTimes WiFiHandler::sunsetTimes()
 {
   HTTPClient http;
   std::string path ="https://api.sunrisesunset.io/json?lat="+std::to_string(m_lat)+"&lng="+std::to_string(m_lng);
@@ -55,7 +55,7 @@ MoveTimes WiFiHandler_t::sunsetTimes()
 
 }
 
-tmElements_t WiFiHandler_t::convertShityStringTimeNotationFromSunsetApi(std::string shityFormat)
+tmElements_t WiFiHandler::convertShityStringTimeNotationFromSunsetApi(std::string shityFormat)
 {
   uint8_t hour=0,minute=0;
   while(shityFormat[0]!=':')
@@ -77,14 +77,14 @@ tmElements_t WiFiHandler_t::convertShityStringTimeNotationFromSunsetApi(std::str
   return tm;
 }
 
-void WiFiHandler_t::setLocation()
+void WiFiHandler::setLocation()
 {
   StaticJsonDocument<1536> json=ipGeolocationRequest();
   m_lat=json["latitude"];
   m_lng=json["longitude"];
 }
 
-StaticJsonDocument<1536> WiFiHandler_t::ipGeolocationRequest()
+StaticJsonDocument<1536> WiFiHandler::ipGeolocationRequest()
 {
   HTTPClient http;
   StaticJsonDocument<1536> json;
@@ -111,7 +111,7 @@ StaticJsonDocument<1536> WiFiHandler_t::ipGeolocationRequest()
   return json;
 }; 
 
-tmElements_t WiFiHandler_t::ipTime()
+tmElements_t WiFiHandler::ipTime()
 {
   tmElements_t tm; tm.Hour=0; tm.Minute=0;
   StaticJsonDocument<1536> json=ipGeolocationRequest();
@@ -120,7 +120,7 @@ tmElements_t WiFiHandler_t::ipTime()
   return tm;
 }
 
-tmElements_t WiFiHandler_t::UTCTime()
+tmElements_t WiFiHandler::UTCTime()
 {
   tmElements_t tm; tm.Hour=0; tm.Minute=0;
   StaticJsonDocument<1536> json=ipGeolocationRequest();

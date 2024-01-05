@@ -11,6 +11,7 @@
 #include <TimeAlarms.h>
 #include "WiFi_handler.hpp"
 #include "times_manager.hpp"
+#include "sleep_handler.hpp"
 
 
 class ChickenDoor{
@@ -19,10 +20,14 @@ class ChickenDoor{
     ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig, WiFiConfig *wifiConfig);
     void begin();
     Motor motor;
-    WiFiHandler_t WiFiHandler;
-    TimesManager_t TimesManager;
+    WiFiHandler wifiHandler;
+    TimesManager timesManager;
+    SleepHandler sleepHandler;
   protected:
     DisplayUI displayUI;
     MemoryManager_t MemoryManager;
+    DisplayUiConfig* displayUiConfig;
+    MotorConfig* motorConfig;
+    WiFiConfig* wifiConfig;
 };
 
