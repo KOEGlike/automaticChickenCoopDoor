@@ -24,6 +24,16 @@ uint32_t AsyncHandler::registerCallback(unsigned long delay,uint32_t times, std:
   return maxCurrentId++;
 }
 
+void AsyncHandler::enableCallBack(uint32_t id)
+{
+  callbacks[id].enabled=true;
+}
+
+void AsyncHandler::disableCallBack(uint32_t id)
+{
+  callbacks[id].enabled=false;
+}
+
 
 void AsyncHandler::check()
 {
@@ -44,7 +54,7 @@ void AsyncHandler::check()
       callbacks[id].onEnd();
       deleteCallBack(id);
     }
-    else if(millis()-callbacks[id].lastCalled>=callbacks[id].delay)
+    else if(callbacks[id].enabled && millis()-callbacks[id].lastCalled>=callbacks[id].delay)
     {
       callbacks[id].callback();
       

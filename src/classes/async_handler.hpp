@@ -13,12 +13,15 @@ struct callbackData
   unsigned long delay=0, lastCalled=0;
   int32_t times=0, timesCalled=0;
   std::function<void(void)> callback=[](){}, onEnd=[](){};
+  bool enabled=true;
 };
 
 class AsyncHandler{
   public:
     uint32_t registerCallback(unsigned long delay,uint32_t times, std::function<void(void)> callback,std::function<void(void)> onEnd=[](){},bool doDelayFirst=false);
     void deleteCallBack(uint32_t id);
+    void enableCallBack(uint32_t id);
+    void disableCallBack(uint32_t id);
     void check();
   private:
     std::map<uint32_t,callbackData> callbacks;

@@ -20,4 +20,5 @@ void ChickenDoor::begin()
   TimesManager.begin(idOpen, idClose);
   displayUI.begin();
   motor.begin();
+  Async.registerCallback(100, -1, [&](){Alarm.serviceAlarms();});
 }
