@@ -1,12 +1,12 @@
 #include "memory_manager.hpp"
 
 
-void MemoryManager_t::begin()
+void MemoryManager::begin()
 {
   pref.begin("ChickenDoor", false);
 }
 
-void MemoryManager_t::saveTimeStateToMemory(TimeState timeState)
+void MemoryManager::saveTimeStateToMemory(TimeState timeState)
 {
   pref.putULong("openTime", makeTime(timeState.moveTimes.openTime));
   pref.putULong("closeTime", makeTime(timeState.moveTimes.closeTime));
@@ -15,7 +15,7 @@ void MemoryManager_t::saveTimeStateToMemory(TimeState timeState)
   pref.putInt("offset", timeState.offset);
 }
 
-TimeState MemoryManager_t::loadTimeStateFromMemory()
+TimeState MemoryManager::loadTimeStateFromMemory()
 {
   tmElements_t openTime, closeTime;
   breakTime( pref.getULong("openTime", 0),openTime);
@@ -23,14 +23,14 @@ TimeState MemoryManager_t::loadTimeStateFromMemory()
   return TimeState{MoveTimes{openTime, closeTime}, pref.getBool("sunsetMode", true), pref.getBool("autoTime", true), pref.getInt("offset", 0)};
 }
 
-void MemoryManager_t::saveMotorStateToMemory(MotorState motorState)
+void MemoryManager::saveMotorStateToMemory(MotorState motorState)
 {
   pref.putInt("bottomStep", motorState.calibrationState.bottomStep);
   pref.putInt("topStep", motorState.calibrationState.topStep);
   pref.putInt("currentStep", motorState.currentStep);
 }
 
-MotorState MemoryManager_t::loadMotorStateFromMemory()
+MotorState MemoryManager::loadMotorStateFromMemory()
 {
   return MotorState{MotorCalibrationState{pref.getInt("bottomStep", 0), pref.getInt("topStep", 0)},pref.getInt("currentStep", 0)};
 }

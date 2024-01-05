@@ -25,7 +25,7 @@ class ChickenDoor{
     SleepHandler sleepHandler;
   protected:
     DisplayUI displayUI;
-    MemoryManager_t MemoryManager;
+    MemoryManager memoryManager;
     DisplayUiConfig* displayUiConfig;
     MotorConfig* motorConfig;
     WiFiConfig* wifiConfig;

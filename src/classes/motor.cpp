@@ -2,11 +2,11 @@
 #include <cmath>
 #include "memory_manager.hpp"
 
-Motor::Motor(MemoryManager_t* MemoryManager,MotorConfig* config): 
+Motor::Motor(MemoryManager* memoryManager,MotorConfig* config): 
 m_stepper{config->steps, config->dir, config->step, config->enable,config->m0, config->m1,config->m2},
 calibrator{this}
 {
-  this->MemoryManager=MemoryManager;
+  this->memoryManager=memoryManager;
 }
 
 bool MotorCalibrator::isCalibrating()
@@ -26,7 +26,7 @@ void Motor::begin()
 {
  m_stepper.begin(motorRpm, 32);
  m_stepper.enable();
- motorState= MemoryManager->loadMotorStateFromMemory();
+ motorState= memoryManager->loadMotorStateFromMemory();
 }
 
 void Motor::moveSteps(long steps)
@@ -34,7 +34,7 @@ void Motor::moveSteps(long steps)
   int bottomStep=motorState.calibrationState.bottomStep, topStep=motorState.calibrationState.topStep, currentStep=motorState.currentStep;
   motorState.currentStep+=steps;
   m_stepper.move(steps);
-  MemoryManager-> saveMotorStateToMemory(motorState);
+  memoryManager-> saveMotorStateToMemory(motorState);
 }
 
 float Motor::getState()

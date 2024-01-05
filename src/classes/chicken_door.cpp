@@ -3,8 +3,8 @@
 
 ChickenDoor::ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig, WiFiConfig* wifiConfig):
 wifiHandler{wifiConfig},
-timesManager{&wifiHandler, &MemoryManager},
-motor{&MemoryManager,motorConfig},
+timesManager{&wifiHandler, &memoryManager},
+motor{&memoryManager,motorConfig},
 displayUI{&timesManager,&motor ,displayUiConfig},
 sleepHandler{&timesManager, displayUiConfig}
 {
@@ -17,7 +17,7 @@ sleepHandler{&timesManager, displayUiConfig}
 void ChickenDoor::begin()
 {
   wifiHandler.begin();
-  MemoryManager.begin();
+  memoryManager.begin();
   setTime(SECS_PER_YEAR);
   const int idOpen=Alarm.alarmRepeat(1,[&]() {motor.changeState(1); Serial.println("open");});
   const int idClose=Alarm.alarmRepeat(1,[&]() {motor.changeState(0); Serial.println("close"); if(timesManager.getTimeState().sunsetMode) timesManager.updateMoveTimes(wifiHandler.sunsetTimes());});

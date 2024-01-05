@@ -1,10 +1,10 @@
 #include "times_manager.hpp"
 #include <TimeAlarms.h>
 
-TimesManager::TimesManager(WiFiHandler* wifiHandler, MemoryManager_t* MemoryManager):timeState{MoveTimes{0,0,21,47}, false, true,0}
+TimesManager::TimesManager(WiFiHandler* wifiHandler, MemoryManager* memoryManager):timeState{MoveTimes{0,0,21,47}, false, true,0}
 {
   this->wifiHandler=wifiHandler;
-  this->MemoryManager=MemoryManager;
+  this->memoryManager=memoryManager;
 }
 
 void TimesManager::begin(int openAlarmId, int closeAlarmId)
@@ -12,7 +12,7 @@ void TimesManager::begin(int openAlarmId, int closeAlarmId)
   this->openAlarmId=openAlarmId;
   this->closeAlarmId=closeAlarmId;
   
-  timeState=MemoryManager->loadTimeStateFromMemory();
+  timeState=memoryManager->loadTimeStateFromMemory();
   if(timeState.sunsetMode)
   {
     timeState .moveTimes=wifiHandler->sunsetTimes();
@@ -30,14 +30,14 @@ time_t TimesManager::getTimeUntilNextAction()
 void TimesManager::updateMoveTimes(MoveTimes moveTimes)
 {
  timeState.moveTimes=moveTimes;
-  MemoryManager->saveTimeStateToMemory(timeState);
+  memoryManager->saveTimeStateToMemory(timeState);
   updateAlarm();
 }
 
 void TimesManager::updateTimeSate(TimeState timeState)
 {
   this->timeState=timeState;
-  MemoryManager->saveTimeStateToMemory(timeState);
+  memoryManager->saveTimeStateToMemory(timeState);
   updateAlarm();
 }
 
@@ -53,7 +53,7 @@ void TimesManager::updateCurrentTime(tmElements_t time)
    timeState.autoTime=false;
    timeState.offset=time.Hour-wifiHandler->UTCTime().Hour;
   }
-  MemoryManager->saveTimeStateToMemory(timeState);
+  memoryManager->saveTimeStateToMemory(timeState);
 }
 
 TimeState TimesManager::getTimeState()

@@ -7,7 +7,7 @@
 class TimesManager
 {
   public:
-    TimesManager(WiFiHandler* wifiHandler, MemoryManager_t* MemoryManager);
+    TimesManager(WiFiHandler* wifiHandler, MemoryManager* memoryManager);
     TimeState getTimeState();
     time_t getTimeUntilNextAction();
     void begin(int openAlarmId, int closeAlarmId);
@@ -20,7 +20,7 @@ class TimesManager
     void updateAlarm();
     int openAlarmId, closeAlarmId;
     WiFiHandler* wifiHandler;
-    MemoryManager_t* MemoryManager;
+    MemoryManager* memoryManager;
 };
 
   

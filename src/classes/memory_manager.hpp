@@ -3,7 +3,7 @@
 #include "interfaces.hpp"
 #include <time.h>
 
-class MemoryManager_t{
+class MemoryManager{
   public: 
     void begin();
     void saveTimeStateToMemory(TimeState timeState);
