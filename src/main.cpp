@@ -1,8 +1,8 @@
-#include "classes/chickenDoor.hpp"
+#include "classes/chicken_door.hpp"
 #include "classes/async_handler.hpp"
 #include "classes/interfaces.hpp"
 #include "classes/physical_interface/button.hpp"
-#include "classes/WiFiHandler.hpp"
+#include "classes/WiFi_handler.hpp"
 #include "classes/memory_manager.hpp"
 #include <TimeAlarms.h>
 #include "classes/times_manager.hpp"

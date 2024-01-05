@@ -1,6 +1,4 @@
-#ifndef ASYNC_HANDLER
-#define ASYNC_HANDLER
-
+#pragma once
 #include <functional>
 #include <inttypes.h>
 #include <Arduino.h>
@@ -30,4 +28,4 @@ class AsyncHandler{
 
 inline AsyncHandler Async;
 
-#endif
+

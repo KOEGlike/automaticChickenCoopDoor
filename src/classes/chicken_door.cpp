@@ -1,4 +1,4 @@
-#include "ChickenDoor.hpp"
+#include "chicken_door.hpp"
 #include "memory_manager.hpp"
 
 ChickenDoor::ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig, WiFiConfig* wifiConfig):
