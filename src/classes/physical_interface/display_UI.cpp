@@ -57,7 +57,7 @@ SEG_A|SEG_F|SEG_G|SEG_C|SEG_D,//S
 SEG_A|SEG_F|SEG_G|SEG_E|SEG_D//E
 };
 
-DisplayUI::DisplayUI(TimesManager* timesManager,Motor* motor, DisplayUiConfig *config): 
+DisplayUI::DisplayUI(TimesManager* timesManager,Motor* motor, DisplayUiConfig *config, SleepHandler* sleepHandler): 
     button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
     button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
     buttonPwr{config->btn3Pin, [&](){btnPwrShortFunc();}, [&](){btnPwrLongFunc();}},
@@ -69,6 +69,7 @@ DisplayUI::DisplayUI(TimesManager* timesManager,Motor* motor, DisplayUiConfig *c
   
   this->motor=motor;
   this->timesManager=timesManager;
+  this->sleepHandler=sleepHandler;
 }
 
 void DisplayUI::begin()
@@ -141,13 +142,15 @@ void DisplayUI::onOffToggle()
 {
   if(motor->calibrator.isCalibrating()||isEditing)return;
   
-  if(isOn){
+  if(isOn)
+  {
     isOn=false;
     display.setBrightness(0);
     display.stopAllActivities();
     display.clear();
+    sleepHandler->sleepUntilNextAction();
     return;
-    }
+  }
     isOn=true;
     display.setBrightness(7);
     display.scrollSegmentsAnAmount(std::vector<uint8_t>{SEG_G, SEG_G,SEG_F|SEG_E|SEG_G|SEG_B|SEG_C, SEG_A|SEG_F|SEG_G|SEG_E|SEG_D, SEG_F|SEG_E|SEG_D, SEG_F|SEG_E|SEG_D, SEG_A|SEG_B|SEG_C|SEG_D|SEG_E|SEG_F, SEG_G, SEG_G}, 1000, -1);

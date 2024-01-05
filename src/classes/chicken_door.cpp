@@ -5,8 +5,9 @@ ChickenDoor::ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorCon
 wifiHandler{wifiConfig},
 timesManager{&wifiHandler, &memoryManager},
 motor{&memoryManager,motorConfig},
-displayUI{&timesManager,&motor ,displayUiConfig},
-sleepHandler{&timesManager, displayUiConfig}
+sleepHandler{&timesManager, displayUiConfig},
+displayUI{&timesManager,&motor ,displayUiConfig, &sleepHandler}
+
 {
   this->displayUiConfig=displayUiConfig;
   this->motorConfig=motorConfig;

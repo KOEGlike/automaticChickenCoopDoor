@@ -7,6 +7,6 @@ class SleepHandler
     SleepHandler(TimesManager* timesManager, DisplayUiConfig* displayUiConfig);
     void sleepUntilNextAction();
   private:
-    TimesManagersManagerager;
+    TimesManager* timesManager;
     DisplayUiConfig* displayUiConfig;
 };

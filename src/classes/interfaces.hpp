@@ -34,7 +34,7 @@ struct MoveTimes
 
 struct DisplayUiConfig
 {
-  DisplayUiConfig(uint8_t clk, uint8_t dio, uint8_t btn1, uint8_t btn2, uint8_t btn3)
+  DisplayUiConfig(gpio_num_t clk, gpio_num_t dio, gpio_num_t btn1, gpio_num_t btn2, gpio_num_t btn3) 
   {
     clkPin = clk;
     dioPin = dio;
@@ -42,7 +42,7 @@ struct DisplayUiConfig
     btn2Pin = btn2;
     btn3Pin = btn3;
   }
-  uint8_t clkPin, dioPin,  btn1Pin,  btn2Pin,btn3Pin;
+  gpio_num_t clkPin, dioPin,  btn1Pin,  btn2Pin,btn3Pin;
 };
 
 struct MotorCalibrationState

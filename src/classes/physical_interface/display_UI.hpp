@@ -16,6 +16,7 @@
 #include "../interfaces.hpp"
 #include "../motor.hpp"
 #include "../times_manager.hpp"
+#include "../sleep_handler.hpp"
 
 class DisplayUiConfig;
 class ChickenDoor;
@@ -24,7 +25,7 @@ class MoveTimes;
 class DisplayUI
 {
   public:
-    DisplayUI(TimesManager* timesManager,Motor*motor, DisplayUiConfig *config );
+    DisplayUI(TimesManager* timesManager,Motor*motor, DisplayUiConfig *config, SleepHandler* sleepHandler);
 		void begin();
   protected:
 		unsigned int offTime=100, onTime=100;
@@ -35,6 +36,7 @@ class DisplayUI
 
 		Motor* motor;
 		TimesManager* timesManager;
+		SleepHandler* sleepHandler;
 
 		FourDigitTime digits;
 		StateCounter currentSelectedSegment;
