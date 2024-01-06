@@ -26,6 +26,7 @@ void ChickenDoor::begin()
   timesManager.begin(idOpen, idClose);
   displayUI.begin();
   motor.begin();
+  sleepHandler.begin();
   Async.registerCallback(1*1000, -1, [&](){Alarm.serviceAlarms();});
-  Async.registerCallback(30*1000, -1, [&](){if(ButtonManager.timeFromLastPress()>=5*60*1000) sleepHandler.sleepUntilNextAction();});
+  Async.registerCallback(30*1000, -1, [&](){if(ButtonManager.timeFromLastPress()>=minutesToSleep*60*1000) sleepHandler.sleepUntilNextAction(); Serial.println("sleep check");});
 }

@@ -41,11 +41,6 @@ void AsyncHandler::check()
   {
     return;
   }
- 
-  if(callbacks.size()==0)
-  {
-    return;
-  }
   
   for (const auto &[id, callback] :callbacks)
   {
@@ -56,9 +51,8 @@ void AsyncHandler::check()
     }
     else if(callbacks[id].enabled && millis()-callbacks[id].lastCalled>=callbacks[id].delay)
     {
-      callbacks[id].callback();
-      
       callbacks[id].lastCalled=millis();
+      callbacks[id].callback();
       if(callbacks[id].times>0)
       {
         callbacks[id].timesCalled++;

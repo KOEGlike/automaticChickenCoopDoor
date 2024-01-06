@@ -1,7 +1,7 @@
 #include "times_manager.hpp"
 #include <TimeAlarms.h>
 
-TimesManager::TimesManager(WiFiHandler* wifiHandler, MemoryManager* memoryManager):timeState{MoveTimes{0,0,21,47}, false, true,0}
+TimesManager::TimesManager(WiFiHandler* wifiHandler, MemoryManager* memoryManager):timeState{MoveTimes{0,0,0,0},true, true,0}
 {
   this->wifiHandler=wifiHandler;
   this->memoryManager=memoryManager;
@@ -24,7 +24,7 @@ void TimesManager::begin(int openAlarmId, int closeAlarmId)
 time_t TimesManager::getTimeUntilNextAction()
 {
   time_t open=Alarm.getNextTrigger(openAlarmId), close=Alarm.getNextTrigger(closeAlarmId);
-  return min(open, close);
+  return min(open, close) -now();
 }
 
 void TimesManager::updateMoveTimes(MoveTimes moveTimes)
@@ -69,7 +69,6 @@ void TimesManager::updateAlarm()
 {
   Alarm.write(openAlarmId, AlarmHMS(timeState.moveTimes.openTime.Hour, timeState.moveTimes.openTime.Minute, timeState.moveTimes.openTime.Second));
   Alarm.write(closeAlarmId, AlarmHMS(timeState.moveTimes.closeTime.Hour, timeState.moveTimes.closeTime.Minute, timeState.moveTimes.closeTime.Second));
-  Serial.println(Alarm.getNextTrigger());
 }
 
 time_t TimesManager::getCurrentTime()
