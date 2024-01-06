@@ -37,7 +37,7 @@ ChickenDoor door(&displayUiConfig, &motorConfig, &wifiConfig);
 
 time_t syncFunc()
 {
-  return door.timesManager.syncFunc();
+  return door.timesManager.getCurrentTime();
 }
 
 void setup() {

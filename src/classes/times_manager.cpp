@@ -43,6 +43,10 @@ void TimesManager::updateTimeSate(TimeState timeState)
 
 void TimesManager::updateCurrentTime(tmElements_t time)
 {
+  tmElements_t tm;
+  breakTime(getCurrentTime(), tm);
+  tm.Hour=time.Hour;
+  tm.Minute=time.Minute;
   setTime(makeTime(time)); 
   if(time.Hour==0&&time.Minute==0)
   {
@@ -68,11 +72,18 @@ void TimesManager::updateAlarm()
   Serial.println(Alarm.getNextTrigger());
 }
 
-time_t TimesManager::syncFunc()
+time_t TimesManager::getCurrentTime()
 {
   Serial.println("sync");
   if(timeState.autoTime)return makeTime(wifiHandler->ipTime());
   tmElements_t tm=wifiHandler->UTCTime();
   tm.Hour+=timeState.offset;
   return makeTime(tm);
+}
+
+TimeElements TimesManager::getCurrentTimeElements()
+{
+  TimeElements timeElements;
+  breakTime(getCurrentTime(), timeElements);
+  return timeElements;
 }
