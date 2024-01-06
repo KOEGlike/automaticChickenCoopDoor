@@ -1,5 +1,6 @@
 #include "chicken_door.hpp"
 #include "memory_manager.hpp"
+#include "physical_interface/button.hpp"
 
 ChickenDoor::ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig, WiFiConfig* wifiConfig):
 wifiHandler{wifiConfig},
@@ -25,5 +26,6 @@ void ChickenDoor::begin()
   timesManager.begin(idOpen, idClose);
   displayUI.begin();
   motor.begin();
-  Async.registerCallback(100, -1, [&](){Alarm.serviceAlarms();});
+  Async.registerCallback(1*1000, -1, [&](){Alarm.serviceAlarms();});
+  Async.registerCallback(30*1000, -1, [&](){if(ButtonManager.timeFromLastPress()>=5*60*1000) sleepHandler.sleepUntilNextAction();});
 }

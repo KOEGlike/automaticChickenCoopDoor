@@ -72,6 +72,7 @@ void ButtonManager_t::check()
             
             if (btnPtr->pressedForMillis < btnPtr->millisForLongPress&&btnPtr->pressed==false) 
             { 
+                lastPress=millis();
                 btnPtr->m_press();
             } 
             else if(btnPtr->pressed == true&&btnPtr->pressedForMillis >= btnPtr->millisForLongPress)
@@ -92,18 +93,21 @@ void ButtonManager_t::check()
 
                         if(wasMultiplePress==false) break;
                     }
-                    if(wasMultiplePress==true) {
-                    buttonLinks[linkId].onPress();
-                    for(auto button: buttonLinks[linkId].buttonPtrs)
+                    if(wasMultiplePress==true) 
                     {
-                        button->pressed=false;
-                         button->pressedForMillis=0;
-                    } 
-                    break;
+                        lastPress=millis();
+                        buttonLinks[linkId].onPress();
+                        for(auto button: buttonLinks[linkId].buttonPtrs)
+                        {
+                            button->pressed=false;
+                            button->pressedForMillis=0;
+                        } 
+                        break;
                     }
                 }
                 if(wasMultiplePress==false)
                 {
+                    lastPress=millis();
                     btnPtr->m_longPress();
                     btnPtr->pressed = false;
                 }
@@ -118,6 +122,11 @@ void ButtonManager_t::check()
         btnPtr->wasHighBefore=pinIsHigh;
     }
 
+}
+
+uint64_t ButtonManager_t::timeFromLastPress()
+{
+    return millis()-lastPress;
 }
 
 std::vector<uint> ButtonManager_t::sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(std::vector<uint> linkIds)

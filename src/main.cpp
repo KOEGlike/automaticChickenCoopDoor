@@ -1,11 +1,6 @@
 #include "classes/chicken_door.hpp"
 #include "classes/async_handler.hpp"
 #include "classes/interfaces.hpp"
-#include "classes/physical_interface/button.hpp"
-#include "classes/WiFi_handler.hpp"
-#include "classes/memory_manager.hpp"
-#include <TimeAlarms.h>
-#include "classes/times_manager.hpp"
 
 //Powered by SunriseSunset.io
 
@@ -44,7 +39,7 @@ void setup() {
   Serial.begin(115200);
   door.begin();
   setSyncProvider(syncFunc);
-  setSyncInterval(30);
+  setSyncInterval(60);
   ButtonManager.begin();
 }
 

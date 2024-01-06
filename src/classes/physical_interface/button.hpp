@@ -4,6 +4,7 @@
 #include<map>
 #include <vector>
 #include "../async_handler.hpp"
+#include <inttypes.h>
 
 class ButtonManager_t;
 class Button {
@@ -41,11 +42,13 @@ class ButtonManager_t {
         void removeButton(Button* button);
         void check();
         void begin();
+        uint64_t timeFromLastPress();
     protected:
     	std::map<uint, Button*> buttons;
         std::map<uint, ButtonLinkStruct> buttonLinks;
         uint currentMaxButtonId=0,currentMaxLinkId=0, asyncId;
         std::vector<uint>  sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(std::vector<uint> linkIds);
+        uint64_t lastPress=0;
 };
 
 inline ButtonManager_t ButtonManager;

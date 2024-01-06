@@ -13,9 +13,9 @@ callbackData::callbackData(long delayInMillis,uint32_t timesToRepeat, std::funct
     
   }
 
-uint32_t AsyncHandler::registerCallback(unsigned long delay,uint32_t times, std::function<void()> callback,std::function<void(void)> onEnd, bool doDelayFirst)
+uint32_t AsyncHandler::registerCallback(unsigned long delayInMillis,uint32_t times, std::function<void()> callback,std::function<void(void)> onEnd, bool doDelayFirst)
 {
-  callbackData cbd(delay,times,callback,onEnd);
+  callbackData cbd(delayInMillis,times,callback,onEnd);
   if(doDelayFirst)
   {
     cbd.lastCalled=millis();
