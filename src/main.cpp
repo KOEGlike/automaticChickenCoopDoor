@@ -15,7 +15,7 @@ MotorConfig motorConfig{
   200,//stepper motor steps amount
   4,//dir pin
   5,//step pin
-  7,//enable pin
+  18,//enable pin
   17,//m0
   16,//m1
   15//m2

@@ -1,10 +1,11 @@
 #include "sleep_handler.hpp"
 #include "driver/rtc_io.h"
 
-SleepHandler::SleepHandler(TimesManager* timesManager, DisplayUiConfig* displayUiConfig)
+SleepHandler::SleepHandler(TimesManager* timesManager,Motor* motor ,DisplayUiConfig* displayUiConfig)
 {
   this->timesManager = timesManager;
   this->displayUiConfig = displayUiConfig;
+  this->motor = motor;
 }
 
 void SleepHandler::sleepUntilNextAction()
@@ -12,16 +13,14 @@ void SleepHandler::sleepUntilNextAction()
   Serial.println("Going to sleep");
   rtc_gpio_pullup_en(displayUiConfig->btn3Pin);
   esp_sleep_enable_ext0_wakeup(displayUiConfig->btn3Pin, 0);
-  Serial.println("time until next action "+String(timesManager->getTimeUntilNextAction()));
-
-  esp_err_t err =  esp_sleep_enable_timer_wakeup(timesManager->getTimeUntilNextAction() *1000* 1000000);
+  uint64_t microSecondsForTheSleepinessToGoAway= 20*1000*1000;
+  uint64_t microSecondsForWakeUp=(uint64_t)timesManager->getTimeUntilNextAction() *1000* 1000 -microSecondsForTheSleepinessToGoAway;
+  esp_err_t err =  esp_sleep_enable_timer_wakeup(microSecondsForWakeUp);
   if(err != ESP_OK)
   {
     Serial.println("Error enabling timer wakeup");
   }
-  else{
-    Serial.println("Timer wakeup enabled");
-  }
+  motor->disable();
   Serial.flush();
   esp_deep_sleep_start();
 }

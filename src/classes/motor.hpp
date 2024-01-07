@@ -31,6 +31,8 @@ class Motor
     void changeState(float percentage);
     float getState();
     void begin();
+    void enable();
+    void disable();
     MotorState getMotorState();
     friend class MotorCalibrator;
     MotorCalibrator calibrator;

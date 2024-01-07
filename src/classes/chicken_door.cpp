@@ -6,7 +6,7 @@ ChickenDoor::ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorCon
 wifiHandler{wifiConfig},
 timesManager{&wifiHandler, &memoryManager},
 motor{&memoryManager,motorConfig},
-sleepHandler{&timesManager, displayUiConfig},
+sleepHandler{&timesManager,&motor, displayUiConfig},
 displayUI{&timesManager,&motor ,displayUiConfig, &sleepHandler}
 
 {

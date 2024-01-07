@@ -46,6 +46,16 @@ float Motor::getState()
   return percentage;
 }
 
+void Motor::disable()
+{
+  m_stepper.disable();
+}
+
+void Motor::enable()
+{
+  m_stepper.enable();
+}
+
 MotorState Motor::getMotorState()
 {
   return motorState;

@@ -33,4 +33,5 @@ void MemoryManager::saveMotorStateToMemory(MotorState motorState)
 MotorState MemoryManager::loadMotorStateFromMemory()
 {
   return MotorState{MotorCalibrationState{pref.getInt("bottomStep", 0), pref.getInt("topStep", 0)},pref.getInt("currentStep", 0)};
+  return MotorState{MotorCalibrationState{0,100}, 100};
 }

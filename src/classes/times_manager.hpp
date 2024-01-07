@@ -8,6 +8,7 @@ class TimesManager
 {
   public:
     TimesManager(WiFiHandler* wifiHandler, MemoryManager* memoryManager);
+    TimesManager(WiFiHandler* wifiHandler, MemoryManager, TimeState timeState);
     TimeState getTimeState();
     time_t getTimeUntilNextAction();
     void begin(int openAlarmId, int closeAlarmId);
