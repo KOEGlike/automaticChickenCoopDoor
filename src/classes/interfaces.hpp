@@ -74,7 +74,7 @@ struct MotorState
 
 struct MotorConfig
 {
-  MotorConfig(uint8_t stepsAmount ,uint8_t dirPin, uint8_t stepPin, uint8_t enablePin, uint8_t m0, uint8_t m1, uint8_t m2)
+  MotorConfig(uint8_t stepsAmount ,gpio_num_t dirPin, gpio_num_t stepPin, gpio_num_t enablePin, gpio_num_t m0, gpio_num_t m1, gpio_num_t m2)
   {
     dir = dirPin;
     step = stepPin;
@@ -84,7 +84,8 @@ struct MotorConfig
     this->m1=m1;
     this->m2=m2;
   }
-uint8_t steps, dir, step, enable, m0, m1, m2;
+uint8_t steps;
+gpio_num_t  dir, step, enable, m0, m1, m2;
 };
 
 struct TimeState

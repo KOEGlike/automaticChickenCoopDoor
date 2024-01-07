@@ -33,6 +33,8 @@ class Motor
     void begin();
     void enable();
     void disable();
+    bool getActiveState();
+    MotorConfig* getConfig();
     MotorState getMotorState();
     friend class MotorCalibrator;
     MotorCalibrator calibrator;
@@ -42,4 +44,5 @@ class Motor
     DRV8825 m_stepper;
     MotorState motorState;
     MemoryManager* memoryManager;
+    MotorConfig* config;
 };

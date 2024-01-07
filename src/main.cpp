@@ -13,12 +13,12 @@ DisplayUiConfig displayUiConfig{
   };
 MotorConfig motorConfig{
   200,//stepper motor steps amount
-  4,//dir pin
-  5,//step pin
-  18,//enable pin
-  17,//m0
-  16,//m1
-  15//m2
+  GPIO_NUM_4,//dir pin
+  GPIO_NUM_5,//step pin
+  GPIO_NUM_18,//enable pin
+  GPIO_NUM_17,//m0
+  GPIO_NUM_16,//m1
+  GPIO_NUM_15//m2
   };
 
 

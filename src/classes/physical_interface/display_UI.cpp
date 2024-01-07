@@ -70,6 +70,12 @@ DisplayUI::DisplayUI(TimesManager* timesManager,Motor* motor, DisplayUiConfig *c
   this->motor=motor;
   this->timesManager=timesManager;
   this->sleepHandler=sleepHandler;
+  this->config=config;
+}
+
+DisplayUiConfig* DisplayUI::getConfig()
+{
+  return config;
 }
 
 void DisplayUI::begin()

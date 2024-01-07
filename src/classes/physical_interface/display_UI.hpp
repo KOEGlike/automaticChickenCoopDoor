@@ -27,6 +27,7 @@ class DisplayUI
   public:
     DisplayUI(TimesManager* timesManager,Motor*motor, DisplayUiConfig *config, SleepHandler* sleepHandler);
 		void begin();
+		DisplayUiConfig* getConfig();
   protected:
 		unsigned int offTime=100, onTime=100;
 		uint8_t offShortMult=4, offLongMult=15, onTimeMult=4;
@@ -37,6 +38,8 @@ class DisplayUI
 		Motor* motor;
 		TimesManager* timesManager;
 		SleepHandler* sleepHandler;
+
+		DisplayUiConfig *config;
 
 		FourDigitTime digits;
 		StateCounter currentSelectedSegment;

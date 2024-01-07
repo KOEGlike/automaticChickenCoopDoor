@@ -1,7 +1,9 @@
 #include "times_manager.hpp"
 #include <TimeAlarms.h>
 
-TimesManager::TimesManager(WiFiHandler* wifiHandler, MemoryManager* memoryManager):timeState{MoveTimes{0,0,0,0},0, true,0}
+TimesManager::TimesManager(WiFiHandler* wifiHandler, MemoryManager* memoryManager):
+//timeState{MoveTimes{0,0,0,0},0, true,0}
+timeState{MoveTimes{0,0,21,44},false, true,0}
 {
   this->wifiHandler=wifiHandler;
   this->memoryManager=memoryManager;
@@ -19,7 +21,7 @@ void TimesManager::begin(int openAlarmId, int closeAlarmId)
   this->openAlarmId=openAlarmId;
   this->closeAlarmId=closeAlarmId;
   
-  timeState=memoryManager->loadTimeStateFromMemory();
+  //timeState=memoryManager->loadTimeStateFromMemory();
   if(timeState.sunsetMode)
   {
     timeState .moveTimes=wifiHandler->sunsetTimes();

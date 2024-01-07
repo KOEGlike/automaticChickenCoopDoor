@@ -7,6 +7,12 @@ m_stepper{config->steps, config->dir, config->step, config->enable,config->m0, c
 calibrator{this}
 {
   this->memoryManager=memoryManager;
+  this->config=config;
+}
+
+MotorConfig* Motor::getConfig()\
+{
+  return config;
 }
 
 bool MotorCalibrator::isCalibrating()
@@ -25,6 +31,7 @@ void Motor::changeState(float percentage)
 void Motor::begin()
 {
  m_stepper.begin(motorRpm, 32);
+ m_stepper.setEnableActiveState(LOW);
  m_stepper.enable();
  motorState= memoryManager->loadMotorStateFromMemory();
 }
