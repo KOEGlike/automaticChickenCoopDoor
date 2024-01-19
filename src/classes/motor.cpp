@@ -10,7 +10,7 @@ calibrator{this}
   this->config=config;
 }
 
-MotorConfig* Motor::getConfig()\
+MotorConfig* Motor::getConfig()
 {
   return config;
 }
@@ -107,6 +107,7 @@ void MotorCalibrator::setSecondState()
   if(m_isDone==true)return;
   if(m_firstIsSet==false)return;
   m_motor->motorState= MotorState{MotorCalibrationState{m_firstSetIsBottom?first:m_currentStep, m_firstSetIsBottom?m_currentStep:first}, m_currentStep} ;
+  m_motor-> memoryManager-> saveMotorStateToMemory(m_motor-> motorState);
   m_isDone=true;
   Serial.println("second set");
 }

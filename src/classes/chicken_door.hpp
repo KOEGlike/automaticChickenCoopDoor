@@ -29,6 +29,6 @@ class ChickenDoor{
     DisplayUiConfig* displayUiConfig;
     MotorConfig* motorConfig;
     WiFiConfig* wifiConfig;
-    uint minutesToSleep=1;
+    const uint minutesToSleep=1;
 };
 

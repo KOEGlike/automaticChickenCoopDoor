@@ -57,6 +57,8 @@ SEG_A|SEG_F|SEG_G|SEG_C|SEG_D,//S
 SEG_A|SEG_F|SEG_G|SEG_E|SEG_D//E
 };
 
+
+
 DisplayUI::DisplayUI(TimesManager* timesManager,Motor* motor, DisplayUiConfig *config, SleepHandler* sleepHandler): 
     button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
     button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
@@ -86,7 +88,10 @@ void DisplayUI::begin()
   buttonPwr.begin();
   ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){startCalibration();});
   ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){editingToggle();});
-}
+  asyncIdForClock = Async.registerCallback(1*1000, -1, [&](){TimeElements tm; breakTime(now(), tm);  display.showNumberDecEx(tm.Hour*100+ tm.Minute, 0b01000000);});
+  Async.disableCallBack(asyncIdForClock);
+  display.clear();
+  }
 
 void DisplayUI::defaultForShowNumber(int num)
 {
@@ -148,18 +153,21 @@ void DisplayUI::onOffToggle()
 {
   if(motor->calibrator.isCalibrating()||isEditing)return;
   
+  
+
   if(isOn)
   {
     isOn=false;
     display.setBrightness(0);
     display.stopAllActivities();
+    Async.disableCallBack(asyncIdForClock);
     display.clear();
     sleepHandler->sleepUntilNextAction();
     return;
   }
     isOn=true;
     display.setBrightness(7);
-    display.scrollSegmentsAnAmount(std::vector<uint8_t>{SEG_G, SEG_G,SEG_F|SEG_E|SEG_G|SEG_B|SEG_C, SEG_A|SEG_F|SEG_G|SEG_E|SEG_D, SEG_F|SEG_E|SEG_D, SEG_F|SEG_E|SEG_D, SEG_A|SEG_B|SEG_C|SEG_D|SEG_E|SEG_F, SEG_G, SEG_G}, 1000, -1);
+    Async.enableCallBack(asyncIdForClock);
 }
 
 void DisplayUI::editingToggle()
@@ -171,11 +179,13 @@ void DisplayUI::editingToggle()
     isEditing=false;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
-   timesManager->updateMoveTimes(times);
+    timesManager->updateMoveTimes(times);
     display.stopAllActivities();
     display.clear();
+    Async.enableCallBack(asyncIdForClock);
     return;
   }
+    Async.disableCallBack(asyncIdForClock);
     display.stopAllActivities();
     isEditing=true;
     currentChangingTime.setState(0);
@@ -245,6 +255,7 @@ void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
 void DisplayUI::startCalibration()
 {
   bool firstIsBottom=true;
+  Async.disableCallBack(asyncIdForClock);
   if(!isOn||!motor->calibrator.isCalibrating()||isEditing);
   motor->calibrator.start(firstIsBottom); 
   display.stopAllActivities();
@@ -325,8 +336,10 @@ void DisplayUI::btnPwrShortFunc()
   if(motor->calibrator.isCalibrating())
   {
     setCalibrationState();
-    if(motor->calibrator.firstIsSet())display.scrollSegmentsAnAmount(UPPER_txt, 300, 1);
-    if(!motor->calibrator.isCalibrating())display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1);
+    if(motor->calibrator.firstIsSet())
+      display.scrollSegmentsAnAmount(UPPER_txt, 300, 1);
+    if(!motor->calibrator.isCalibrating())
+      display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1, [&](){Async.enableCallBack(asyncIdForClock);});
     return;
   }
   switchDoorState();
