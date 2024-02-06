@@ -22,7 +22,11 @@ class ChickenDoor{
     Motor motor;
     WiFiHandler wifiHandler;
     TimesManager timesManager;
-    Esp32S3SleepHandler sleepHandler;
+    #ifdef CONFIG_ESP32C3_BROWNOUT_DET
+       Esp32C3SleepHandler sleepHandler;
+    #elif defined(CONFIG_ESP32S3_BROWNOUT_DET)
+       Esp32S3SleepHandler sleepHandler;
+    #endif
   protected:
     DisplayUI displayUI;
     MemoryManager memoryManager;

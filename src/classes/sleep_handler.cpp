@@ -17,6 +17,8 @@ void SleepHandler::setTimerWakeupReason() {
   }
 }
 
+#ifdef CONFIG_ESP32S3_BROWNOUT_DET
+
 Esp32S3SleepHandler::Esp32S3SleepHandler(TimesManager* timesManager,Motor* motor ):
 SleepHandler(timesManager, motor) {
   
@@ -41,14 +43,17 @@ void Esp32S3SleepHandler::sleepUntilNextAction ()
   esp_deep_sleep_start();
 }
 
-void Esp32S3SleepHandler::addGPIOWakeupSource(int gpio, int gpioInputType) {
+
+
+void Esp32S3SleepHandler::addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType) {
   addWakeupReason(
     WakeupReason{
-      [](){},
-      [](){}
+      [&](){esp_sleep_enable_ext0_wakeup(gpio, gpioInputType);},
+      [gpio](){rtc_gpio_deinit(gpio);}
     }
   );
 }
+
 
 void Esp32S3SleepHandler::begin() 
 {
@@ -57,18 +62,21 @@ void Esp32S3SleepHandler::begin()
 
 }
 
+#elif defined(CONFIG_ESP32C3_BROWNOUT_DET)
+
 Esp32C3SleepHandler::Esp32C3SleepHandler(TimesManager* timesManager,Motor* motor ):
 SleepHandler(timesManager, motor) {
 
 }
+
+
 
 void Esp32C3SleepHandler::sleepUntilNextAction () 
 {
   Serial.println("Going to sleep");
   gpio_num_t motorDriverEnablePin=motor->getConfig()->enable;
   digitalWrite(motorDriverEnablePin, HIGH);
-  //rtc_gpio_hold_en(motorDriverEnablePin);
-  esp_sleep_enable_gpio_switch(true);
+  gpio_hold_en(motorDriverEnablePin);
   onGoingToSleep();
   setTimerWakeupReason();
   
@@ -78,11 +86,11 @@ void Esp32C3SleepHandler::sleepUntilNextAction ()
   esp_deep_sleep_start();
 }
 
-void Esp32C3SleepHandler::addGPIOWakeupSource(int gpio, int gpioInputType) {
+void Esp32C3SleepHandler::addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType) {
   addWakeupReason(
     WakeupReason{
-      [](){},
-      [](){}
+      [&](){ gpio_deep_sleep_wakeup_enable(gpio, gpioInputType?GPIO_INTR_HIGH_LEVEL:GPIO_INTR_LOW_LEVEL);},
+      [gpio](){gpio_deep_sleep_wakeup_disable(gpio);}
     }
   );
 }
@@ -91,5 +99,7 @@ void Esp32C3SleepHandler::begin()
 {
   onWakeup();
   gpio_hold_dis(motor->getConfig()->enable);
- // rtc_gpio_deinit(displayUiConfig->btn3Pin);
+  gpio_deep_sleep_hold_dis();
 }
+
+#endif

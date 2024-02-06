@@ -28,7 +28,7 @@ WiFiConfig wifiConfig{
   strdup("0656d8aed024425599c985770726c7fb")//ipGeoLocationKey
   };
 
-/*ChickenDoor door(&displayUiConfig, &motorConfig, &wifiConfig);
+ChickenDoor door(&displayUiConfig, &motorConfig, &wifiConfig);
 
 time_t syncFunc()
 {
@@ -37,6 +37,7 @@ time_t syncFunc()
 
 void setup() {
   Serial.begin(115200);
+  Serial.println("Starting...");
   door.begin();
   setSyncProvider(syncFunc);
   setSyncInterval(60);
@@ -46,9 +47,9 @@ void setup() {
 void loop() 
 {
   Async.check();
-}*/
+}
 
-DRV8825 motor{motorConfig.steps, motorConfig.dir, motorConfig.step, motorConfig.enable, motorConfig.m0, motorConfig.m1, motorConfig.m2};
+/*DRV8825 motor{motorConfig.steps, motorConfig.dir, motorConfig.step, motorConfig.enable, motorConfig.m0, motorConfig.m1, motorConfig.m2};
 
 void setup() {
   motor.begin(200);
@@ -57,4 +58,4 @@ void setup() {
   motor.move(10000);
 };
 
-void loop() {}
+void loop() {}*/

@@ -91,6 +91,7 @@ void DisplayUI::begin()
   asyncIdForClock = Async.registerCallback(1*1000, -1, [&](){TimeElements tm; breakTime(now(), tm);  display.showNumberDecEx(tm.Hour*100+ tm.Minute, 0b01000000);});
   Async.disableCallBack(asyncIdForClock);
   display.clear();
+  sleepHandler->addGPIOWakeupSource(config->btn3Pin, LOW);
   }
 
 void DisplayUI::defaultForShowNumber(int num)

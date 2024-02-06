@@ -21,7 +21,7 @@ class SleepHandler
     void addWakeupReason(WakeupReason wakeupReason) {
       wakeupReasons.push_back(wakeupReason);
     }
-    virtual void addGPIOWakeupSource(int gpio, int gpioInputType=INPUT)=0;
+    virtual void addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType=INPUT)=0;
   protected:
     TimesManager* timesManager;
     Motor* motor;
@@ -41,18 +41,22 @@ class SleepHandler
     }
 };
 
-class Esp32S3SleepHandler :public SleepHandler {
-  public:
-    Esp32S3SleepHandler(TimesManager* timesManager,Motor* motor);
-    void sleepUntilNextAction() override;
-    void begin() override;
-    void addGPIOWakeupSource(int gpio, int gpioInputType=INPUT) override;
-};
+#ifdef CONFIG_ESP32C3_BROWNOUT_DET
 
 class Esp32C3SleepHandler :public SleepHandler {
   public:
     Esp32C3SleepHandler(TimesManager* timesManager,Motor* motor);
     void sleepUntilNextAction() override;
     void begin() override;
-    void addGPIOWakeupSource(int gpio, int gpioInputType=INPUT) override;
+    void addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType=INPUT) override;
+    
 };
+#elif defined(CONFIG_ESP32S3_BROWNOUT_DET)
+class Esp32S3SleepHandler :public SleepHandler {
+  public:
+    Esp32S3SleepHandler(TimesManager* timesManager,Motor* motor);
+    void sleepUntilNextAction() override;
+    void begin() override;
+    void addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType=INPUT) override;
+};
+#endif
