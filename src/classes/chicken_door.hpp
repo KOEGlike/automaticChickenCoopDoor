@@ -22,7 +22,7 @@ class ChickenDoor{
     Motor motor;
     WiFiHandler wifiHandler;
     TimesManager timesManager;
-    SleepHandler sleepHandler;
+    Esp32S3SleepHandler sleepHandler;
   protected:
     DisplayUI displayUI;
     MemoryManager memoryManager;
