@@ -5,26 +5,26 @@
 //Powered by SunriseSunset.io
 
 DisplayUiConfig displayUiConfig{
-  GPIO_NUM_10,//clk
-  GPIO_NUM_11,//dio
-  GPIO_NUM_9,//btn1 (left)
-  GPIO_NUM_11,//bnt2 (right)
-  GPIO_NUM_10//btn pwr
+  GPIO_NUM_0,//clk
+  GPIO_NUM_10,//dio
+  GPIO_NUM_1,//btn1 (left)
+  GPIO_NUM_3,//bnt2 (right)
+  GPIO_NUM_2//btn pwr
   };
 MotorConfig motorConfig{
   200,//stepper motor steps amount
-  GPIO_NUM_4,//dir pin
-  GPIO_NUM_5,//step pin
-  GPIO_NUM_18,//enable pin
-  GPIO_NUM_17,//m0
-  GPIO_NUM_16,//m1
-  GPIO_NUM_15//m2
+  GPIO_NUM_19,//dir pin
+  GPIO_NUM_18,//step pin
+  GPIO_NUM_9,//enable pin
+  GPIO_NUM_8,//m0
+  GPIO_NUM_7,//m1
+  GPIO_NUM_6//m2
   };
 
 
 WiFiConfig wifiConfig{
-  strdup("nova sepsi"), //ssid
-  strdup("MarciFanni"), //password
+  strdup("Wokwi-GUEST"), //ssid
+  strdup(""), //password
   strdup("0656d8aed024425599c985770726c7fb")//ipGeoLocationKey
   };
 
@@ -48,14 +48,3 @@ void loop()
 {
   Async.check();
 }
-
-/*DRV8825 motor{motorConfig.steps, motorConfig.dir, motorConfig.step, motorConfig.enable, motorConfig.m0, motorConfig.m1, motorConfig.m2};
-
-void setup() {
-  motor.begin(200);
-  motor.setEnableActiveState(HIGH);
-  motor.enable();
-  motor.move(10000);
-};
-
-void loop() {}*/

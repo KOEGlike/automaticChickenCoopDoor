@@ -41,7 +41,7 @@ class Motor
   protected:
     void moveSteps(long steps);
     const uint16_t motorRpm=200;
-    DRV8825 m_stepper;
+    A4988 m_stepper;
     MotorState motorState;
     MemoryManager* memoryManager;
     MotorConfig* config;

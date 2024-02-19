@@ -10,6 +10,7 @@
 #include "../times_manager.hpp"
 #include "button.hpp"
 #include "custom_display_behavior.hpp"
+#include <TM1637.h>
 #include "four_digit_time.hpp"
 #include "counter.hpp"
 #include "../async_handler.hpp"

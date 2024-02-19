@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "author": "KOEG",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-breadboard",
+      "id": "bb1",
+      "top": 101,
+      "left": 109.6,
+      "rotate": 90,
+      "attrs": {}
+    },
+    {
+      "type": "board-esp32-c3-devkitm-1",
+      "id": "esp",
+      "top": 145.5,
+      "left": 387.78,
+      "rotate": 180,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 249.7,
+      "left": 601.5,
+      "rotate": 270,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn2",
+      "top": 249.7,
+      "left": 553.5,
+      "rotate": 270,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn3",
+      "top": 249.7,
+      "left": 649.5,
+      "rotate": 270,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-tm1637-7segment",
+      "id": "sevseg1",
+      "top": 28.76,
+      "left": 151.03,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-a4988",
+      "id": "drv1",
+      "top": 167.8,
+      "left": 187.8,
+      "rotate": 180,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "stepper1",
+      "top": 116.07,
+      "left": -27.29,
+      "rotate": 270,
+      "attrs": { "size": "17" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:19", "drv1:DIR", "red", [ "h0" ] ],
+    [ "esp:18", "drv1:STEP", "gold", [ "h-74.38", "v9.6" ] ],
+    [ "esp:6", "drv1:MS3", "green", [ "h0" ] ],
+    [ "drv1:MS2", "esp:7", "cyan", [ "h0" ] ],
+    [ "esp:8", "drv1:MS1", "purple", [ "h0" ] ],
+    [ "esp:9", "drv1:ENABLE", "blue", [ "h0" ] ],
+    [ "stepper1:B-", "drv1:1B", "green", [ "h0" ] ],
+    [ "stepper1:B+", "drv1:1A", "green", [ "h0" ] ],
+    [ "stepper1:A+", "drv1:2A", "green", [ "h48" ] ],
+    [ "stepper1:A-", "drv1:2B", "green", [ "h0" ] ],
+    [ "sevseg1:GND", "esp:GND.10", "black", [ "h38.4", "v201.6" ] ],
+    [ "sevseg1:VCC", "esp:3V3.1", "red", [ "h182.4", "v192", "h-28.8" ] ],
+    [ "btn2:2.r", "esp:1", "#8f4814", [ "v0" ] ],
+    [ "btn1:2.r", "esp:2", "purple", [ "h-38.2", "v-9.8", "h-115.2", "v28.8" ] ],
+    [ "btn3:2.r", "esp:3", "orange", [ "v-67.4", "h-172.6", "v76.8" ] ],
+    [ "sevseg1:DIO", "esp:10", "green", [ "h144", "v57.6", "h19.2", "v67.2" ] ],
+    [ "sevseg1:CLK", "esp:0", "green", [ "h172.8", "v153.6" ] ],
+    [ "drv1:SLEEP", "drv1:RESET", "green", [ "h19.2", "v9.6" ] ],
+    [ "esp:GND.1", "btn2:1.l", "black", [ "v0" ] ],
+    [ "btn2:1.l", "btn1:1.l", "black", [ "v19.2", "h9.6" ] ],
+    [ "btn1:1.l", "btn3:1.l", "black", [ "v19.2", "h48" ] ],
+    [ "esp:0", "bb1:33t.b", "", [ "$bb" ] ],
+    [ "esp:1", "bb1:32t.b", "", [ "$bb" ] ],
+    [ "esp:2", "bb1:38t.b", "", [ "$bb" ] ],
+    [ "esp:3", "bb1:37t.b", "", [ "$bb" ] ],
+    [ "esp:10", "bb1:31t.b", "", [ "$bb" ] ],
+    [ "esp:GND.1", "bb1:41t.b", "", [ "$bb" ] ],
+    [ "esp:3V3.1", "bb1:40t.b", "", [ "$bb" ] ],
+    [ "esp:3V3.2", "bb1:39t.b", "", [ "$bb" ] ],
+    [ "esp:GND.2", "bb1:36t.b", "", [ "$bb" ] ],
+    [ "esp:RST", "bb1:35t.b", "", [ "$bb" ] ],
+    [ "esp:GND.3", "bb1:34t.b", "", [ "$bb" ] ],
+    [ "esp:GND.4", "bb1:30t.b", "", [ "$bb" ] ],
+    [ "esp:5V.1", "bb1:29t.b", "", [ "$bb" ] ],
+    [ "esp:5V.2", "bb1:28t.b", "", [ "$bb" ] ],
+    [ "esp:GND.5", "bb1:27t.b", "", [ "$bb" ] ]
+  ],
+  "dependencies": {}
+}

@@ -86,8 +86,8 @@ void DisplayUI::begin()
   button1.begin();
   button2.begin();
   buttonPwr.begin();
-  ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){startCalibration();});
-  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){editingToggle();});
+  ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){Serial.println("1, pw"); startCalibration();});
+  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){Serial.println("2, pw"); editingToggle();});
   asyncIdForClock = Async.registerCallback(1*1000, -1, [&](){TimeElements tm; breakTime(now(), tm);  display.showNumberDecEx(tm.Hour*100+ tm.Minute, 0b01000000);});
   Async.disableCallBack(asyncIdForClock);
   display.clear();
@@ -163,7 +163,7 @@ void DisplayUI::onOffToggle()
     display.stopAllActivities();
     Async.disableCallBack(asyncIdForClock);
     display.clear();
-    sleepHandler->sleepUntilNextAction();
+    //sleepHandler->sleepUntilNextAction();
     return;
   }
     isOn=true;
@@ -349,6 +349,7 @@ void DisplayUI::btnPwrShortFunc()
 void DisplayUI::btnPwrLongFunc()
 {
   onOffToggle();
+  Serial.println("onOffToggle");
 }
 
 tmElements_t DisplayUI::getTimeInElements()
