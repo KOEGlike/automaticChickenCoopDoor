@@ -2,8 +2,8 @@
 #include <TimeAlarms.h>
 
 TimesManager::TimesManager(WiFiHandler* wifiHandler, MemoryManager* memoryManager):
-//timeState{MoveTimes{0,0,0,0},0, true,0}
-timeState{MoveTimes{0,0,21,44},false, true,0}
+timeState{MoveTimes{0,0,0,0},0, true,0}
+//timeState{MoveTimes{0,0,11,19},false, true,0}
 {
   this->wifiHandler=wifiHandler;
   this->memoryManager=memoryManager;

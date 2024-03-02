@@ -57,9 +57,12 @@
     "board/esp32s3-builtin.cfg"
   ],
   "cSpell.words": [
+    "devkitm",
     "FOURDIGITTIME",
     "GPIO",
     "Millies",
-    "movetimes"
+    "movetimes",
+    "sevseg",
+    "wokwi"
   ]
 }
