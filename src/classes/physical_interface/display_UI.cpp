@@ -101,8 +101,8 @@ void DisplayUI::defaultForShowNumber(int num)
   display.showNumberDecEx(num, 0b01000000, true);
 }
 
-// gets the time of : current time(0), open time(1), close time(2) 
-// in a format of HHMM
+/// @brief gets the time of : current time(0), open time(1), close time(2) 
+/// in a format of HHMM
 int DisplayUI::digitValueRouter(int state)
 {tmElements_t currentTime= getTimeInElements();
   switch(state) {
@@ -117,8 +117,8 @@ int DisplayUI::digitValueRouter(int state)
   }
 }
 
-// sets the time of : current time(0), open time(1), close time(2) on the display
-// in a format of HHMM
+/// @brief sets the time of : current time(0), open time(1), close time(2) on the display
+/// in a format of HHMM
 void DisplayUI::setTimeRouter(int digits, int state)
 {
   tmElements_t currentTime;
@@ -143,13 +143,13 @@ void DisplayUI::setTimeRouter(int digits, int state)
   }
 }
 
-// change how many times the dots blink then delay
+/// @brief  change how many times the dots blink then delay
 void DisplayUI::dotTimingRouter(int state)
 {
   display.blinkDotsAnAmountThenDelayContinuouslyChangeAmount(state+1);
 }
 
-// change the current segment
+/// @brief change the current segment
 void DisplayUI::mutateCurrentSegment(int amount)
 {
   if(isOn==false||!isEditing)return;
@@ -159,12 +159,10 @@ void DisplayUI::mutateCurrentSegment(int amount)
 }
 
 
-// turn on or off the display
+/// @brief turn on or off the display
 void DisplayUI::onOffToggle()
 {
   if(motor->calibrator.isCalibrating()||isEditing)return;
-  
-  
 
   if(isOn)
   {
@@ -173,7 +171,7 @@ void DisplayUI::onOffToggle()
     display.stopAllActivities();
     Async.disableCallBack(asyncIdForClock);
     display.clear();
-    //sleepHandler->sleepUntilNextAction();
+    sleepHandler->sleepUntilNextAction();
     return;
   }
     isOn=true;
@@ -181,6 +179,7 @@ void DisplayUI::onOffToggle()
     Async.enableCallBack(asyncIdForClock);
 }
 
+/// @brief edits the open && close && current time
 void DisplayUI::editingToggle()
 {
   if(motor->calibrator.isCalibrating()||!isOn)return;
@@ -208,7 +207,7 @@ void DisplayUI::editingToggle()
     textValueRouter(currentChangingTime.getState());
 }
 
-// display the text for the current time(0), open time(1), close time(2)
+/// @brief display the text for the current time(0), open time(1), close time(2)
 void DisplayUI::textValueRouter(int state)
 {
   display.stopAllActivities();
@@ -231,9 +230,9 @@ void DisplayUI::textValueRouter(int state)
     });
 }
 
-// move the cursor
-// forward is true if the cursor is moving forward
-// forward is false if the cursor is moving backward
+/// @brief move the cursor
+/// forward is true if the cursor is moving forward
+/// forward is false if the cursor is moving backward
 void DisplayUI::moveCursor(bool forward)
 {
   if(isOn==false||!isEditing||motor->calibrator.isCalibrating())return;
@@ -242,7 +241,7 @@ void DisplayUI::moveCursor(bool forward)
   display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
 }
 
-// change the current type time
+/// @brief change the current type time
 void DisplayUI::changeCurrentChangingTime()
 {
   if(isOn==false||motor->calibrator.isCalibrating()||!isEditing)return;
@@ -254,12 +253,16 @@ void DisplayUI::changeCurrentChangingTime()
 
 }
 
+/// @brief set the calibration state
 void DisplayUI::setCalibrationState()
 {
   if(!isOn||!motor->calibrator.isCalibrating()||isEditing)return;
   motor->calibrator.setState();
 }
 
+/// @brief turn the motor a amount of steps for calibration
+/// @param steps the amount of steps to turn
+/// @param isClockwise true if the motor is turning clockwise, false if the motor is turning counter clockwise
 void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
 {
   if(!isOn||!motor->calibrator.isCalibrating()||isEditing)return;
@@ -267,6 +270,7 @@ void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
   display.showNumberDec(motor->calibrator.getCurrentStep());
 }
 
+/// @brief start the motor calibration
 void DisplayUI::startCalibration()
 {
   bool firstIsBottom=true;
@@ -277,6 +281,7 @@ void DisplayUI::startCalibration()
   display.scrollSegmentsAnAmount(LOWER_txt, 300, 1);
 }
 
+/// @brief switch the door state, open/close it
 void DisplayUI::switchDoorState()
 {
   if(!isOn)return;
@@ -285,6 +290,7 @@ void DisplayUI::switchDoorState()
 }
 
 
+/// @brief what happens when btn1 is pressed a single time shortly
 void DisplayUI::btn1ShortFunc()
 {
   if(motor->calibrator.isCalibrating())
@@ -299,6 +305,7 @@ void DisplayUI::btn1ShortFunc()
   }
 }
 
+/// @brief what happens when btn1 is pressed a single time for a long time
 void DisplayUI::btn1LongFunc()
 {
   if(motor->calibrator.isCalibrating())
@@ -313,6 +320,7 @@ void DisplayUI::btn1LongFunc()
   }
 }
 
+/// @brief what happens when btn2 is pressed a single time shortly
 void DisplayUI::btn2ShortFunc()
 {
   if(motor->calibrator.isCalibrating())
@@ -327,6 +335,7 @@ void DisplayUI::btn2ShortFunc()
   }
 }
 
+/// @brief what happens when btn2 is pressed a single time for a long time
 void DisplayUI::btn2LongFunc()
 {
   if(motor->calibrator.isCalibrating())
@@ -341,6 +350,7 @@ void DisplayUI::btn2LongFunc()
   }
 }
 
+/// @brief what happens when pwr-btn is pressed a single time shortly
 void DisplayUI::btnPwrShortFunc()
 {
   if(isEditing)
@@ -360,6 +370,7 @@ void DisplayUI::btnPwrShortFunc()
   switchDoorState();
 }
 
+/// @brief what happens when pwr-btn is pressed a single time for a long time
 void DisplayUI::btnPwrLongFunc()
 {
   onOffToggle();

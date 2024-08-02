@@ -19,6 +19,7 @@ Async.registerCallback(0,-1, [&](){check();});
 
 } 
 
+/// @brief this runts in the async loop to check if the display should blink
 void CustomDisplayBehavior::blinkCheck() {
   if (millis() - blinkStartInMillis >= m_offTime && isBlinking) {
     blinkEnd = millis();
@@ -49,6 +50,8 @@ void CustomDisplayBehavior::blinkCheck() {
   }
 }
 
+
+/// @brief this runts in the async loop to check if the display should blink
 void CustomDisplayBehavior::dotBlinkCheck() {
  
   if (millis() - dotBlinkStartInMillis >= m_dotOffTime && dotIsBlinking) {
@@ -84,6 +87,9 @@ void CustomDisplayBehavior::dotBlinkCheck() {
   }
 }
 
+/// @brief blink the segments
+/// @param segmentsToBlink segments
+/// @param offTime the off time 
 void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long offTime) {
   if (isBlinking) {
     return;
@@ -93,7 +99,7 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
   memcpy(beforeBlinkSegments, currentSegments, segmentsLength);
   uint8_t segments[4];
   
-memcpy(segments, currentSegments, segmentsLength);
+  memcpy(segments, currentSegments, segmentsLength);
   
   if (segmentsToBlink & 0b1000) {
     segments[0] = 0;
@@ -124,6 +130,10 @@ memcpy(segments, currentSegments, segmentsLength);
   memcpy(currentSegments, beforeBlinkSegments, segmentsLength);
 }
 
+/// @brief blink the segments continuously
+/// @param segmentsToBlink segments
+/// @param offTime the time the light is off
+/// @param onTime the time the light is on
 void CustomDisplayBehavior::blinkSegmentsContinuouslyOn(uint8_t segmentsToBlink, unsigned long offTime, unsigned long onTime) {
   isContinuouslyBlinking = true;
   segmentsThatBlink = segmentsToBlink;
@@ -131,10 +141,15 @@ void CustomDisplayBehavior::blinkSegmentsContinuouslyOn(uint8_t segmentsToBlink,
   blinkSegments(segmentsThatBlink, offTime);
 }
 
+/// @brief stop the continuous blinking, but dont lose the configuration
 void CustomDisplayBehavior::blinkSegmentsContinuouslyOff() {
   isContinuouslyBlinking = false;
 }
 
+/// @brief change the continuous blinking configuration
+/// @param segmentsToBlink 
+/// @param offTime the time the light is off
+/// @param onTime the time the light is on
 void CustomDisplayBehavior::changeSegmentsContinuos(uint8_t segmentsToBlink, unsigned long offTime, unsigned long onTime)
 {
   segmentsThatBlink=segmentsToBlink;
@@ -142,6 +157,12 @@ void CustomDisplayBehavior::changeSegmentsContinuos(uint8_t segmentsToBlink, uns
   m_onTime=onTime;
 }
 
+/// @brief blink the segments a certain amount of times
+/// @param segmentsToBlink 
+/// @param amount the amount to blink the segments
+/// @param offTime the time the light is off
+/// @param onTime the time the light is on
+/// @param onEnd a function to call when the blinking is done
 void CustomDisplayBehavior::blinkSegmentsAnAmount(uint8_t segmentsToBlink, unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
   timesBlinked = 0;
   timesToBlink = amount;
@@ -149,6 +170,7 @@ void CustomDisplayBehavior::blinkSegmentsAnAmount(uint8_t segmentsToBlink, unsig
   blinkSegmentsContinuouslyOn(segmentsToBlink, offTime, onTime);
 }
 
+/// @brief blink the dots
 void CustomDisplayBehavior::blinkDots(unsigned long offTime){
 
   if (dotIsBlinking) {
@@ -171,16 +193,25 @@ memcpy(segments, currentSegments, segmentsLength);
   
 }
 
+/// @brief blink the dots continuously
+/// @param offTime the time the light is off
+/// @param onTime the time the light is on
 void CustomDisplayBehavior::blinkDotsContinuouslyOn( unsigned long offTime, unsigned long onTime) {
   dotIsContinuouslyBlinking = true;
   m_dotOnTime = onTime;
   blinkDots(offTime);
 }
 
+/// @brief stop the continuous blinking of the dots, but dont lose the configuration
 void CustomDisplayBehavior::blinkDotsContinuouslyOff() {
   dotIsContinuouslyBlinking = false;
 }
 
+/// @brief blink the dots a certain amount of times
+/// @param amount the amount
+/// @param offTime the time the light is off
+/// @param onTime the time the light is on
+/// @param onEnd a function to call when the blinking is done
 void CustomDisplayBehavior::blinkDotsAnAmount( unsigned int amount, unsigned long offTime, unsigned long onTime, std::function<void()> onEnd) {
   timesDotBlinked = 0;
   timesDotToBlink = amount;
@@ -188,6 +219,11 @@ void CustomDisplayBehavior::blinkDotsAnAmount( unsigned int amount, unsigned lon
   blinkDotsContinuouslyOn(offTime, onTime);
 }
 
+/// @brief blink the dots a certain amount of times then delay some time and then start again
+/// @param amount the amount
+/// @param longOffTime the time to delay
+/// @param offTime the time the light is off
+/// @param onTime the time the light is on
 void CustomDisplayBehavior::blinkDotsAnAmountThenDelayContinuously(unsigned int amount, unsigned long longOffTime ,unsigned long offTime , unsigned long onTime)
 {
   dotBlinkAnAmountLongDelayContinuos=longOffTime;
@@ -197,44 +233,55 @@ void CustomDisplayBehavior::blinkDotsAnAmountThenDelayContinuously(unsigned int 
   blinkDotsAnAmount(amount, offTime, onTime, [&](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true; });
 }
 
+/// @brief change the amount of times the dots blink then delay
+/// @param amount 
 void CustomDisplayBehavior::blinkDotsAnAmountThenDelayContinuouslyChangeAmount(unsigned int amount)
 {
   dotBlinkAnAmountLongDelayContinuosAmount=amount;
 }
 
+/// @brief check if the display should blink
 void CustomDisplayBehavior::check() {
   dotBlinkCheck();
   blinkCheck();
 }
 
+/// @brief scroll the segments
+/// @param segments segments to scroll
+/// @param millisForOneMove the time it takes for on segment to move
+/// @param amount the amount to scroll, if 0 or less it will scroll forever
+/// @param onEnd a function to call when the scrolling is done
 void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments, unsigned long millisForOneMove, int amount, std::function<void()> onEnd)
 {
   scrollCycles=0;
+  scrollCurrentCycle=0;
   segmentsToScroll=segments;
   scrollAmount=amount;
   scrollSegmentsOnEnd=onEnd;
   std::function<void()> 
   scrollAsyncFunc = [&]() 
   {
-   if(scrollCycles>segmentsToScroll.size()-1) {scrollCycles=0;}
-   if(scrollCycles/scrollAmount>=scrollAmount-1&&scrollAmount>=0&&scrollCycles>segmentsToScroll.size()-4) {scrollSegmentsOnEnd(); scrollSegmentsContinuouslyOff(); return;}
+   if(scrollCurrentCycle>segmentsToScroll.size()-1) {scrollCurrentCycle=0; scrollCycles++;}
+   if(scrollCycles>=scrollAmount&&scrollAmount>=0) {scrollSegmentsOnEnd(); scrollSegmentsContinuouslyOff(); return;}
     uint8_t segmentsToDisplay[4];
     for(int i=0;i<4;i++)
     {
-      segmentsToDisplay[i]=segmentsToScroll[scrollCycles+i<segmentsToScroll.size()?scrollCycles+i:((scrollCycles+i)-segmentsToScroll.size())];
+      segmentsToDisplay[i]=segmentsToScroll[scrollCurrentCycle+i<segmentsToScroll.size()?scrollCurrentCycle+i:((scrollCurrentCycle+i)-segmentsToScroll.size())];
     }
     setSegments(segmentsToDisplay);
-    scrollCycles++;
+    scrollCurrentCycle++;
   };
   scrollAsyncId= Async.registerCallback(millisForOneMove, -1, scrollAsyncFunc);
 }
 
+/// @brief stop the scrolling
 void CustomDisplayBehavior::scrollSegmentsContinuouslyOff()
 {
   
   Async.deleteCallBack(scrollAsyncId);
 }
 
+/// @brief stop all activities, including blinking and scrolling
 void CustomDisplayBehavior::stopAllActivities()
 {
   dotBlinkAnAmountLongDelayContinuos=-1;dotBlinkAnAmountLongDelayContinuosStart; 

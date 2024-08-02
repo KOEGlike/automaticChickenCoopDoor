@@ -72,6 +72,8 @@ MotorCalibrator::MotorCalibrator(Motor *motor){
   m_motor=motor;
 }
 
+/// @brief starts the calibration
+/// @param firstSetIsBottom if the first set position is the bottom state
 void MotorCalibrator::start(bool firstSetIsBottom)
 {
   if(m_isDone==false)return;
@@ -112,6 +114,9 @@ void MotorCalibrator::setSecondState()
   Serial.println("second set");
 }
 
+// set the calibration state
+// so the step of the motor, 
+// the first state is the bottom state
 void MotorCalibrator::setState()
 {
   if(m_isDone==true)return;

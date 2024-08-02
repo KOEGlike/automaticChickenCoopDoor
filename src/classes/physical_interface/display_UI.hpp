@@ -29,21 +29,39 @@ class DisplayUI
 		void begin();
 		DisplayUiConfig* getConfig();
   protected:
+		/// @brief the time to wait before turning on/off the display
 		unsigned int offTime=100, onTime=100;
+		
+		/// @brief  multiplier for the on/off time for display on different states
 		uint8_t offShortMult=4, offLongMult=15, onTimeMult=4;
 		uint32_t asyncIdForClock;
 
+		/// @brief when the motor moves
 		MoveTimes times;
-		bool isOn=false, isEditing=false;
 
+		/// @brief if the display is on
+		bool isOn=false;
+		/// @brief if the ui is editing times
+		bool isEditing=false;
+
+		/// @brief pointer to the motor in the main class
 		Motor* motor;
+		/// @brief pointer to the times manager in the main class
 		TimesManager* timesManager;
+		/// @brief pointer to the sleep handler in the main class
 		SleepHandler* sleepHandler;
 
+		/// @brief the pointer configuration for the display in the main class
 		DisplayUiConfig *config;
 
+		/// @brief the current editing time
 		FourDigitTime digits;
+		/// @brief counter of 4 states for the 4 segments of the display
 		StateCounter currentSelectedSegment;
+		/// @brief counter of 3 states for the 3 different times to change: 
+		/// 1. the opening time
+		/// 2. the closing time
+		/// 3. the current time
 		StateCounter currentChangingTime;
 
 		void defaultForShowNumber(int num);
@@ -72,6 +90,7 @@ class DisplayUI
 		void btn2LongFunc();
 		void btnPwrLongFunc();
 		
+		/// @brief the display class, extended to have custom behaviors
 		CustomDisplayBehavior display;
 		
 		Button button1;
