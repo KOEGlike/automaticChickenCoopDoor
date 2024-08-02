@@ -87,6 +87,8 @@ void FourDigitTime::mutateMinutes(int minutes) {
     }
 }
 
+// placement is the digit to mutate, mutate is the amount to mutate by
+// mutate means add or subtract the amount from the digit
 void FourDigitTime::mutateOneDigit(int placement, int mutate,bool stepOver) {
      m_stepOver=stepOver;
     switch (placement)

@@ -18,7 +18,7 @@ public:
     StateCounter(int amountOfStates, std::function<void(uint8_t amount)> onMutate = [](uint8_t amount){});
     void add(uint8_t amount = 1);
     void subtract(uint8_t amount = 1);
-    void mutate(uint8_t amount = 1);
+    void mutate(int8_t amount = 1);
     uint8_t getState();
     uint8_t getStateInBitMask();
     int getAmountOfStates();

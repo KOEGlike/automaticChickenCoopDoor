@@ -60,6 +60,7 @@
     "devkitm",
     "FOURDIGITTIME",
     "GPIO",
+    "HHMM",
     "Millies",
     "movetimes",
     "sevseg",

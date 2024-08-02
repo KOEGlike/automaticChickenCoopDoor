@@ -33,7 +33,9 @@ void StateCounter::subtract(uint8_t amount)
     Serial.print(state);
 }
 
-void StateCounter::mutate(uint8_t amount)
+
+// add or subtract the amount from the state
+void StateCounter::mutate(int8_t amount)
 {    
     m_onMutate(amount);
     if(amount<0)

@@ -32,6 +32,7 @@ SEG_A|SEG_F|SEG_G|SEG_E|SEG_D,//E
 SEG_E|SEG_G|SEG_C|SEG_D|SEG_B//d
 };
 
+// current txt
 const std::vector<uint8_t> CURRENT_txt{
 SEG_D|SEG_E|SEG_G,//c
 SEG_E|SEG_D|SEG_C,//U
@@ -42,6 +43,7 @@ SEG_E|SEG_G|SEG_C,//n
 SEG_F|SEG_G|SEG_E|SEG_D,//T
 };
 
+// txt for open time
 const std::vector<uint8_t> OPEN_txt{
 SEG_C|SEG_D|SEG_E|SEG_G,//o
 SEG_A|SEG_B|SEG_E|SEG_F|SEG_G,//P
@@ -99,6 +101,8 @@ void DisplayUI::defaultForShowNumber(int num)
   display.showNumberDecEx(num, 0b01000000, true);
 }
 
+// gets the time of : current time(0), open time(1), close time(2) 
+// in a format of HHMM
 int DisplayUI::digitValueRouter(int state)
 {tmElements_t currentTime= getTimeInElements();
   switch(state) {
@@ -113,6 +117,8 @@ int DisplayUI::digitValueRouter(int state)
   }
 }
 
+// sets the time of : current time(0), open time(1), close time(2) on the display
+// in a format of HHMM
 void DisplayUI::setTimeRouter(int digits, int state)
 {
   tmElements_t currentTime;
@@ -137,11 +143,13 @@ void DisplayUI::setTimeRouter(int digits, int state)
   }
 }
 
+// change how many times the dots blink then delay
 void DisplayUI::dotTimingRouter(int state)
 {
   display.blinkDotsAnAmountThenDelayContinuouslyChangeAmount(state+1);
 }
 
+// change the current segment
 void DisplayUI::mutateCurrentSegment(int amount)
 {
   if(isOn==false||!isEditing)return;
@@ -150,6 +158,8 @@ void DisplayUI::mutateCurrentSegment(int amount)
   defaultForShowNumber(digits.getDigits());
 }
 
+
+// turn on or off the display
 void DisplayUI::onOffToggle()
 {
   if(motor->calibrator.isCalibrating()||isEditing)return;
@@ -198,6 +208,7 @@ void DisplayUI::editingToggle()
     textValueRouter(currentChangingTime.getState());
 }
 
+// display the text for the current time(0), open time(1), close time(2)
 void DisplayUI::textValueRouter(int state)
 {
   display.stopAllActivities();
@@ -220,15 +231,18 @@ void DisplayUI::textValueRouter(int state)
     });
 }
 
+// move the cursor
+// forward is true if the cursor is moving forward
+// forward is false if the cursor is moving backward
 void DisplayUI::moveCursor(bool forward)
 {
   if(isOn==false||!isEditing||motor->calibrator.isCalibrating())return;
   
-  currentSelectedSegment.add(forward?1:-1);
+  currentSelectedSegment.mutate(forward?1:-1);
   display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
 }
 
-
+// change the current type time
 void DisplayUI::changeCurrentChangingTime()
 {
   if(isOn==false||motor->calibrator.isCalibrating()||!isEditing)return;
