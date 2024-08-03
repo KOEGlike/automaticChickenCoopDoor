@@ -48,7 +48,7 @@ void Esp32S3SleepHandler::sleepUntilNextAction ()
 void Esp32S3SleepHandler::addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType) {
   addWakeupReason(
     WakeupReason{
-      [&](){esp_sleep_enable_ext0_wakeup(gpio, gpioInputType);},
+      [=](){esp_sleep_enable_ext0_wakeup(gpio, gpioInputType);},
       [gpio](){rtc_gpio_deinit(gpio);}
     }
   );
@@ -89,7 +89,7 @@ void Esp32C3SleepHandler::sleepUntilNextAction ()
 void Esp32C3SleepHandler::addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType) {
   addWakeupReason(
     WakeupReason{
-      [&](){ gpio_deep_sleep_wakeup_enable(gpio, gpioInputType?GPIO_INTR_HIGH_LEVEL:GPIO_INTR_LOW_LEVEL);},
+      [=](){ gpio_deep_sleep_wakeup_enable(gpio, gpioInputType?GPIO_INTR_HIGH_LEVEL:GPIO_INTR_LOW_LEVEL);},
       [gpio](){gpio_deep_sleep_wakeup_disable(gpio);}
     }
   );

@@ -62,9 +62,9 @@ SEG_A|SEG_F|SEG_G|SEG_E|SEG_D//E
 
 
 DisplayUI::DisplayUI(TimesManager* timesManager,Motor* motor, DisplayUiConfig *config, SleepHandler* sleepHandler): 
-    button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
-    button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
-    buttonPwr{config->btn3Pin, [&](){btnPwrShortFunc();}, [&](){btnPwrLongFunc();}},
+    button1(config->btn1Pin, [=]() {btn1ShortFunc();},[=]() {btn1LongFunc();}),
+    button2(config->btn2Pin, [=]() {btn2ShortFunc();},[=]() {btn2LongFunc();}), 
+    buttonPwr{config->btn3Pin, [=](){btnPwrShortFunc();}, [=](){btnPwrLongFunc();}},
     display(config->clkPin, config->dioPin),
     currentSelectedSegment(4), 
     currentChangingTime(3),
@@ -88,9 +88,9 @@ void DisplayUI::begin()
   button1.begin();
   button2.begin();
   buttonPwr.begin();
-  ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){Serial.println("1, pw"); startCalibration();});
-  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){Serial.println("2, pw"); editingToggle();});
-  asyncIdForClock = Async.registerCallback(1*1000, -1, [&](){TimeElements tm; breakTime(now(), tm);  display.showNumberDecEx(tm.Hour*100+ tm.Minute, 0b01000000);});
+  ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [=](){Serial.println("1, pw"); startCalibration();});
+  ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [=](){Serial.println("2, pw"); editingToggle();});
+  asyncIdForClock = Async.registerCallback(1*1000, -1, [=](){TimeElements tm; breakTime(now(), tm);  display.showNumberDecEx(tm.Hour*100+ tm.Minute, 0b01000000);});
   Async.disableCallBack(asyncIdForClock);
   display.clear();
   sleepHandler->addGPIOWakeupSource(config->btn3Pin, LOW);
@@ -221,7 +221,7 @@ void DisplayUI::textValueRouter(int state)
     case 2:txt=CLOSE_txt;
      break;
   }
-  display.scrollSegmentsAnAmount(txt, 300, 1, [&](){
+  display.scrollSegmentsAnAmount(txt, 300, 1, [=](){
     dotTimingRouter(currentChangingTime.getState());currentSelectedSegment.setState(0);
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defaultForShowNumber(digits.getDigits());
@@ -364,7 +364,7 @@ void DisplayUI::btnPwrShortFunc()
     if(motor->calibrator.firstIsSet())
       display.scrollSegmentsAnAmount(UPPER_txt, 300, 1);
     if(!motor->calibrator.isCalibrating())
-      display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1, [&](){Async.enableCallBack(asyncIdForClock);});
+      display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1, [=](){Async.enableCallBack(asyncIdForClock);});
     return;
   }
   switchDoorState();

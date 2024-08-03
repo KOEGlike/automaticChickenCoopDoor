@@ -10,10 +10,13 @@ extern "C" {
   #include <stdlib.h>
   #include <inttypes.h>
 }
-class CustomDisplayBehavior : public TM1637Display {
+class CustomDisplayBehavior {
   public:
     CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO);
     ~CustomDisplayBehavior() ;
+
+    TM1637Display display;
+
     void begin();
 
     void blinkSegments(uint8_t segmentsToBlink, unsigned long offTime = 50);

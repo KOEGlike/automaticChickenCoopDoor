@@ -22,8 +22,8 @@ void ChickenDoor::begin()
   memoryManager.begin();
   
   setTime(SECS_PER_YEAR);
-  const int idOpen=Alarm.alarmRepeat(1,[&]() {motor.changeState(1); Serial.println("open");});
-  const int idClose=Alarm.alarmRepeat(1,[&]() {motor.changeState(0); Serial.println("close"); if(timesManager.getTimeState().sunsetMode) timesManager.updateMoveTimes(wifiHandler.sunsetTimes());});
+  const int idOpen=Alarm.alarmRepeat(1,[=]() {motor.changeState(1); Serial.println("open");});
+  const int idClose=Alarm.alarmRepeat(1,[=]() {motor.changeState(0); Serial.println("close"); if(timesManager.getTimeState().sunsetMode) timesManager.updateMoveTimes(wifiHandler.sunsetTimes());});
   timesManager.begin(idOpen, idClose);
   
   displayUI.begin();
@@ -32,6 +32,6 @@ void ChickenDoor::begin()
 
   
   
-  Async.registerCallback(1*1000, -1, [&](){Alarm.serviceAlarms();});
-  Async.registerCallback(sleepCheckIntervalSec*1000, -1, [&](){if(ButtonManager.timeFromLastPress()>=minutesToSleep*minutesToSleep*1000) sleepHandler.sleepUntilNextAction(); Serial.println("sleep check");});
+  Async.registerCallback(1*1000, -1, [=](){Alarm.serviceAlarms();});
+  Async.registerCallback(sleepCheckIntervalSec*1000, -1, [=](){if(ButtonManager.timeFromLastPress()>=minutesToSleep*minutesToSleep*1000) sleepHandler.sleepUntilNextAction(); Serial.println("sleep check");});
 }

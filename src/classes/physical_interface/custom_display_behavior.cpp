@@ -5,18 +5,14 @@ extern "C" {
   #include <stdlib.h>
   #include <inttypes.h>
 }
-CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO)
-  : TM1637Display(pinClk, pinDIO) 
-  {
-  }
-  CustomDisplayBehavior :: ~CustomDisplayBehavior() {
+CustomDisplayBehavior::CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO): display(pinClk, pinDIO) {}
+
+CustomDisplayBehavior :: ~CustomDisplayBehavior() { 
   Async.deleteCallBack(asyncId);
-  }
+}
 
 void CustomDisplayBehavior::begin() { 
-
-Async.registerCallback(0,-1, [&](){check();});
-
+  Async.registerCallback(0,-1, [=](){check();});
 } 
 
 /// @brief this runts in the async loop to check if the display should blink
@@ -26,7 +22,7 @@ void CustomDisplayBehavior::blinkCheck() {
     isBlinking = false;
     uint8_t segments[4];
     
-    memcpy(segments, currentSegments, segmentsLength);
+    memcpy(segments, display.currentSegments, display.segmentsLength);
     if(dotIsBlinking)
     {
       segments[1]&=~0b10000000;
@@ -35,7 +31,7 @@ void CustomDisplayBehavior::blinkCheck() {
     {
       segments[1]|=0b10000000;
     }
-    setSegments(segments);
+    display.setSegments(segments);
     timesBlinked++;
   }
   
@@ -58,14 +54,14 @@ void CustomDisplayBehavior::dotBlinkCheck() {
     dotBlinkEnd = millis();
     dotIsBlinking = false;
     uint8_t segments[4];
-    memcpy(segments, currentSegments, segmentsLength);
+    memcpy(segments, display.currentSegments, display.segmentsLength);
     if(isBlinking)
     {
       segments[1]=0;
     }
     dotIsOn=true;
     segments[1]|=0b10000000;
-    setSegments(currentSegments);
+    display.setSegments(display.currentSegments);
     timesDotBlinked++;
   }
   
@@ -83,7 +79,7 @@ void CustomDisplayBehavior::dotBlinkCheck() {
   if(millis()-dotBlinkAnAmountLongDelayContinuosStart>=dotBlinkAnAmountLongDelayContinuos&&dotBlinkAnAmountLongDelayContinuosAmount>=0&&isDotBlinkAnAmountLongDelayContinuos==true)
   {
     isDotBlinkAnAmountLongDelayContinuos=false;
-    blinkDotsAnAmount(dotBlinkAnAmountLongDelayContinuosAmount, blinkDotsAnAmountThenDelayContinuouslyOffTime,blinkDotsAnAmountThenDelayContinuouslyOnTime, [&](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true;} );
+    blinkDotsAnAmount(dotBlinkAnAmountLongDelayContinuosAmount, blinkDotsAnAmountThenDelayContinuouslyOffTime,blinkDotsAnAmountThenDelayContinuouslyOnTime, [=](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true;} );
   }
 }
 
@@ -96,10 +92,10 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
   }
   isBlinking = true;
   uint8_t beforeBlinkSegments[4];
-  memcpy(beforeBlinkSegments, currentSegments, segmentsLength);
+  memcpy(beforeBlinkSegments, display.currentSegments, display.segmentsLength);
   uint8_t segments[4];
   
-  memcpy(segments, currentSegments, segmentsLength);
+  memcpy(segments, display.currentSegments, display.segmentsLength);
   
   if (segmentsToBlink & 0b1000) {
     segments[0] = 0;
@@ -125,9 +121,9 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
   
   blinkStartInMillis = millis();
   m_offTime = offTime;
-  setSegments(segments);
+  display.setSegments(segments);
   segmentsThatBlink=segmentsToBlink;
-  memcpy(currentSegments, beforeBlinkSegments, segmentsLength);
+  memcpy(display.currentSegments, beforeBlinkSegments, display.segmentsLength);
 }
 
 /// @brief blink the segments continuously
@@ -179,18 +175,17 @@ void CustomDisplayBehavior::blinkDots(unsigned long offTime){
   
   
   uint8_t beforeBlinkSegments[4];
-  memcpy(beforeBlinkSegments, currentSegments, segmentsLength);
+  memcpy(beforeBlinkSegments, display.currentSegments, display.segmentsLength);
   uint8_t segments[4];
   
-memcpy(segments, currentSegments, segmentsLength);
+memcpy(segments, display.currentSegments, display.segmentsLength);
   m_dotOffTime = offTime;
   dotIsBlinking = true;
   dotIsOn=false;
   segments[1]&=~0b10000000;
   dotBlinkStartInMillis = millis();
-  setSegments(segments);
-  memcpy(currentSegments, beforeBlinkSegments, segmentsLength);
-  
+  display.setSegments(segments);
+  memcpy(display.currentSegments, beforeBlinkSegments, display.segmentsLength); 
 }
 
 /// @brief blink the dots continuously
@@ -230,7 +225,7 @@ void CustomDisplayBehavior::blinkDotsAnAmountThenDelayContinuously(unsigned int 
   blinkDotsAnAmountThenDelayContinuouslyOnTime=onTime;
   blinkDotsAnAmountThenDelayContinuouslyOffTime=offTime;
   dotBlinkAnAmountLongDelayContinuosAmount=amount;
-  blinkDotsAnAmount(amount, offTime, onTime, [&](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true; });
+  blinkDotsAnAmount(amount, offTime, onTime, [=](){dotBlinkAnAmountLongDelayContinuosStart=millis(); isDotBlinkAnAmountLongDelayContinuos=true; });
 }
 
 /// @brief change the amount of times the dots blink then delay
@@ -259,7 +254,7 @@ void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments
   scrollAmount=amount;
   scrollSegmentsOnEnd=onEnd;
   std::function<void()> 
-  scrollAsyncFunc = [&]() 
+  scrollAsyncFunc = [=]() 
   {
    if(scrollCurrentCycle>segmentsToScroll.size()-1) {scrollCurrentCycle=0; scrollCycles++;}
    if(scrollCycles>=scrollAmount&&scrollAmount>=0) {scrollSegmentsOnEnd(); scrollSegmentsContinuouslyOff(); return;}
@@ -268,7 +263,7 @@ void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments
     {
       segmentsToDisplay[i]=segmentsToScroll[scrollCurrentCycle+i<segmentsToScroll.size()?scrollCurrentCycle+i:((scrollCurrentCycle+i)-segmentsToScroll.size())];
     }
-    setSegments(segmentsToDisplay);
+    display.setSegments(segmentsToDisplay);
     scrollCurrentCycle++;
   };
   scrollAsyncId= Async.registerCallback(millisForOneMove, -1, scrollAsyncFunc);

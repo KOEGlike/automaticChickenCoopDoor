@@ -40,7 +40,7 @@ MoveTimes WiFiHandler::sunsetTimes()
   
   String payload = http.getString();
   http.end();
-  StaticJsonDocument<512> json;
+  JsonDocument json;
   DeserializationError error = deserializeJson(json, payload);
   if(error)
   {
@@ -79,15 +79,15 @@ tmElements_t WiFiHandler::convertShityStringTimeNotationFromSunsetApi(std::strin
 
 void WiFiHandler::setLocation()
 {
-  StaticJsonDocument<1536> json=ipGeolocationRequest();
+  JsonDocument json=ipGeolocationRequest();
   m_lat=json["latitude"];
   m_lng=json["longitude"];
 }
 
-StaticJsonDocument<1536> WiFiHandler::ipGeolocationRequest()
+JsonDocument WiFiHandler::ipGeolocationRequest()
 {
   HTTPClient http;
-  StaticJsonDocument<1536> json;
+  JsonDocument json;
   std::string path="https://api.ipgeolocation.io/ipgeo?apiKey="+std::string{wifiConfig->ipGeolocationAPIkey};
   http.begin(path.c_str());
   int httpCode = http.GET();
@@ -104,7 +104,7 @@ StaticJsonDocument<1536> WiFiHandler::ipGeolocationRequest()
   DeserializationError error = deserializeJson(json, payload);
   if(error)
   {
-    Serial.print("deserializeJson() failed: ");
+    Serial.print("deserializeJson(  ) failed: ");
     Serial.println(error.c_str());
   }
 
@@ -114,7 +114,7 @@ StaticJsonDocument<1536> WiFiHandler::ipGeolocationRequest()
 tmElements_t WiFiHandler::ipTime()
 {
   tmElements_t tm; tm.Hour=0; tm.Minute=0;
-  StaticJsonDocument<1536> json=ipGeolocationRequest();
+  JsonDocument json=ipGeolocationRequest();
   breakTime(json["time_zone"]["current_time_unix"], tm);
   tm.Hour=tm.Hour+json["time_zone"]["offset"].as<uint8_t>();
   return tm;
@@ -123,7 +123,7 @@ tmElements_t WiFiHandler::ipTime()
 tmElements_t WiFiHandler::UTCTime()
 {
   tmElements_t tm; tm.Hour=0; tm.Minute=0;
-  StaticJsonDocument<1536> json=ipGeolocationRequest();
+  JsonDocument json=ipGeolocationRequest();
   breakTime(json["time_zone"]["current_time_unix"], tm); 
   return tm;
 }

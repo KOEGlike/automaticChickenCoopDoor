@@ -21,6 +21,6 @@ class WiFiHandler
     float m_lat=0, m_lng=0;
     tmElements_t convertShityStringTimeNotationFromSunsetApi(std::string shityFormat);
     void setLocation();
-    StaticJsonDocument<1536> ipGeolocationRequest();
+    JsonDocument ipGeolocationRequest();
     WiFiConfig *wifiConfig;
 };
