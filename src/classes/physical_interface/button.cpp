@@ -25,7 +25,7 @@ ButtonManager_t::~ButtonManager_t()
 
 void ButtonManager_t::begin() 
 {
-    asyncId = Async.registerCallback(0, -1, [=](){check();});
+    asyncId = Async.registerCallback(0, -1, [&](){check();});
 }
 
 void ButtonManager_t::link(std::vector<Button*> buttons, std::function<void()> onPress, int maxDelta)
@@ -131,7 +131,7 @@ uint64_t ButtonManager_t::timeFromLastPress()
 
 std::vector<uint> ButtonManager_t::sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(std::vector<uint> linkIds)
 {
-    std::sort(linkIds.begin(), linkIds.end(),[=](uint linkId1,uint linkId2){return( buttonLinks[linkId1].buttonPtrs.size()>buttonLinks[linkId2].buttonPtrs.size());});
+    std::sort(linkIds.begin(), linkIds.end(),[&](uint linkId1,uint linkId2){return( buttonLinks[linkId1].buttonPtrs.size()>buttonLinks[linkId2].buttonPtrs.size());});
     return linkIds;
 }
 

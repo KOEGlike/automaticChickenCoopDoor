@@ -73,10 +73,10 @@ TM1637Display::TM1637Display(uint8_t pinClk, uint8_t pinDIO, unsigned int bitDel
 
 void TM1637Display::begin()
 {
-pinMode(m_pinClk, INPUT);
+    pinMode(m_pinClk, INPUT);
     pinMode(m_pinDIO,INPUT);
     digitalWrite(m_pinClk, LOW);
-	digitalWrite(m_pinDIO, LOW);
+	  digitalWrite(m_pinDIO, LOW);
 }
 void TM1637Display::setBrightness(uint8_t brightness, bool on)
 {

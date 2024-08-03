@@ -9,10 +9,10 @@ extern "C" {
 using namespace std::placeholders;
 
 /// @brief the constructor for the FourDigitTime class
-FourDigitTime::FourDigitTime():H1(3,[=](int times){H1OnMutate(times);}),
- H2(10,[=](int times){H2OnMutate(times);}), 
- M1(6,[=](int times){M1OnMutate(times);}), 
- M2(10,[=](int times){M2OnMutate(times);})
+FourDigitTime::FourDigitTime():H1(3,[&](int times){H1OnMutate(times);}),
+ H2(10,[&](int times){H2OnMutate(times);}), 
+ M1(6,[&](int times){M1OnMutate(times);}), 
+ M2(10,[&](int times){M2OnMutate(times);})
 {}
 
 /// @brief what happens when H1 is mutated
