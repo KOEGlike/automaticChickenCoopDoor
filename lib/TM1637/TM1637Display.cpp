@@ -254,6 +254,7 @@ bool TM1637Display::writeByte(uint8_t b)
 
 void TM1637Display::showDots(uint8_t dots, uint8_t* digits)
 {
+  
     for(int i = 0; i < 4; ++i)
     {
         digits[i] |= (dots & 0x80);

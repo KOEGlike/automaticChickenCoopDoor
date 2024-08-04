@@ -11,11 +11,9 @@ void CustomDisplayBehavior::begin() {
   display.begin();
 } 
 
-/// @brief blink the segments, if another blink is already happening it will override it
-/// @param segmentsToBlink segments
-/// @param offTime the off time 
+
 void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long offTime, unsigned long onTime, uint32_t timesToBlink, std::function<void()> onEnd){
-  uint32_t onId=Async.registerCallback(
+  uint32_t offId=Async.registerCallback(
     offTime+onTime, 
     timesToBlink, 
     [this, segmentsToBlink](){
@@ -39,87 +37,94 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
       }
       display.setSegments(segments);
       memcpy(display.currentSegments, beforeBlinkSegments, display.segmentsLength);
-    },
-    onEnd
+    }
   );
-
-  uint32_t offId;
+  this->segmentsAsyncId.off=offId;
   Async.registerCallback(
     onTime, 
     timesToBlink, 
-    [offId](){
-      
+    [offId, this](){
+      if (offId != this->segmentsAsyncId.off) {
+        return;
+      }
+      display.setSegments(display.currentSegments);
     },
     onEnd
   );
 }
 
-
-/// @brief blink the dots
-void CustomDisplayBehavior::blinkDots(unsigned long offTime){
-
-  if (dotIsBlinking) {
-    return;
-  }
-  
-  
-  uint8_t beforeBlinkSegments[4];
-  memcpy(beforeBlinkSegments, display.currentSegments, display.segmentsLength);
-  uint8_t segments[4];
-  
-memcpy(segments, display.currentSegments, display.segmentsLength);
-  m_dotOffTime = offTime;
-  dotIsBlinking = true;
-  dotIsOn=false;
-  segments[1]&=~0b10000000;
-  dotBlinkStartInMillis = millis();
-  display.setSegments(segments);
-  memcpy(display.currentSegments, beforeBlinkSegments, display.segmentsLength); 
+void CustomDisplayBehavior::blinkSegmentsOff(){
+  Async.deleteCallBack(this->segmentsAsyncId.off);
+  Async.deleteCallBack(this->segmentsAsyncId.on);
 }
 
 
 
+void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsigned long onTime, uint32_t timesToBlink, std::function<void()> onEnd){
+  uint32_t offId=Async.registerCallback(
+    offTime+onTime, 
+    timesToBlink, 
+    [this, dots](){
+      uint8_t beforeBlinkSegments[4];
+      memcpy(beforeBlinkSegments, display.currentSegments, display.segmentsLength);
+      uint8_t segments[4];
+      memcpy(segments, display.currentSegments, display.segmentsLength);
+      display.showDots(dots, segments);
+      display.setSegments(segments);
+      memcpy(display.currentSegments, beforeBlinkSegments, display.segmentsLength);
+    }
+  );
+  this->dotsAsyncId.off=offId;
+  Async.registerCallback(
+    onTime, 
+    timesToBlink, 
+    [offId, this](){
+      if (offId != this->dotsAsyncId.off) {
+        return;
+      }
+      display.setSegments(display.currentSegments);
+    },
+    onEnd
+  ); 
+}
 
-/// @brief scroll the segments
-/// @param segments segments to scroll
-/// @param millisForOneMove the time it takes for on segment to move
-/// @param amount the amount to scroll, if 0 or less it will scroll forever
-/// @param onEnd a function to call when the scrolling is done
+void CustomDisplayBehavior::blinkDotsOff(){
+  Async.deleteCallBack(this->dotsAsyncId.off);
+  Async.deleteCallBack(this->dotsAsyncId.on);
+}
+
+
 void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments, unsigned long millisForOneMove, int amount, std::function<void()> onEnd)
 {
-  scrollCycles=0;
-  scrollCurrentCycle=0;
-  segmentsToScroll=segments;
-  scrollAmount=amount;
-  scrollSegmentsOnEnd=onEnd;
+  scrollData.cycles=0;
+  scrollData.currentCycle=0;
+  scrollData.segments=segments;
+  scrollData.amount=amount;
+  scrollData.onEnd=onEnd;
   std::function<void()> 
   scrollAsyncFunc = [&]() 
   {
-   if(scrollCurrentCycle>segmentsToScroll.size()-1) {scrollCurrentCycle=0; scrollCycles++;}
-   if(scrollCycles>=scrollAmount&&scrollAmount>=0) {scrollSegmentsOnEnd(); scrollSegmentsContinuouslyOff(); return;}
+   if(scrollData.currentCycle>segments.size()-1) {scrollData.currentCycle=0; scrollData.cycles++;}
+   if(scrollData.cycles>=scrollData.amount&&scrollData.amount>=0) {scrollData.onEnd(); scrollSegmentsOff(); return;}
     uint8_t segmentsToDisplay[4];
     for(int i=0;i<4;i++)
     {
-      segmentsToDisplay[i]=segmentsToScroll[scrollCurrentCycle+i<segmentsToScroll.size()?scrollCurrentCycle+i:((scrollCurrentCycle+i)-segmentsToScroll.size())];
+      segmentsToDisplay[i]=segments[scrollData.currentCycle+i<segments.size()?scrollData.currentCycle+i:((scrollData.currentCycle+i)-segments.size())];
     }
     display.setSegments(segmentsToDisplay);
-    scrollCurrentCycle++;
+    scrollData.currentCycle++;
   };
-  scrollAsyncId= Async.registerCallback(millisForOneMove, -1, scrollAsyncFunc);
+  scrollData.asyncId= Async.registerCallback(millisForOneMove, -1, scrollAsyncFunc);
 }
 
-/// @brief stop the scrolling
-void CustomDisplayBehavior::scrollSegmentsContinuouslyOff()
+void CustomDisplayBehavior::scrollSegmentsOff()
 {
-  
-  Async.deleteCallBack(scrollAsyncId);
+  Async.deleteCallBack(scrollData.asyncId);
 }
 
-/// @brief stop all activities, including blinking and scrolling
 void CustomDisplayBehavior::stopAllActivities()
 {
-  dotBlinkAnAmountLongDelayContinuos=-1;dotBlinkAnAmountLongDelayContinuosStart; 
-  timesBlinked = 0; timesToBlink = -1;timesDotBlinked = 0; timesDotToBlink = -1;
-  isBlinking = false; isContinuouslyBlinking = false; dotIsBlinking=false;dotIsContinuouslyBlinking = false; dotIsOn=false;isDotBlinkAnAmountLongDelayContinuos=false;
-  scrollSegmentsContinuouslyOff();
+  blinkSegmentsOff();
+  blinkDotsOff();
+  scrollSegmentsOff();
 }

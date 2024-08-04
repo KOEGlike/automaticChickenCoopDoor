@@ -46,7 +46,7 @@ public:
   //! The setting takes effect when a command is given to change the data being
   //! displayed.
   //!
-  //! @param brightness A number from 0 (lowes brightness) to 7 (highest brightness)
+  //! @param brightness A number from 0 (lowest brightness) to 7 (highest brightness)
   //! @param on Turn display on or off
   void setBrightness(uint8_t brightness, bool on = true);
 
@@ -69,7 +69,7 @@ public:
 
   //! Display a decimal number
   //!
-  //! Dispaly the given argument as a decimal number.
+  //! Display the given argument as a decimal number.
   //!
   //! @param num The number to be shown
   //! @param leading_zero When true, leading zeros are displayed. Otherwise unnecessary digits are
@@ -82,7 +82,7 @@ public:
 
   //! Display a decimal number, with dot control
   //!
-  //! Dispaly the given argument as a decimal number. The dots between the digits (or colon)
+  //! Display the given argument as a decimal number. The dots between the digits (or colon)
   //! can be individually controlled.
   //!
   //! @param num The number to be shown
@@ -107,7 +107,7 @@ public:
 
   //! Display a hexadecimal number, with dot control
   //!
-  //! Dispaly the given argument as a hexadecimal number. The dots between the digits (or colon)
+  //! Display the given argument as a hexadecimal number. The dots between the digits (or colon)
   //! can be individually controlled.
   //!
   //! @param num The number to be shown
@@ -142,10 +142,10 @@ public:
   uint8_t encodeDigit(uint8_t digit);
 
   void begin();
+  void showDots(uint8_t dots, uint8_t* digits);
 
   uint8_t currentSegments[4];
-  uint8_t segmentsLength=4;
-  
+  uint8_t segmentsLength=4;  
 protected:
   void bitDelay();
 
@@ -155,7 +155,7 @@ protected:
 
   bool writeByte(uint8_t b);
 
-  void showDots(uint8_t dots, uint8_t* digits);
+  
    
   void showNumberBaseEx(int8_t base, uint16_t num, uint8_t dots = 0, bool leading_zero = false, uint8_t length = 4, uint8_t pos = 0);
 
