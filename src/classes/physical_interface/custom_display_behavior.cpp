@@ -24,19 +24,15 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
       memcpy(segments, display.currentSegments, display.segmentsLength);
       
       if (segmentsToBlink & 0b1000) {
-        Serial.println("0");
         segments[0] = 0;
       }
       if (segmentsToBlink & 0b0100) {
-        Serial.println("1");
         segments[1] = 0;
       }
       if (segmentsToBlink & 0b0010) {
-        Serial.println("2");
         segments[2] = 0;
       }
       if (segmentsToBlink & 0b0001) {
-        Serial.println("3");
         segments[3] = 0;
       }
       Serial.print(millis());
@@ -80,13 +76,18 @@ void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsig
     offTime+onTime, 
     timesToBlink, 
     [=](){
+      Serial.print(millis());
+      Serial.println(" off dots");
       uint8_t beforeBlinkSegments[4];
       memcpy(beforeBlinkSegments, display.currentSegments, display.segmentsLength);
+      uint8_t beforeBlinkDisplayedSegments[4];
+      memcpy(beforeBlinkDisplayedSegments, display.displayedSegments, display.segmentsLength);
       uint8_t segments[4];
-      memcpy(segments, display.currentSegments, display.segmentsLength);
-      display.showDots(dots, segments);
+      memcpy(segments, display.displayedSegments, display.segmentsLength);
+      display.removeDots(dots, segments);
       display.setSegments(segments);
       memcpy(display.currentSegments, beforeBlinkSegments, display.segmentsLength);
+      memcpy(display.displayedSegments, beforeBlinkDisplayedSegments, display.segmentsLength);
     }
   );
   this->dotsAsyncId.off=offId;
@@ -94,14 +95,27 @@ void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsig
     onTime, 
     1, 
     [=](){
-       this->dotsAsyncId.on = Async.registerCallback(
+      Serial.print(millis());
+      Serial.println(" onTime dots");
+      this->dotsAsyncId.on = Async.registerCallback(
         offTime+onTime, 
         timesToBlink,
-        [this, offId](){
+        [this, offId, dots](){
           if (offId != this->dotsAsyncId.off) {
             return;
           }
-          display.setSegments(display.currentSegments);
+          uint8_t beforeBlinkSegments[4];
+          memcpy(beforeBlinkSegments, display.displayedSegments, display.segmentsLength);
+          uint8_t beforeBlinkDisplayedSegments[4];
+          memcpy(beforeBlinkDisplayedSegments, display.displayedSegments, display.segmentsLength);
+          uint8_t segments[4];
+          memcpy(segments, display.displayedSegments, display.segmentsLength);
+          display.showDots(dots, segments);
+          Serial.print(millis());
+          Serial.println(" on dots");
+          display.setSegments(segments);
+          memcpy(display.currentSegments, beforeBlinkSegments, display.segmentsLength);
+          memcpy(display.displayedSegments, beforeBlinkDisplayedSegments, display.segmentsLength);
         },
         onEnd);
     },

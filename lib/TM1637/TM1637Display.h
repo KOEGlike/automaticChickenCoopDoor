@@ -142,10 +142,20 @@ public:
   uint8_t encodeDigit(uint8_t digit);
 
   void begin();
+  /// @brief encode dots into the passed in digits
+  /// @param dots the bitmask of the dots
+  /// @param digits the array of digits to encode the dots into
   void showDots(uint8_t dots, uint8_t* digits);
 
+  /// @brief encode the dots out of the passed in digits
+  /// @param dots the bitmask of the dots
+  /// @param digits the array of digits to decode the dots from
+  void removeDots(uint8_t dots, uint8_t* digits);
+
   uint8_t currentSegments[4];
+  uint8_t displayedSegments[4];
   uint8_t segmentsLength=4;  
+
 protected:
   void bitDelay();
 

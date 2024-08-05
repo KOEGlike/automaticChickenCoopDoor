@@ -86,6 +86,7 @@ void TM1637Display::setBrightness(uint8_t brightness, bool on)
 void TM1637Display::setSegments(uint8_t segments[], uint8_t length, uint8_t pos)
 {
   memcpy(currentSegments, segments, length);
+  memcpy(displayedSegments, segments, length);
   segmentsLength=length;  
 
     // Write COMM1
@@ -261,6 +262,16 @@ void TM1637Display::showDots(uint8_t dots, uint8_t* digits)
         dots <<= 1;
     }
 }
+
+void TM1637Display::removeDots(uint8_t dots, uint8_t* digits)
+{
+    for(int i = 0; i < 4; ++i)
+    {
+        digits[i] &= ~(dots & 0x80);
+        dots <<= 1;
+    }
+}
+
 
 uint8_t TM1637Display::encodeDigit(uint8_t digit)
 {

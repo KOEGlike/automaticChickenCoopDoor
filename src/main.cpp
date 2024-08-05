@@ -47,8 +47,8 @@ void setup() {
   display.begin();
   display.display.setBrightness(7);
   display.display.showNumberDecEx(1234);
-  //display.blinkSegments(0b0100, 1000, 1000, 5, []() {display.display.showNumberDecEx(4321);});
-  display.blinkDots(0b01000000, 1000, 1000, 5, []() {Serial.println("done");});
+  display.blinkSegments(0b0100, 3000, 3000, 5, []() {display.display.showNumberDecEx(4321);});
+  display.blinkDotsPeriodically(0b01000000,5, 3000, 3000, 500,2, []() {Serial.println("done");});
 }
 
 void loop() 
