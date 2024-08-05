@@ -91,7 +91,6 @@ public:
   void stopAllActivities();
 
 protected:
-  std::vector<uint8_t> segmentsToScroll;
 
   /// @brief the async id for the segments, and dots
   struct id

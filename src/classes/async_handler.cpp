@@ -42,16 +42,22 @@ void AsyncHandler::check()
     return;
   }
   
-  for (const auto &[id, callback] :callbacks)
+  for (const auto &[id, dontUse] :callbacks)
   {
+    unsigned long currentMillis=millis();
     if(callbacks[id].timesCalled>=callbacks[id].times&&callbacks[id].times>=0)
     {
       callbacks[id].onEnd();
       deleteCallBack(id);
     }
-    else if(callbacks[id].enabled && (callbacks[id].lastCalled==0 || millis()-callbacks[id].lastCalled>=callbacks[id].delay))
+    else if(callbacks[id].enabled && (callbacks[id].lastCalled==0 || currentMillis-callbacks[id].lastCalled>=callbacks[id].delay))
     {
-      callbacks[id].lastCalled=millis();
+      callbacks[id].lastCalled += callbacks[id].delay;
+      //the plus 10 is to add a bit of leeway to the delay, so a bit of drift is allowed, adjust as needed
+      if (callbacks[id].lastCalled < currentMillis - callbacks[id].delay+10)
+      {
+        callbacks[id].lastCalled = currentMillis;
+      }
       callbacks[id].callback();
       if(callbacks[id].times>0)
       {

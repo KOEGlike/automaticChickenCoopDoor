@@ -225,7 +225,7 @@ void DisplayUI::textValueRouter(int state)
     dotTimingRouter(currentChangingTime.getState());currentSelectedSegment.setState(0);
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defaultForShowNumber(digits.getDigits());
-    customDisplay.blinkSegments(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
+    customDisplay.blinkSegments(currentSelectedSegment.getStateInBitMask(), offTime, onTime, -1);
     dotTimingRouter(0);
     });
 }
@@ -238,7 +238,7 @@ void DisplayUI::moveCursor(bool forward)
   if(isOn==false||!isEditing||motor->calibrator.isCalibrating())return;
   
   currentSelectedSegment.mutate(forward?1:-1);
-  customDisplay.blinkSegments(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
+  customDisplay.blinkSegments(currentSelectedSegment.getStateInBitMask(), offTime, onTime, -1);
 }
 
 /// @brief change the current type time
@@ -293,6 +293,9 @@ void DisplayUI::switchDoorState()
 /// @brief what happens when btn1 is pressed a single time shortly
 void DisplayUI::btn1ShortFunc()
 {
+  if (!isOn){
+    return;
+  }
   if(motor->calibrator.isCalibrating())
   {
     calibrationTurn(5, false);
@@ -303,6 +306,7 @@ void DisplayUI::btn1ShortFunc()
     mutateCurrentSegment(1);
     return;
   }
+  editingToggle();
 }
 
 /// @brief what happens when btn1 is pressed a single time for a long time
@@ -323,6 +327,9 @@ void DisplayUI::btn1LongFunc()
 /// @brief what happens when btn2 is pressed a single time shortly
 void DisplayUI::btn2ShortFunc()
 {
+  if (!isOn){
+    return;
+  }
   if(motor->calibrator.isCalibrating())
   {
     calibrationTurn(5, true);
@@ -333,6 +340,7 @@ void DisplayUI::btn2ShortFunc()
     moveCursor(false);
     return;
   }
+  startCalibration();
 }
 
 /// @brief what happens when btn2 is pressed a single time for a long time
