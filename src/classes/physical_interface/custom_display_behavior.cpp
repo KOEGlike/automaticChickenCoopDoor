@@ -13,6 +13,7 @@ void CustomDisplayBehavior::begin() {
 
 
 void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long offTime, unsigned long onTime, uint32_t timesToBlink, std::function<void()> onEnd){
+  blinkSegmentsOff();
   uint32_t offId=Async.registerCallback(
     offTime+onTime, 
     timesToBlink, 
@@ -73,6 +74,7 @@ void CustomDisplayBehavior::blinkSegmentsOff(){
 }
 
 void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsigned long onTime, uint32_t timesToBlink, std::function<void()> onEnd){
+  blinkDotsOff();
   uint32_t offId=Async.registerCallback(
     offTime+onTime, 
     timesToBlink, 
