@@ -24,32 +24,49 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
       memcpy(segments, display.currentSegments, display.segmentsLength);
       
       if (segmentsToBlink & 0b1000) {
+        Serial.println("0");
         segments[0] = 0;
       }
       if (segmentsToBlink & 0b0100) {
+        Serial.println("1");
         segments[1] = 0;
       }
       if (segmentsToBlink & 0b0010) {
+        Serial.println("2");
         segments[2] = 0;
       }
       if (segmentsToBlink & 0b0001) {
+        Serial.println("3");
         segments[3] = 0;
       }
+      Serial.print(millis());
+      Serial.println(" off");
       display.setSegments(segments);
       memcpy(display.currentSegments, beforeBlinkSegments, display.segmentsLength);
     }
   );
   this->segmentsAsyncId.off=offId;
   Async.registerCallback(
-    onTime, 
-    timesToBlink, 
-    [offId, this](){
-      if (offId != this->segmentsAsyncId.off) {
-        return;
-      }
-      display.setSegments(display.currentSegments);
+    offTime, 
+    1, 
+    [=](){
+        Serial.print(millis());
+        Serial.println(" onTime");
+        this->segmentsAsyncId.on = Async.registerCallback(
+        offTime+onTime, 
+        timesToBlink,
+        [this, offId](){
+          Serial.print(millis());
+          Serial.println(" on");
+          if (offId != this->segmentsAsyncId.off) {
+            return;
+          }
+          display.setSegments(display.currentSegments);
+        },
+        onEnd);
     },
-    onEnd
+    [](){},
+    true
   );
 }
 
@@ -58,13 +75,11 @@ void CustomDisplayBehavior::blinkSegmentsOff(){
   Async.deleteCallBack(this->segmentsAsyncId.on);
 }
 
-
-
 void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsigned long onTime, uint32_t timesToBlink, std::function<void()> onEnd){
   uint32_t offId=Async.registerCallback(
     offTime+onTime, 
     timesToBlink, 
-    [this, dots](){
+    [=](){
       uint8_t beforeBlinkSegments[4];
       memcpy(beforeBlinkSegments, display.currentSegments, display.segmentsLength);
       uint8_t segments[4];
@@ -77,20 +92,39 @@ void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsig
   this->dotsAsyncId.off=offId;
   Async.registerCallback(
     onTime, 
-    timesToBlink, 
-    [offId, this](){
-      if (offId != this->dotsAsyncId.off) {
-        return;
-      }
-      display.setSegments(display.currentSegments);
+    1, 
+    [=](){
+       this->dotsAsyncId.on = Async.registerCallback(
+        offTime+onTime, 
+        timesToBlink,
+        [this, offId](){
+          if (offId != this->dotsAsyncId.off) {
+            return;
+          }
+          display.setSegments(display.currentSegments);
+        },
+        onEnd);
+    },
+    [](){},
+    true
+  );
+}
+
+void CustomDisplayBehavior::blinkDotsPeriodically(uint8_t dots, uint32_t periods, unsigned long offTime, unsigned long onTime, unsigned long timeBetween, uint32_t timesToBlinkInOnePeriod, std::function<void()> onEnd){
+  this->dotsAsyncIdPeriodically=Async.registerCallback(
+    timesToBlinkInOnePeriod*(offTime+onTime)+timeBetween, 
+    periods, 
+    [=](){
+      this->blinkDots(dots, offTime, onTime, timesToBlinkInOnePeriod);
     },
     onEnd
-  ); 
+  );
 }
 
 void CustomDisplayBehavior::blinkDotsOff(){
   Async.deleteCallBack(this->dotsAsyncId.off);
   Async.deleteCallBack(this->dotsAsyncId.on);
+  Async.deleteCallBack(this->dotsAsyncIdPeriodically);
 }
 
 

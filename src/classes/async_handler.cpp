@@ -49,7 +49,7 @@ void AsyncHandler::check()
       callbacks[id].onEnd();
       deleteCallBack(id);
     }
-    else if(callbacks[id].enabled && millis()-callbacks[id].lastCalled>=callbacks[id].delay)
+    else if(callbacks[id].enabled && (callbacks[id].lastCalled==0 || millis()-callbacks[id].lastCalled>=callbacks[id].delay))
     {
       callbacks[id].lastCalled=millis();
       callbacks[id].callback();

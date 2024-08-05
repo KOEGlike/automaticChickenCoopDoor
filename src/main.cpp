@@ -28,20 +28,27 @@ WiFiConfig wifiConfig{
   strdup("0656d8aed024425599c985770726c7fb")//ipGeoLocationKey
   };
 
-ChickenDoor door(&displayUiConfig, &motorConfig, &wifiConfig);
+//ChickenDoor door(&displayUiConfig, &motorConfig, &wifiConfig);
 
-time_t syncFunc()
-{
-  return door.timesManager.getCurrentTime();
-}
+// time_t syncFunc()
+// {
+//   return door.timesManager.getCurrentTime();
+// }
+
+CustomDisplayBehavior display(0, 10);
 
 void setup() {
   Serial.begin(115200);
   Serial.println("Starting...");
-  door.begin();
-  setSyncProvider(syncFunc);
-  setSyncInterval(60);
-  ButtonManager.begin();
+  //door.begin();
+  //setSyncProvider(syncFunc);
+  //setSyncInterval(60);
+  //ButtonManager.begin();
+  display.begin();
+  display.display.setBrightness(7);
+  display.display.showNumberDecEx(1234);
+  //display.blinkSegments(0b0100, 1000, 1000, 5, []() {display.display.showNumberDecEx(4321);});
+  display.blinkDots(0b01000000, 1000, 1000, 5, []() {Serial.println("done");});
 }
 
 void loop() 

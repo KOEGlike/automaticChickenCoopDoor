@@ -91,7 +91,7 @@ class DisplayUI
 		void btnPwrLongFunc();
 		
 		/// @brief the display class, extended to have custom behaviors
-		CustomDisplayBehavior display;
+		CustomDisplayBehavior customDisplay;
 		
 		Button button1;
 		Button button2;

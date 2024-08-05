@@ -14,15 +14,20 @@ extern "C"
 class CustomDisplayBehavior
 {
 public:
+  /// @brief Construct a new Custom Display Behavior object
+  /// @param pinClk the clock pin
+  /// @param pinDIO the data pin
   CustomDisplayBehavior(uint8_t pinClk, uint8_t pinDIO);
-  ~CustomDisplayBehavior();
 
+  /// @brief the display instance
   TM1637Display display;
 
   void begin();
 
   /// @brief blink the segments, if another blink is already happening it will override it
-  /// @param segmentsToBlink segments
+  /// @param segmentsToBlink segments in a bit mask, each bit corresponds to a segment,
+  ///        i.e. 0b1111 will blink all segments, 0b0000 will blink none
+  ///        0b1000 will blink the first segment, 0b0100 will blink the second segment, etc.
   /// @param offTime the off time in milliseconds
   /// @param onTime the on time in milliseconds
   /// @param timesToBlink the times to blink
@@ -88,11 +93,14 @@ public:
 protected:
   std::vector<uint8_t> segmentsToScroll;
 
+  /// @brief the async id for the segments, and dots
   struct id
   {
     uint32_t on, off;
   };
 
+
+  /// @brief the data for scrolling, including the segments, amount, and onEnd function
   struct scrollData
   {
     int cycles = 0;

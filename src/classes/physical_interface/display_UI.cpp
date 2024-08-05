@@ -65,7 +65,7 @@ DisplayUI::DisplayUI(TimesManager* timesManager,Motor* motor, DisplayUiConfig *c
     button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
     button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
     buttonPwr{config->btn3Pin, [&](){btnPwrShortFunc();}, [&](){btnPwrLongFunc();}},
-    display(config->clkPin, config->dioPin),
+    customDisplay(config->clkPin, config->dioPin),
     currentSelectedSegment(4), 
     currentChangingTime(3),
     times(timesManager->getTimeState().moveTimes)
@@ -84,21 +84,21 @@ DisplayUiConfig* DisplayUI::getConfig()
 
 void DisplayUI::begin()
 {
-  display.begin();
+  customDisplay.begin();
   button1.begin();
   button2.begin();
   buttonPwr.begin();
   ButtonManager.link(std::vector<Button*>{&button1, &buttonPwr}, [&](){Serial.println("1, pw"); startCalibration();});
   ButtonManager.link(std::vector<Button*>{&button2, &buttonPwr}, [&](){Serial.println("2, pw"); editingToggle();});
-  asyncIdForClock = Async.registerCallback(1*1000, -1, [&](){TimeElements tm; breakTime(now(), tm);  display.showNumberDecEx(tm.Hour*100+ tm.Minute, 0b01000000);});
+  asyncIdForClock = Async.registerCallback(1*1000, -1, [&](){TimeElements tm; breakTime(now(), tm);  customDisplay.display.showNumberDecEx(tm.Hour*100+ tm.Minute, 0b01000000);});
   Async.disableCallBack(asyncIdForClock);
-  display.clear();
+  customDisplay.display.clear();
   sleepHandler->addGPIOWakeupSource(config->btn3Pin, LOW);
   }
 
 void DisplayUI::defaultForShowNumber(int num)
 {
-  display.showNumberDecEx(num, 0b01000000, true);
+  customDisplay.display.showNumberDecEx(num, 0b01000000, true);
 }
 
 /// @brief gets the time of : current time(0), open time(1), close time(2) 
@@ -146,7 +146,7 @@ void DisplayUI::setTimeRouter(int digits, int state)
 /// @brief  change how many times the dots blink then delay
 void DisplayUI::dotTimingRouter(int state)
 {
-  display.blinkDotsAnAmountThenDelayContinuouslyChangeAmount(state+1);
+  customDisplay.blinkDotsPeriodically(0b01000000,-1,offTime*offShortMult,onTime*onTimeMult,offTime*offLongMult,1);
 }
 
 /// @brief change the current segment
@@ -167,15 +167,15 @@ void DisplayUI::onOffToggle()
   if(isOn)
   {
     isOn=false;
-    display.setBrightness(0);
-    display.stopAllActivities();
+    customDisplay.display.setBrightness(0);
+    customDisplay.stopAllActivities();
     Async.disableCallBack(asyncIdForClock);
-    display.clear();
+    customDisplay.display.clear();
     sleepHandler->sleepUntilNextAction();
     return;
   }
     isOn=true;
-    display.setBrightness(7);
+    customDisplay.display.setBrightness(7);
     Async.enableCallBack(asyncIdForClock);
 }
 
@@ -190,13 +190,13 @@ void DisplayUI::editingToggle()
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
     timesManager->updateMoveTimes(times);
-    display.stopAllActivities();
-    display.clear();
+    customDisplay.stopAllActivities();
+    customDisplay.display.clear();
     Async.enableCallBack(asyncIdForClock);
     return;
   }
     Async.disableCallBack(asyncIdForClock);
-    display.stopAllActivities();
+    customDisplay.stopAllActivities();
     isEditing=true;
     currentChangingTime.setState(0);
     currentSelectedSegment.setState(0);
@@ -210,7 +210,7 @@ void DisplayUI::editingToggle()
 /// @brief display the text for the current time(0), open time(1), close time(2)
 void DisplayUI::textValueRouter(int state)
 {
-  display.stopAllActivities();
+  customDisplay.stopAllActivities();
   std::vector<uint8_t> txt;
   switch(state) {
 
@@ -221,12 +221,12 @@ void DisplayUI::textValueRouter(int state)
     case 2:txt=CLOSE_txt;
      break;
   }
-  display.scrollSegmentsAnAmount(txt, 300, 1, [&](){
+  customDisplay.scrollSegmentsAnAmount(txt, 300, 1, [&](){
     dotTimingRouter(currentChangingTime.getState());currentSelectedSegment.setState(0);
     digits.setDigits(digitValueRouter(currentChangingTime.getState()));
     defaultForShowNumber(digits.getDigits());
-    display.blinkSegmentsContinuouslyOn(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
-    display.blinkDotsAnAmountThenDelayContinuously(1, offTime*offLongMult,offTime*offShortMult,onTime*onTimeMult)  ;
+    customDisplay.blinkSegments(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
+    dotTimingRouter(0);
     });
 }
 
@@ -238,7 +238,7 @@ void DisplayUI::moveCursor(bool forward)
   if(isOn==false||!isEditing||motor->calibrator.isCalibrating())return;
   
   currentSelectedSegment.mutate(forward?1:-1);
-  display.changeSegmentsContinuos(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
+  customDisplay.blinkSegments(currentSelectedSegment.getStateInBitMask(), offTime, onTime);
 }
 
 /// @brief change the current type time
@@ -267,7 +267,7 @@ void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
 {
   if(!isOn||!motor->calibrator.isCalibrating()||isEditing)return;
   motor->calibrator.turn(steps, isClockwise);
-  display.showNumberDec(motor->calibrator.getCurrentStep());
+  customDisplay.display.showNumberDec(motor->calibrator.getCurrentStep());
 }
 
 /// @brief start the motor calibration
@@ -277,8 +277,8 @@ void DisplayUI::startCalibration()
   Async.disableCallBack(asyncIdForClock);
   if(!isOn||!motor->calibrator.isCalibrating()||isEditing);
   motor->calibrator.start(firstIsBottom); 
-  display.stopAllActivities();
-  display.scrollSegmentsAnAmount(LOWER_txt, 300, 1);
+  customDisplay.stopAllActivities();
+  customDisplay.scrollSegmentsAnAmount(LOWER_txt, 300, 1);
 }
 
 /// @brief switch the door state, open/close it
@@ -362,9 +362,9 @@ void DisplayUI::btnPwrShortFunc()
   {
     setCalibrationState();
     if(motor->calibrator.firstIsSet())
-      display.scrollSegmentsAnAmount(UPPER_txt, 300, 1);
+      customDisplay.scrollSegmentsAnAmount(UPPER_txt, 300, 1);
     if(!motor->calibrator.isCalibrating())
-      display.scrollSegmentsAnAmount(FINISHED_txt, 300, 1, [&](){Async.enableCallBack(asyncIdForClock);});
+      customDisplay.scrollSegmentsAnAmount(FINISHED_txt, 300, 1, [&](){Async.enableCallBack(asyncIdForClock);});
     return;
   }
   switchDoorState();
