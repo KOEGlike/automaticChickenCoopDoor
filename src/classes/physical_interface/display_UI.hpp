@@ -65,29 +65,64 @@ class DisplayUI
 		StateCounter currentChangingTime;
 
 		void defaultForShowNumber(int num);
+		/// @brief switch the door state, open/close it
 		void switchDoorState();
+		/// @brief turn on or off the display
 		void onOffToggle();
+		
+		/// @brief enable the clock, show the current time
+		void enableClock();
+		/// @brief disable the clock, stop showing the current time
+		void disableClock();
 
+		/// @brief gets the time of : current time(0), open time(1), close time(2) 
+		/// in a format of HHMM
+		/// @param state the state of the time to get
 		int  digitValueRouter(int state);
+		/// @brief sets the time of : current time(0), open time(1), close time(2) on the display
+		/// in a format of HHMM
+		/// @param digits the time to set
+		/// @param state the state of the time to set
 		void setTimeRouter(int digits, int state);
+		/// @brief  change how many times the dots blink then delay
+		/// @param state the state of the time to change
 		void dotTimingRouter(int state);
+		/// @brief display the text for the current time(0), open time(1), close time(2)
+		/// @param state the state of the time to display
 		void textValueRouter(int state);
 
+		/// @brief change the current segment
+		/// @param amount the amount to change the segment
 		void mutateCurrentSegment(int amount);
+		/// @brief move the cursor
+		/// @param forward is true if the cursor is moving forward is false if the cursor is moving backward
 		void moveCursor(bool forward);
+		/// @brief edits the open && close && current time
 		void editingToggle();
+		/// @brief change the current type time, so close, open or current time, it will loop
 		void changeCurrentChangingTime();
 		
+		/// @brief start the motor calibration
 		void startCalibration();
+		/// @brief set the calibration state, so if the motor is at 35 steps then it will set the curent state(open/close) to 35
 		void setCalibrationState();
+		/// @brief turn the motor a amount of steps for calibration
+		/// @param steps the amount of steps to turn
+		/// @param isClockwise true if the motor is turning clockwise, false if the motor is turning counter clockwise
 		void calibrationTurn(uint steps, bool isClockwise);
 
+		/// @brief what happens when btn1 is pressed a single time shortly
 		void btn1ShortFunc();
+		/// @brief what happens when btn2 is pressed a single time shortly
 		void btn2ShortFunc();
+		/// @brief what happens when pwr-btn is pressed a single time shortly
 		void btnPwrShortFunc();
 
+		/// @brief what happens when btn1 is pressed a single time for a long time
 		void btn1LongFunc();
+		/// @brief what happens when btn2 is pressed a single time for a long time
 		void btn2LongFunc();
+		/// @brief what happens when pwr-btn is pressed a single time for a long time
 		void btnPwrLongFunc();
 		
 		/// @brief the display class, extended to have custom behaviors

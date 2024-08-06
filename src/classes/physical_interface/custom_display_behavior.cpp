@@ -36,8 +36,6 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
       if (segmentsToBlink & 0b0001) {
         segments[3] = 0;
       }
-      Serial.print(millis());
-      Serial.println(" off");
       display.setSegments(segments);
       memcpy(display.currentSegments, beforeBlinkSegments, display.segmentsLength);
     }
@@ -47,14 +45,10 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
     offTime, 
     1, 
     [=](){
-        Serial.print(millis());
-        Serial.println(" onTime");
         this->segmentsAsyncId.on = Async.registerCallback(
         offTime+onTime, 
         timesToBlink,
         [this, offId](){
-          Serial.print(millis());
-          Serial.println(" on");
           Serial.println(display.currentSegments[1]);
           if (offId != this->segmentsAsyncId.off) {
             return;
@@ -79,8 +73,6 @@ void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsig
     offTime+onTime, 
     timesToBlink, 
     [=](){
-      Serial.print(millis());
-      Serial.println(" off dots");
       uint8_t beforeBlinkSegments[4];
       memcpy(beforeBlinkSegments, display.currentSegments, display.segmentsLength);
       uint8_t beforeBlinkDisplayedSegments[4];
@@ -98,8 +90,6 @@ void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsig
     onTime, 
     1, 
     [=](){
-      Serial.print(millis());
-      Serial.println(" onTime dots");
       this->dotsAsyncId.on = Async.registerCallback(
         offTime+onTime, 
         timesToBlink,
@@ -114,8 +104,6 @@ void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsig
           uint8_t segments[4];
           memcpy(segments, display.displayedSegments, display.segmentsLength);
           display.showDots(dots, segments);
-          Serial.print(millis());
-          Serial.println(" on dots");
           display.setSegments(segments);
           memcpy(display.currentSegments, beforeBlinkSegments, display.segmentsLength);
           memcpy(display.displayedSegments, beforeBlinkDisplayedSegments, display.segmentsLength);
@@ -164,9 +152,8 @@ void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments
       scrollData.cycles++;
     }
 
-    if (scrollData.cycles >= scrollData.amount-1 && scrollData.currentCycle==scrollData.segments.size()-3 && scrollData.amount >= 0) {
+    if (scrollData.cycles >= scrollData.amount-1 && scrollData.currentCycle>=scrollData.segments.size()-3 && scrollData.amount >= 0) {
       scrollData.onEnd();
-      scrollSegmentsOff();
       return;
     }
 
@@ -188,7 +175,7 @@ void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments
     scrollData.currentCycle++;
   };
 
-  scrollData.asyncId = Async.registerCallback(millisForOneMove, -1, scrollAsyncFunc);
+  scrollData.asyncId = Async.registerCallback(millisForOneMove, (scrollData.segments.size()*scrollData.amount-2), scrollAsyncFunc);
 }
 
 void CustomDisplayBehavior::scrollSegmentsOff()
