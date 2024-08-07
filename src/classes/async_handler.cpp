@@ -5,13 +5,12 @@ void AsyncHandler::deleteCallBack(uint32_t id)
   callbacks.erase(id);
 }
 
-callbackData::callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack,std::function<void(void)> onEnd){
-    delay=delayInMillis;
-    times=timesToRepeat;
-    callback=callBack;
+AsyncHandler::callbackData::callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack,std::function<void(void)> onEnd){
+    this->delay=delayInMillis;
+    this->times=timesToRepeat;
+    this->callback=callBack;
     this->onEnd=onEnd;
-    
-  }
+}
 
 uint32_t AsyncHandler::registerCallback(unsigned long delayInMillis,uint32_t times, std::function<void()> callback,std::function<void(void)> onEnd, bool doDelayFirst)
 {
@@ -42,9 +41,9 @@ void AsyncHandler::check()
     return;
   }
   
+  const unsigned long currentMillis=millis();
   for (const auto &[id, dontUse] :callbacks)
   {
-    unsigned long currentMillis=millis();
     if(callbacks[id].timesCalled>=callbacks[id].times&&callbacks[id].times>=0)
     {
       callbacks[id].onEnd();

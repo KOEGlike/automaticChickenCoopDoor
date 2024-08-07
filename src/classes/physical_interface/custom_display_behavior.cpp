@@ -133,6 +133,41 @@ void CustomDisplayBehavior::blinkDotsOff(){
 }
 
 
+void CustomDisplayBehavior::scrollAsyncFunc() {
+  if (scrollData.currentCycle >= scrollData.segments.size()) {
+    scrollData.currentCycle = 0;
+    scrollData.cycles++;
+  }
+
+  uint8_t segmentsToDisplay[4];
+  for (int i = 0; i < 4; i++) {
+    int index = (scrollData.currentCycle + i) % scrollData.segments.size();
+    segmentsToDisplay[i] = scrollData.segments[index];
+  }
+
+  // Debug output to verify segment values
+  Serial.print("lolol: ");
+  for (int i = 0; i < 4; i++) {
+    Serial.print(segmentsToDisplay[i], HEX);
+    Serial.print(" ");
+  }
+  Serial.println();
+
+  display.setSegments(segmentsToDisplay);
+  scrollData.currentCycle++;
+}
+
+void CustomDisplayBehavior::scrollAsyncOnEndFunc(unsigned long millisForOneMove) {
+  Serial.println("scroll end");
+    Async.registerCallback(
+      millisForOneMove, 
+      1,
+      scrollData.onEnd, 
+      [](){}, 
+      true
+    );
+}
+
 void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments, unsigned long millisForOneMove, int amount, std::function<void()> onEnd)
 {
   if (segments.empty()) {
@@ -145,37 +180,19 @@ void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments
   scrollData.amount = amount;
   scrollData.onEnd = onEnd;
 
-  std::function<void()> scrollAsyncFunc = [this]() 
-  {
-    if (scrollData.currentCycle >= scrollData.segments.size()) {
-      scrollData.currentCycle = 0;
-      scrollData.cycles++;
+ 
+    
+
+  scrollData.asyncId = Async.registerCallback(
+    millisForOneMove, 
+    (scrollData.segments.size()*scrollData.amount-3), 
+    [this](){
+      this->scrollAsyncFunc();
+    }, 
+    [this, millisForOneMove]() {
+      this->scrollAsyncOnEndFunc(millisForOneMove);
     }
-
-    if (scrollData.cycles >= scrollData.amount-1 && scrollData.currentCycle>=scrollData.segments.size()-3 && scrollData.amount >= 0) {
-      scrollData.onEnd();
-      return;
-    }
-
-    uint8_t segmentsToDisplay[4];
-    for (int i = 0; i < 4; i++) {
-      int index = (scrollData.currentCycle + i) % scrollData.segments.size();
-      segmentsToDisplay[i] = scrollData.segments[index];
-    }
-
-    // Debug output to verify segment values
-    Serial.print("Segments to display: ");
-    for (int i = 0; i < 4; i++) {
-      Serial.print(segmentsToDisplay[i], HEX);
-      Serial.print(" ");
-    }
-    Serial.println();
-
-    display.setSegments(segmentsToDisplay);
-    scrollData.currentCycle++;
-  };
-
-  scrollData.asyncId = Async.registerCallback(millisForOneMove, (scrollData.segments.size()*scrollData.amount-2), scrollAsyncFunc);
+  );
 }
 
 void CustomDisplayBehavior::scrollSegmentsOff()

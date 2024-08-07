@@ -4,15 +4,7 @@
 #include <Arduino.h>
 #include<map>
 
-struct callbackData
-{
-  callbackData() = default;
-  callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack, std::function<void(void)> onEnd);
-  unsigned long delay=0, lastCalled=0;
-  int32_t times=0, timesCalled=0;
-  std::function<void(void)> callback=[](){}, onEnd=[](){};
-  bool enabled=true;
-};
+
 
 class AsyncHandler{
   public:
@@ -21,7 +13,17 @@ class AsyncHandler{
     void enableCallBack(uint32_t id);
     void disableCallBack(uint32_t id);
     void check();
-  private:
+  protected:
+    struct callbackData
+    {
+      callbackData() = default;
+      callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack, std::function<void(void)> onEnd);
+      unsigned long delay=0, lastCalled=0;
+      int32_t times=0, timesCalled=0;
+      std::function<void(void)> callback=[](){}, onEnd=[](){};
+      bool enabled=true;
+    };
+
     std::map<uint32_t,callbackData> callbacks;
     uint32_t maxCurrentId=0;
 };

@@ -267,7 +267,7 @@ void DisplayUI::startCalibration()
   if(!isOn||!motor->calibrator.isCalibrating()||isEditing);
   motor->calibrator.start(firstIsBottom); 
   customDisplay.stopAllActivities();
-  customDisplay.scrollSegmentsAnAmount(LOWER_txt, 300, 1, [this](){customDisplay.display.showNumberDec(motor->calibrator.getCurrentStep());});
+  customDisplay.scrollSegmentsAnAmount(LOWER_txt, 300, 1, [this](){Serial.println("low"); customDisplay.display.showNumberDec(motor->calibrator.getCurrentStep());});
 }
 
 void DisplayUI::switchDoorState()
@@ -353,7 +353,15 @@ void DisplayUI::btnPwrShortFunc()
   {
     setCalibrationState();
     if(motor->calibrator.firstIsSet())
-      customDisplay.scrollSegmentsAnAmount(UPPER_txt, 300, 1, [this](){customDisplay.display.showNumberDec(motor->calibrator.getCurrentStep());});
+      customDisplay.scrollSegmentsAnAmount(
+        UPPER_txt, 
+        300, 
+        1, 
+        [this]() {
+          Serial.println("up"); 
+          customDisplay.display.showNumberDec(motor->calibrator.getCurrentStep());
+        }
+      );
     if(!motor->calibrator.isCalibrating())
       customDisplay.scrollSegmentsAnAmount(FINISHED_txt, 300, 1, [this](){enableClock();Serial.println("finished");});
     return;

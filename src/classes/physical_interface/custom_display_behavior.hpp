@@ -115,5 +115,7 @@ protected:
   id dotsAsyncId = {0, 0};
   uint32_t dotsAsyncIdPeriodically = 0;
 
+  void scrollAsyncFunc();
+  void scrollAsyncOnEndFunc(unsigned long millisForOneMove);
   scrollData scrollData;
 };
