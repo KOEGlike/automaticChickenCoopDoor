@@ -8,7 +8,7 @@
 class Motor;
 class MotorCalibrator{
   public:
-    MotorCalibrator(Motor *motor);
+    MotorCalibrator(std::unique_ptr<Motor> motor);
     void start( bool firstSetIsBottom=true);
     void turn(int amountOfSteps,bool isClockwise);
     void setFirstState();
@@ -19,7 +19,7 @@ class MotorCalibrator{
     bool firstIsSet();
     friend class Motor;
   protected:
-    Motor *m_motor;
+    std::unique_ptr<Motor> m_motor;    
     int  m_currentStep=0, first;
     bool  m_firstSetIsBottom, m_isDone=true, m_firstIsSet=false;
 };
@@ -27,14 +27,14 @@ class MotorCalibrator{
 class Motor
 {
   public:
-    Motor(MemoryManager* memoryManager,MotorConfig* config);
+    Motor(std::shared_ptr<MemoryManager> memoryManager,std::shared_ptr<MotorConfig> config);
     void changeState(float percentage);
     float getState();
     void begin();
     void enable();
     void disable();
     bool getActiveState();
-    MotorConfig* getConfig();
+    std::shared_ptr<MotorConfig> getConfig();
     MotorState getMotorState();
     friend class MotorCalibrator;
     MotorCalibrator calibrator;
@@ -43,6 +43,6 @@ class Motor
     const uint16_t motorRpm=200;
     A4988 m_stepper;
     MotorState motorState;
-    MemoryManager* memoryManager;
-    MotorConfig* config;
+    std::shared_ptr<MemoryManager> memoryManager;
+    std::shared_ptr<MotorConfig> config;
 };

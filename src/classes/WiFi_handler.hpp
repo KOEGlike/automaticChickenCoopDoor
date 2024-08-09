@@ -12,7 +12,7 @@ class MoveTimes;
 class WiFiHandler
 {
   public:
-    WiFiHandler(WiFiConfig *wifiConfig);
+    WiFiHandler(std::shared_ptr<WiFiConfig> wifiConfig);
     void begin();
     MoveTimes sunsetTimes();
     tmElements_t UTCTime();
@@ -22,5 +22,5 @@ class WiFiHandler
     tmElements_t convertShityStringTimeNotationFromSunsetApi(std::string shityFormat);
     void setLocation();
     JsonDocument ipGeolocationRequest();
-    WiFiConfig *wifiConfig;
+    std::shared_ptr<WiFiConfig>wifiConfig;
 };

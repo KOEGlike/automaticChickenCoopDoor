@@ -15,7 +15,7 @@ struct WakeupReason{
 class SleepHandler
 {
   public:
-    SleepHandler(TimesManager* timesManager,Motor* motor );
+    SleepHandler(std::shared_ptr<TimesManager> timesManager,std::shared_ptr<Motor> motor );
     virtual void sleepUntilNextAction()=0;
     virtual void begin()=0;
     void addWakeupReason(WakeupReason wakeupReason) {
@@ -23,8 +23,8 @@ class SleepHandler
     }
     virtual void addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType=INPUT)=0;
   protected:
-    TimesManager* timesManager;
-    Motor* motor;
+    std::shared_ptr<TimesManager> timesManager;
+    std::shared_ptr<Motor> motor;
     std::vector<WakeupReason> wakeupReasons;
     
     void setTimerWakeupReason();
@@ -45,7 +45,7 @@ class SleepHandler
 
 class Esp32C3SleepHandler :public SleepHandler {
   public:
-    Esp32C3SleepHandler(TimesManager* timesManager,Motor* motor);
+    Esp32C3SleepHandler(std::shared_ptr<TimesManager> timesManager,std::shared_ptr<Motor> motor);
     void sleepUntilNextAction() override;
     void begin() override;
     void addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType=INPUT) override;
@@ -54,7 +54,7 @@ class Esp32C3SleepHandler :public SleepHandler {
 #elif defined(CONFIG_ESP32S3_BROWNOUT_DET)
 class Esp32S3SleepHandler :public SleepHandler {
   public:
-    Esp32S3SleepHandler(TimesManager* timesManager,Motor* motor);
+    Esp32S3SleepHandler(std::shared_ptr<TimesManager> timesManager,std::shared_ptr<Motor> motor);
     void sleepUntilNextAction() override;
     void begin() override;
     void addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType=INPUT) override;

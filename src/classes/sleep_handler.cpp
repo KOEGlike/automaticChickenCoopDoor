@@ -1,7 +1,7 @@
 #include "sleep_handler.hpp"
 #include "driver/rtc_io.h"
 
-SleepHandler::SleepHandler(TimesManager* timesManager,Motor* motor )
+SleepHandler::SleepHandler(std::shared_ptr<TimesManager> timesManager, std::shared_ptr<Motor> motor )
 {
   this->timesManager = timesManager;
   this->motor = motor;
@@ -64,7 +64,7 @@ void Esp32S3SleepHandler::begin()
 
 #elif defined(CONFIG_ESP32C3_BROWNOUT_DET)
 
-Esp32C3SleepHandler::Esp32C3SleepHandler(TimesManager* timesManager,Motor* motor ):
+Esp32C3SleepHandler::Esp32C3SleepHandler(std::shared_ptr<TimesManager> timesManager,std::shared_ptr<Motor> motor ):
 SleepHandler(timesManager, motor) {
 
 }

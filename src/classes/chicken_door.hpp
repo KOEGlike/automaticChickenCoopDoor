@@ -14,25 +14,27 @@
 #include "sleep_handler.hpp"
 
 
+
+
 class ChickenDoor{
   public:
     friend class Motor;
-    ChickenDoor(DisplayUiConfig *displayUiConfig, MotorConfig *motorConfig, WiFiConfig *wifiConfig);
+    ChickenDoor(DisplayUiConfig displayUiConfig, MotorConfig motorConfig, WiFiConfig wifiConfig);
     void begin();
-    Motor motor;
-    WiFiHandler wifiHandler;
-    TimesManager timesManager;
+    std::shared_ptr<Motor> motor;
+    std::shared_ptr<WiFiHandler> wifiHandler;
+    std::shared_ptr<TimesManager> timesManager;
     #ifdef CONFIG_ESP32C3_BROWNOUT_DET
-       Esp32C3SleepHandler sleepHandler;
+      std::shared_ptr<Esp32C3SleepHandler> sleepHandler;
     #elif defined(CONFIG_ESP32S3_BROWNOUT_DET)
-       Esp32S3SleepHandler sleepHandler;
+      std::shared_ptr<Esp32S3SleepHandler> sleepHandler;
     #endif
   protected:
     DisplayUI displayUI;
-    MemoryManager memoryManager;
-    DisplayUiConfig* displayUiConfig;
-    MotorConfig* motorConfig;
-    WiFiConfig* wifiConfig;
+    std::shared_ptr<MemoryManager> memoryManager;
+    std::shared_ptr<DisplayUiConfig> displayUiConfig;
+    std::shared_ptr<MotorConfig> motorConfig;
+    std::shared_ptr<WiFiConfig> wifiConfig;
     const uint minutesToSleep=8, sleepCheckIntervalSec =30;
 };
 

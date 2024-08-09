@@ -25,9 +25,14 @@ class MoveTimes;
 class DisplayUI
 {
   public:
-    DisplayUI(TimesManager* timesManager,Motor*motor, DisplayUiConfig *config, SleepHandler* sleepHandler);
-		void begin();
-		DisplayUiConfig* getConfig();
+    DisplayUI(
+		std::shared_ptr<TimesManager> timesManager,
+		std::shared_ptr<Motor> motor, 
+		std::shared_ptr<DisplayUiConfig> config, 
+		std::shared_ptr<SleepHandler> sleepHandler
+	);
+	void begin();
+	std::shared_ptr<DisplayUiConfig> getConfig();
   protected:
 		/// @brief the time to wait before turning on/off the display
 		unsigned int offTime=100, onTime=100;
@@ -45,14 +50,14 @@ class DisplayUI
 		bool isEditing=false;
 
 		/// @brief pointer to the motor in the main class
-		Motor* motor;
+		std::shared_ptr<Motor> motor;
 		/// @brief pointer to the times manager in the main class
-		TimesManager* timesManager;
+		std::shared_ptr<TimesManager> timesManager;
 		/// @brief pointer to the sleep handler in the main class
-		SleepHandler* sleepHandler;
+		std::shared_ptr<SleepHandler> sleepHandler;
 
 		/// @brief the pointer configuration for the display in the main class
-		DisplayUiConfig *config;
+		std::shared_ptr<DisplayUiConfig>config;
 
 		/// @brief the current editing time
 		FourDigitTime digits;

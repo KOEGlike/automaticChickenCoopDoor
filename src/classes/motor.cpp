@@ -1,16 +1,17 @@
 #include "motor.hpp"	
 #include <cmath>
 #include "memory_manager.hpp"
+#include <memory>
 
-Motor::Motor(MemoryManager* memoryManager,MotorConfig* config): 
+Motor::Motor(std::shared_ptr<MemoryManager> memoryManager,std::shared_ptr<MotorConfig> config): 
 m_stepper{config->steps, config->dir, config->step, config->enable,config->m0, config->m1,config->m2},
-calibrator{this}
+calibrator{std::unique_ptr<Motor>(this)}
 {
   this->memoryManager=memoryManager;
   this->config=config;
 }
 
-MotorConfig* Motor::getConfig()
+std::shared_ptr<MotorConfig> Motor::getConfig()
 {
   return config;
 }
@@ -68,8 +69,8 @@ MotorState Motor::getMotorState()
   return motorState;
 }
 
-MotorCalibrator::MotorCalibrator(Motor *motor){
-  m_motor=motor;
+MotorCalibrator::MotorCalibrator(std::unique_ptr<Motor>motor){
+  m_motor=std::move(motor);
 }
 
 /// @brief starts the calibration

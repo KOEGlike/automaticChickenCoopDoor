@@ -61,23 +61,26 @@ SEG_A|SEG_F|SEG_G|SEG_E|SEG_D//E
 
 
 
-DisplayUI::DisplayUI(TimesManager* timesManager,Motor* motor, DisplayUiConfig *config, SleepHandler* sleepHandler): 
-    button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
-    button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
-    buttonPwr{config->btn3Pin, [&](){btnPwrShortFunc();}, [&](){btnPwrLongFunc();}},
-    customDisplay(config->clkPin, config->dioPin),
-    currentSelectedSegment(4), 
-    currentChangingTime(3),
-    times(timesManager->getTimeState().moveTimes)
+DisplayUI::DisplayUI(
+	std::shared_ptr<TimesManager> timesManager,
+	std::shared_ptr<Motor> motor, 
+	std::shared_ptr<DisplayUiConfig> config, 
+	std::shared_ptr<SleepHandler> sleepHandler
+):button1(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();}),
+  button2(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();}), 
+  buttonPwr{config->btn3Pin, [&](){btnPwrShortFunc();}, [&](){btnPwrLongFunc();}},
+  customDisplay(config->clkPin, config->dioPin),
+  currentSelectedSegment(4), 
+  currentChangingTime(3),
+  times(timesManager->getTimeState().moveTimes)
 {
-  
   this->motor=motor;
   this->timesManager=timesManager;
   this->sleepHandler=sleepHandler;
   this->config=config;
 }
 
-DisplayUiConfig* DisplayUI::getConfig()
+std::shared_ptr<DisplayUiConfig> DisplayUI::getConfig()
 {
   return config;
 }
