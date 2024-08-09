@@ -9,6 +9,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Wokwi GDB",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/.pio/build/esp32-c3-devkitm-1/firmware.elf",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "${userHome}/.platformio/packages/toolchain-riscv32-esp/bin/riscv32-esp-elf-gdb.exe",
+            "miDebuggerServerAddress": "localhost:3333"
+        },
+        {
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
@@ -39,16 +49,6 @@
             "toolchainBinDir": "C:/Users/lenovo/.platformio/packages/toolchain-riscv32-esp/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "loadMode": "manual"
-        },
-        {
-            "name": "Wokwi GDB",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/.pio/build/esp32-c3-devkitm-1/firmware.elf",
-            "cwd": "${workspaceFolder}",
-            "MIMode": "gdb",
-            "miDebuggerPath": "${userHome}/.platformio/packages/toolchain-riscv32-esp/bin/riscv32-esp-elf-gdb.exe",
-            "miDebuggerServerAddress": "localhost:3333"
         }
     ]
 }

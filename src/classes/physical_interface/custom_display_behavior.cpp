@@ -155,17 +155,19 @@ void CustomDisplayBehavior::scrollAsyncFunc() {
 
   display.setSegments(segmentsToDisplay);
   scrollData.currentCycle++;
+  Serial.println(",");
 }
 
 void CustomDisplayBehavior::scrollAsyncOnEndFunc(unsigned long millisForOneMove) {
-  Serial.println("scroll end");
-    Async.registerCallback(
+  Serial.println("scroll end: ");
+  uint32_t id=  Async.registerCallback(
       millisForOneMove, 
       1,
       scrollData.onEnd, 
       [](){}, 
       true
     );
+  Serial.print(id);
 }
 
 void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments, unsigned long millisForOneMove, int amount, std::function<void()> onEnd)

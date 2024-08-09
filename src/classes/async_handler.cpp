@@ -3,6 +3,10 @@
 void AsyncHandler::deleteCallBack(uint32_t id)
 {
   callbacks.erase(id);
+  Serial.println(id);
+  Serial.print(" deleted callback, size of callbacks: ");
+  Serial.print(callbacks.size());
+  Serial.println();
 }
 
 AsyncHandler::callbackData::callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack,std::function<void(void)> onEnd){
