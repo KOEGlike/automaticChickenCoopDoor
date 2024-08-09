@@ -1,0 +1,3 @@
+[submodule "cad/chicken-door-pcb"]
+	path = cad/chicken-door-pcb
+	url = https://github.com/KOEGlike/chicken-door-pcb
