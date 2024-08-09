@@ -7,8 +7,8 @@
 class TimesManager
 {
   public:
-    TimesManager(WiFiHandler* wifiHandler, MemoryManager* memoryManager);
-    TimesManager(WiFiHandler* wifiHandler, MemoryManager, TimeState timeState);
+    TimesManager(std::shared_ptr<WiFiHandler> wifiHandler, std::shared_ptr<MemoryManager> memoryManager);
+    TimesManager(std::shared_ptr<WiFiHandler> wifiHandler, MemoryManager, TimeState timeState);
     TimeState getTimeState();
     time_t getTimeUntilNextAction();
     void begin(int openAlarmId, int closeAlarmId);
@@ -21,8 +21,8 @@ class TimesManager
     TimeState timeState;
     void updateAlarm();
     int openAlarmId, closeAlarmId;
-    WiFiHandler* wifiHandler;
-    MemoryManager* memoryManager;
+    std::shared_ptr<WiFiHandler> wifiHandler;
+    std::shared_ptr<MemoryManager> memoryManager;
 };
 
   

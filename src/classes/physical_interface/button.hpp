@@ -23,13 +23,13 @@ class Button {
 
 struct ButtonLinkStruct{
     ButtonLinkStruct() : maxDelta(0) {}
-    ButtonLinkStruct(std::vector<Button*> buttonPtrs, std::function<void()> onPress,int maxDelta)
+    ButtonLinkStruct(std::vector<std::shared_ptr<Button>> buttonPtrs, std::function<void()> onPress,int maxDelta)
     {
         this->buttonPtrs = buttonPtrs;
         this->onPress = onPress;
         this->maxDelta = maxDelta;
     }
-    std::vector<Button*> buttonPtrs;
+    std::vector<std::shared_ptr<Button>> buttonPtrs;
     std::function<void()> onPress;
     int maxDelta;
 };
@@ -37,14 +37,14 @@ struct ButtonLinkStruct{
 class ButtonManager_t {
     public:
         ~ButtonManager_t();
-        void link(std::vector<Button*> buttons, std::function<void()> onPress, int maxDelta=40);
-        void addButton(Button* button);
-        void removeButton(Button* button);
+        void link(std::vector<std::shared_ptr<Button>> buttons, std::function<void()> onPress, int maxDelta=40);
+        void addButton(std::shared_ptr<Button> button);
+        void removeButton(std::shared_ptr<Button> button);
         void check();
         void begin();
         uint64_t timeFromLastPress();
     protected:
-    	std::map<uint, Button*> buttons;
+    	std::map<uint, std::shared_ptr<Button>> buttons;
         std::map<uint, ButtonLinkStruct> buttonLinks;
         uint currentMaxButtonId=0,currentMaxLinkId=0, asyncId;
         std::vector<uint>  sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(std::vector<uint> linkIds);

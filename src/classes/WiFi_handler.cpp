@@ -6,7 +6,7 @@
 #include <Arduino.h> 
 #include <string>
 
-WiFiHandler::WiFiHandler(WiFiConfig *wifiConfig)
+WiFiHandler::WiFiHandler(std::shared_ptr<WiFiConfig> wifiConfig)
 {
   this->wifiConfig = wifiConfig;
 }

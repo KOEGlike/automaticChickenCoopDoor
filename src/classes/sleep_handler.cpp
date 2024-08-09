@@ -19,7 +19,7 @@ void SleepHandler::setTimerWakeupReason() {
 
 #ifdef CONFIG_ESP32S3_BROWNOUT_DET
 
-Esp32S3SleepHandler::Esp32S3SleepHandler(TimesManager* timesManager,Motor* motor ):
+Esp32S3SleepHandler::Esp32S3SleepHandler(std::shared_ptr<TimesManager> timesManager,std::shared_ptr<Motor> motor ):
 SleepHandler(timesManager, motor) {
   
 }

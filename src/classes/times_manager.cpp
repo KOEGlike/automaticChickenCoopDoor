@@ -1,7 +1,7 @@
 #include "times_manager.hpp"
 #include <TimeAlarms.h>
 
-TimesManager::TimesManager(WiFiHandler* wifiHandler, MemoryManager* memoryManager):
+TimesManager::TimesManager(std::shared_ptr<WiFiHandler> wifiHandler, std::shared_ptr<MemoryManager> memoryManager):
 timeState{MoveTimes{0,0,0,0},0, true,0}
 //timeState{MoveTimes{0,0,11,19},false, true,0}
 {
@@ -9,7 +9,7 @@ timeState{MoveTimes{0,0,0,0},0, true,0}
   this->memoryManager=memoryManager;
 }
 
-TimesManager::TimesManager(WiFiHandler* wifiHandler, MemoryManager, TimeState timeState):timeState{MoveTimes{0,0,0,0},true, true,0}
+TimesManager::TimesManager(std::shared_ptr<WiFiHandler> wifiHandler, MemoryManager, TimeState timeState):timeState{MoveTimes{0,0,0,0},true, true,0}
 {
   this->timeState=timeState;
   this->wifiHandler=wifiHandler;
