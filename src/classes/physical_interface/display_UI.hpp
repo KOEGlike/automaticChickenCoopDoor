@@ -133,9 +133,7 @@ class DisplayUI
 		/// @brief the display class, extended to have custom behaviors
 		CustomDisplayBehavior customDisplay;
 		
-		Button button1;
-		Button button2;
-		Button buttonPwr;
+		uint button1, button2, buttonPwr;
 
 		tmElements_t getTimeInElements();
 

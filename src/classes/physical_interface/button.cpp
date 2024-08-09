@@ -1,22 +1,13 @@
 #include "button.hpp"
 #include <Arduino.h>
 #include <functional>
+#include <memory>
 
-Button::Button(int pin, std::function<void()> press, std::function<void()> longPress) {
+ButtonManager_t::Button::Button(int pin, std::function<void()> press, std::function<void()> longPress) {
     m_pin = pin;
     m_longPress = longPress;
     m_press = press;
 }
-
-Button::~Button() {
-    ButtonManager.removeButton(this);
-}
-
-void Button::begin() {
-    pinMode(m_pin, INPUT_PULLUP);
-    ButtonManager.addButton(this);
-}
-
 
 ButtonManager_t::~ButtonManager_t() 
 {
@@ -28,23 +19,23 @@ void ButtonManager_t::begin()
     asyncId = Async.registerCallback(0, -1, [&](){check();});
 }
 
-void ButtonManager_t::link(std::vector<Button*> buttons, std::function<void()> onPress, int maxDelta)
+void ButtonManager_t::link(std::vector<uint> buttonIDs, std::function<void()> onPress, int maxDelta)
 {
-    ButtonLinkStruct link{buttons, onPress, maxDelta};
+    ButtonLinkStruct link{buttonIDs, onPress, maxDelta};
     buttonLinks[currentMaxLinkId] = link;
-    for(auto button : buttons)
+    for(auto id : buttonIDs)
     {
-        button->linkIds.push_back(currentMaxLinkId);
-        button->linkIds=sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(button->linkIds);
+        buttons[id]->linkIds.push_back(currentMaxLinkId);
+        buttons[id]->linkIds=sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(buttons[id]->linkIds);
     }
     
     currentMaxLinkId++;
 }
 
-void ButtonManager_t::addButton(Button* button)
+uint ButtonManager_t::addButton(int pin, std::function<void()> press, std::function<void()> longPress)
 {
-    buttons[currentMaxButtonId] = button;
-    currentMaxButtonId++;
+    buttons[currentMaxButtonId] = std::make_shared<Button>(pin, press, longPress);
+    return currentMaxButtonId++;
 }
 
 void ButtonManager_t::check() 
@@ -80,9 +71,9 @@ void ButtonManager_t::check()
                 bool wasMultiplePress=true;
                 for(auto linkId : btnPtr->linkIds)
                 {
-                    for(auto button: buttonLinks[linkId].buttonPtrs)
+                    for(auto id: buttonLinks[linkId].buttonIDs)
                     {   
-                        if(button->millisForLongPress-button->pressedForMillis<=buttonLinks[linkId].maxDelta&&button->pressed==true)
+                        if(buttons[id]->millisForLongPress-buttons[id]->pressedForMillis<=buttonLinks[linkId].maxDelta&&buttons[id]->pressed==true)
                         {
                             wasMultiplePress=true;                        
                         }
@@ -97,10 +88,10 @@ void ButtonManager_t::check()
                     {
                         lastPress=millis();
                         buttonLinks[linkId].onPress();
-                        for(auto button: buttonLinks[linkId].buttonPtrs)
+                        for(auto button: buttonLinks[linkId].buttonIDs)
                         {
-                            button->pressed=false;
-                            button->pressedForMillis=0;
+                            buttons[id]->pressed=false;
+                            buttons[id]->pressedForMillis=0;
                         } 
                         break;
                     }
@@ -131,7 +122,7 @@ uint64_t ButtonManager_t::timeFromLastPress()
 
 std::vector<uint> ButtonManager_t::sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(std::vector<uint> linkIds)
 {
-    std::sort(linkIds.begin(), linkIds.end(),[&](uint linkId1,uint linkId2){return( buttonLinks[linkId1].buttonPtrs.size()>buttonLinks[linkId2].buttonPtrs.size());});
+    std::sort(linkIds.begin(), linkIds.end(),[&](uint linkId1,uint linkId2){return( buttonLinks[linkId1].buttonIDs.size()>buttonLinks[linkId2].buttonIDs.size());});
     return linkIds;
 }
 
@@ -143,15 +134,15 @@ int getIndex(std::vector<uint> v, uint K)
 } 
 
 
-void ButtonManager_t::removeButton(Button* button)
+void ButtonManager_t::removeButton(uint id)
 {
-    std::vector<uint> links=button->linkIds;
+    std::vector<uint> links=buttons[id]->linkIds;
     for(auto link : links)
     {
-        for(auto button : buttonLinks[link].buttonPtrs)
+        for(auto id : buttonLinks[link].buttonIDs)
         {
-            int index=getIndex(button->linkIds, link);
-            button->linkIds.erase(button->linkIds.begin()+index);
+            int index=getIndex(buttons[id]->linkIds, link);
+            buttons[id]->linkIds.erase(buttons[id]->linkIds.begin()+index);
         }
         buttonLinks.erase(link);
     }
