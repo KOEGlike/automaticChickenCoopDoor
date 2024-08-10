@@ -8,12 +8,18 @@
 
 WiFiHandler::WiFiHandler(std::shared_ptr<WiFiConfig> wifiConfig)
 {
+  Serial.print("ssid bef: ");
+  Serial.println(wifiConfig->ssid);
   this->wifiConfig = wifiConfig;
+  Serial.print("ssid aft: ");
+  Serial.println(this->wifiConfig->ssid);
 }
 
 void WiFiHandler::begin()
 {
   WiFi.mode(WIFI_STA);
+  Serial.print("SSID: ");
+  Serial.println(wifiConfig->ssid);
   WiFi.begin(wifiConfig->ssid, wifiConfig->password);
   WiFi.setAutoReconnect(true);
 
