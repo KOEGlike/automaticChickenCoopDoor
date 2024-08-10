@@ -89,8 +89,8 @@ void DisplayUI::begin()
   button1=ButtonManager.addButton(config->btn1Pin, [&]() {btn1ShortFunc();},[&]() {btn1LongFunc();});
   button2=ButtonManager.addButton(config->btn2Pin, [&]() {btn2ShortFunc();},[&]() {btn2LongFunc();});
   buttonPwr=ButtonManager.addButton(config->btn3Pin, [&](){btnPwrShortFunc();}, [&](){btnPwrLongFunc();});
-  ButtonManager.link(std::vector<std::shared_ptr<Button>>{button1, buttonPwr}, [&](){Serial.println("1, pw"); startCalibration();});
-  ButtonManager.link(std::vector<std::shared_ptr<Button>>{button2, buttonPwr}, [&](){Serial.println("2, pw"); editingToggle();});
+  ButtonManager.link(std::vector<uint>{button1, buttonPwr}, [&](){Serial.println("1, pw"); startCalibration();});
+  ButtonManager.link(std::vector<uint>{button2, buttonPwr}, [&](){Serial.println("2, pw"); editingToggle();});
   asyncIdForClock = Async.registerCallback(1*1000, -1, [&](){TimeElements tm; breakTime(now(), tm);  customDisplay.display.showNumberDecEx(tm.Hour*100+ tm.Minute, 0b01000000); Serial.println("clock");});
   Async.disableCallBack(asyncIdForClock);
   customDisplay.display.clear();

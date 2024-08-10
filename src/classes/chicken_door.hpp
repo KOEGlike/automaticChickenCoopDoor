@@ -19,7 +19,7 @@
 class ChickenDoor{
   public:
     friend class Motor;
-    ChickenDoor(DisplayUiConfig displayUiConfig, MotorConfig motorConfig, WiFiConfig wifiConfig);
+    ChickenDoor(std::shared_ptr<DisplayUiConfig> displayUiConfig, std::shared_ptr<MotorConfig> motorConfig, std::shared_ptr<WiFiConfig> wifiConfig);
     void begin();
     std::shared_ptr<Motor> motor;
     std::shared_ptr<WiFiHandler> wifiHandler;

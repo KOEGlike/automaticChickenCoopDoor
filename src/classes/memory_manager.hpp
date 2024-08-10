@@ -12,5 +12,4 @@ class MemoryManager{
     MotorState loadMotorStateFromMemory();
   private:
     Preferences pref;
-
 };

@@ -4,6 +4,7 @@
 #include<DRV8825.h>
 #include "interfaces.hpp"
 #include "memory_manager.hpp"
+#include <memory>
 
 class Motor;
 class MotorCalibrator{
