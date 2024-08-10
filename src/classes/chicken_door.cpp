@@ -33,6 +33,14 @@ void ChickenDoor::begin()
 
   
   
-  Async.registerCallback(1*1000, -1, [&](){Alarm.serviceAlarms();});
-  Async.registerCallback(sleepCheckIntervalSec*1000, -1, [&](){if(ButtonManager.timeFromLastPress()>=minutesToSleep*minutesToSleep*1000) sleepHandler->sleepUntilNextAction(); Serial.println("sleep check");});
+  Async.registerCallback("service alarms",1*1000, -1, [&](){Alarm.serviceAlarms();});
+  Async.registerCallback(
+    "sleep check",
+    sleepCheckIntervalSec*1000, 
+    -1, 
+    [&](){
+      if(ButtonManager.timeFromLastPress()>=minutesToSleep*minutesToSleep*1000) 
+        sleepHandler->sleepUntilNextAction(); Serial.println("sleep check");
+    }
+  );
 }

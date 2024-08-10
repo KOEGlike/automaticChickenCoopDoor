@@ -95,7 +95,7 @@ protected:
   /// @brief the async id for the segments, and dots
   struct id
   {
-    uint32_t on, off;
+    TaskHandle_t on, off;
   };
 
 
@@ -107,13 +107,13 @@ protected:
     std::vector<uint8_t> segments;
     int amount = 0;
     std::function<void()> onEnd = []() {};
-    uint32_t asyncId;
+    TaskHandle_t asyncId;
   };
 
   id segmentsAsyncId = {0, 0};
 
   id dotsAsyncId = {0, 0};
-  uint32_t dotsAsyncIdPeriodically = 0;
+  TaskHandle_t dotsAsyncIdPeriodically = 0;
 
   void scrollAsyncFunc();
   void scrollAsyncOnEndFunc(unsigned long millisForOneMove);

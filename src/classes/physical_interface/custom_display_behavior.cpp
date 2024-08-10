@@ -14,7 +14,8 @@ void CustomDisplayBehavior::begin() {
 
 void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long offTime, unsigned long onTime, uint32_t timesToBlink, std::function<void()> onEnd){
   blinkSegmentsOff();
-  uint32_t offId=Async.registerCallback(
+  TaskHandle_t offId=Async.registerCallback(
+    "blinkSegmentsOff",
     offTime+onTime, 
     timesToBlink, 
     [this, segmentsToBlink](){
@@ -42,10 +43,12 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
   );
   this->segmentsAsyncId.off=offId;
   Async.registerCallback(
+    "blinkSegmentsOnInitial",
     offTime, 
     1, 
     [=](){
         this->segmentsAsyncId.on = Async.registerCallback(
+        "blinkSegmentsOn",
         offTime+onTime, 
         timesToBlink,
         [this, offId](){
@@ -69,7 +72,8 @@ void CustomDisplayBehavior::blinkSegmentsOff(){
 
 void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsigned long onTime, uint32_t timesToBlink, std::function<void()> onEnd){
   blinkDotsOff();
-  uint32_t offId=Async.registerCallback(
+  TaskHandle_t offId=Async.registerCallback(
+    "blinkDotsOff",
     offTime+onTime, 
     timesToBlink, 
     [=](){
@@ -87,10 +91,12 @@ void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsig
   );
   this->dotsAsyncId.off=offId;
   Async.registerCallback(
+    "blinkDotsOnInitial",
     onTime, 
     1, 
     [=](){
       this->dotsAsyncId.on = Async.registerCallback(
+        "blinkDotsOn",
         offTime+onTime, 
         timesToBlink,
         [this, offId, dots](){
@@ -117,6 +123,7 @@ void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsig
 
 void CustomDisplayBehavior::blinkDotsPeriodically(uint8_t dots, uint32_t periods, unsigned long offTime, unsigned long onTime, unsigned long timeBetween, uint32_t timesToBlinkInOnePeriod, std::function<void()> onEnd){
   this->dotsAsyncIdPeriodically=Async.registerCallback(
+    "blinkDotsPeriodically",
     timesToBlinkInOnePeriod*(offTime+onTime)+timeBetween, 
     periods, 
     [=](){
@@ -160,14 +167,14 @@ void CustomDisplayBehavior::scrollAsyncFunc() {
 
 void CustomDisplayBehavior::scrollAsyncOnEndFunc(unsigned long millisForOneMove) {
   Serial.println("scroll end: ");
-  uint32_t id=  Async.registerCallback(
+  TaskHandle_t id=  Async.registerCallback(
+      "scrollAsyncOnEndFunc",
       millisForOneMove, 
       1,
       scrollData.onEnd, 
       [](){}, 
       true
     );
-  Serial.print(id);
 }
 
 void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments, unsigned long millisForOneMove, int amount, std::function<void()> onEnd)
@@ -186,6 +193,7 @@ void CustomDisplayBehavior::scrollSegmentsAnAmount(std::vector<uint8_t> segments
     
 
   scrollData.asyncId = Async.registerCallback(
+    "scrollAsyncFunc",
     millisForOneMove, 
     (scrollData.segments.size()*scrollData.amount-3), 
     [this](){

@@ -1,71 +1,77 @@
 #include "async_handler.hpp"
+#include <freertos/FreeRTOS.h>
 
-void AsyncHandler::deleteCallBack(uint32_t id)
+struct callbackData
 {
-  callbacks.erase(id);
-  Serial.println(id);
-  Serial.print(" deleted callback, size of callbacks: ");
-  Serial.print(callbacks.size());
-  Serial.println();
-}
+  callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack, std::function<void(void)> onEnd, bool doDelayFirst=false, const char* name="");
+  unsigned long delay=0;
+  int32_t times=0, timesCalled=0;
+  std::function<void(void)> callback=[](){}, onEnd=[](){};
+  bool doDelayFirst=false;
+  const char* name;
+};
 
-AsyncHandler::callbackData::callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack,std::function<void(void)> onEnd){
+callbackData::callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack,std::function<void(void)> onEnd, bool doDelayFirst, const char* name){
     this->delay=delayInMillis;
     this->times=timesToRepeat;
     this->callback=callBack;
     this->onEnd=onEnd;
+    this->doDelayFirst=doDelayFirst;
+    this->name=name;
 }
 
-uint32_t AsyncHandler::registerCallback(unsigned long delayInMillis,uint32_t times, std::function<void()> callback,std::function<void(void)> onEnd, bool doDelayFirst)
+void AsyncHandler::deleteCallBack(TaskHandle_t id)
 {
-  callbackData cbd(delayInMillis,times,callback,onEnd);
-  if(doDelayFirst)
+  vTaskDelete(id);
+}
+
+void callBackFunction(void* data)
+{
+  callbackData* callbackData = (struct callbackData*)data;
+  const TickType_t ticks=pdMS_TO_TICKS(callbackData->delay);
+  if(callbackData->doDelayFirst)
   {
-    cbd.lastCalled=millis();
+    vTaskDelay(ticks);
   }
-  callbacks[maxCurrentId]=cbd;
-  return maxCurrentId++;
-}
-
-void AsyncHandler::enableCallBack(uint32_t id)
-{
-  callbacks[id].enabled=true;
-}
-
-void AsyncHandler::disableCallBack(uint32_t id)
-{
-  callbacks[id].enabled=false;
-}
-
-
-void AsyncHandler::check()
-{
-  if(callbacks.size()==0)
+  while(callbackData->times<0 || (callbackData->timesCalled < callbackData->times))
   {
-    return;
-  }
-  
-  const unsigned long currentMillis=millis();
-  for (const auto &[id, dontUse] :callbacks)
-  {
-    if(callbacks[id].timesCalled>=callbacks[id].times&&callbacks[id].times>=0)
+    Serial.print(callbackData->name);
+    Serial.println(callbackData->timesCalled);
+    //delay
+    Serial.print("delay: ");
+    Serial.println(callbackData->delay);
+    Serial.println();
+    callbackData->callback();
+    callbackData->timesCalled++;
+    if((callbackData->timesCalled<callbackData->times) || callbackData->times<0)
     {
-      callbacks[id].onEnd();
-      deleteCallBack(id);
-    }
-    else if(callbacks[id].enabled && (callbacks[id].lastCalled==0 || currentMillis-callbacks[id].lastCalled>=callbacks[id].delay))
-    {
-      callbacks[id].lastCalled += callbacks[id].delay;
-      //the plus 10 is to add a bit of leeway to the delay, so a bit of drift is allowed, adjust as needed
-      if (callbacks[id].lastCalled < currentMillis - callbacks[id].delay+10)
-      {
-        callbacks[id].lastCalled = currentMillis;
-      }
-      callbacks[id].callback();
-      if(callbacks[id].times>0)
-      {
-        callbacks[id].timesCalled++;
-      }    
+      vTaskDelay(ticks);
     }
   }
+  callbackData->onEnd();
+  delete callbackData;
+}
+
+TaskHandle_t AsyncHandler::registerCallback(const char* name ,unsigned long delayInMillis,uint32_t times, std::function<void()> callback,std::function<void(void)> onEnd, bool doDelayFirst)
+{
+  TaskHandle_t taskHandle;
+  xTaskCreate(
+    callBackFunction,
+    name,
+    5000,
+    new callbackData(delayInMillis,times,callback,onEnd,doDelayFirst),
+    1,
+    &taskHandle
+  );
+  return taskHandle;
+}
+
+void AsyncHandler::enableCallBack(TaskHandle_t  id)
+{
+  vTaskResume(id);
+}
+
+void AsyncHandler::disableCallBack(TaskHandle_t  id)
+{
+  vTaskSuspend(id);
 }

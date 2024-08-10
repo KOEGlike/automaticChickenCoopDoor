@@ -43,9 +43,11 @@ class ButtonManager_t {
             int maxDelta;
         };
 
+        TaskHandle_t asyncId;
+
         std::map<uint, std::shared_ptr<Button>> buttons;
         std::map<uint, ButtonLinkStruct> buttonLinks;
-        uint currentMaxButtonId=0,currentMaxLinkId=0, asyncId;
+        uint currentMaxButtonId=0,currentMaxLinkId=0;
         std::vector<uint>  sortVectorOfIntsThatAreLinkIdsByTheNumberOfButtonsInTheLinks(std::vector<uint> linkIds);
         uint64_t lastPress=0;
 };

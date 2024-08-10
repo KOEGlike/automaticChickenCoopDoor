@@ -91,7 +91,16 @@ void DisplayUI::begin()
   buttonPwr=ButtonManager.addButton(config->btn3Pin, [&](){btnPwrShortFunc();}, [&](){btnPwrLongFunc();});
   ButtonManager.link(std::vector<uint>{button1, buttonPwr}, [&](){Serial.println("1, pw"); startCalibration();});
   ButtonManager.link(std::vector<uint>{button2, buttonPwr}, [&](){Serial.println("2, pw"); editingToggle();});
-  asyncIdForClock = Async.registerCallback(1*1000, -1, [&](){TimeElements tm; breakTime(now(), tm);  customDisplay.display.showNumberDecEx(tm.Hour*100+ tm.Minute, 0b01000000); Serial.println("clock");});
+  asyncIdForClock = Async.registerCallback(
+    "clock",
+    1*1000, -1, 
+    [&](){
+      TimeElements tm; 
+      breakTime(now(), tm);  
+      customDisplay.display.showNumberDecEx(tm.Hour*100+ tm.Minute, 0b01000000); 
+      Serial.println("clock");
+    }
+  );
   Async.disableCallBack(asyncIdForClock);
   customDisplay.display.clear();
   sleepHandler->addGPIOWakeupSource(config->btn3Pin, LOW);

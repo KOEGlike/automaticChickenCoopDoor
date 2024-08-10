@@ -39,7 +39,7 @@ class DisplayUI
 		
 		/// @brief  multiplier for the on/off time for display on different states
 		uint8_t offShortMult=4, offLongMult=15, onTimeMult=4;
-		uint32_t asyncIdForClock;
+		TaskHandle_t asyncIdForClock;
 
 		/// @brief when the motor moves
 		MoveTimes times;
