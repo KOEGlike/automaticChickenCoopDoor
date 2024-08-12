@@ -16,7 +16,7 @@ ButtonManager_t::~ButtonManager_t()
 
 void ButtonManager_t::begin() 
 {
-    asyncId = Async.registerCallback("button check",0, -1, [&](){check();});
+    asyncId = Async.registerCallback("button check",5, -1, [&](){check();}, [](){Serial.println("button check ended");});
 }
 
 void ButtonManager_t::link(std::vector<uint> buttonIDs, std::function<void()> onPress, int maxDelta)
@@ -34,6 +34,7 @@ void ButtonManager_t::link(std::vector<uint> buttonIDs, std::function<void()> on
 
 uint ButtonManager_t::addButton(int pin, std::function<void()> press, std::function<void()> longPress)
 {
+    pinMode(pin, INPUT_PULLUP);
     buttons[currentMaxButtonId] = std::make_shared<Button>(pin, press, longPress);
     return currentMaxButtonId++;
 }
@@ -46,10 +47,14 @@ void ButtonManager_t::check()
         if (pinIsHigh == HIGH) 
         {
             btnPtr->pressed = false;
+            Serial.println("not pressed");
+
         } 
         else 
         {
-            if (btnPtr->pressed == false&&btnPtr->wasHighBefore) 
+            Serial.println("pressed");
+
+            if (btnPtr->pressed == false) 
             {
                 btnPtr->pressStartInMillies = millis();
                 btnPtr->pressedForMillis=0;
@@ -109,8 +114,6 @@ void ButtonManager_t::check()
         {
             btnPtr->pressedForMillis = 0;
         }
-
-        btnPtr->wasHighBefore=pinIsHigh;
     }
 
 }

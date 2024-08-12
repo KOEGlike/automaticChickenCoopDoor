@@ -273,9 +273,9 @@ void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
 void DisplayUI::startCalibration()
 {
   bool firstIsBottom=true;
-  Async.disableCallBack(asyncIdForClock);
   if(!isOn||!motor->calibrator.isCalibrating()||isEditing);
   motor->calibrator.start(firstIsBottom); 
+  Async.disableCallBack(asyncIdForClock);
   customDisplay.stopAllActivities();
   customDisplay.scrollSegmentsAnAmount(LOWER_txt, 300, 1, [this](){Serial.println("low"); customDisplay.display.showNumberDec(motor->calibrator.getCurrentStep());});
 }

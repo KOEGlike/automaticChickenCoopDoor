@@ -1,22 +1,31 @@
 #include "async_handler.hpp"
 #include <freertos/FreeRTOS.h>
+#include <string>
 
 struct callbackData
 {
-  callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack, std::function<void(void)> onEnd, bool doDelayFirst=false, const char* name="");
+  callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack, std::function<void(void)> onEnd, bool doDelayFirst=false, std::string name="");
   unsigned long delay=0;
   int32_t times=0, timesCalled=0;
   std::function<void(void)> callback=[](){}, onEnd=[](){};
   bool doDelayFirst=false;
-  const char* name;
+  std::string name;
 };
 
-callbackData::callbackData(long delayInMillis,uint32_t timesToRepeat, std::function<void(void)> callBack,std::function<void(void)> onEnd, bool doDelayFirst, const char* name){
+callbackData::callbackData(
+  long delayInMillis,
+  uint32_t timesToRepeat, 
+  std::function<void(void)> callBack,
+  std::function<void(void)> onEnd, 
+  bool doDelayFirst, 
+  std::string name
+) {
     this->delay=delayInMillis;
     this->times=timesToRepeat;
     this->callback=callBack;
     this->onEnd=onEnd;
     this->doDelayFirst=doDelayFirst;
+    Serial.println(name.c_str());
     this->name=name;
 }
 
@@ -35,12 +44,6 @@ void callBackFunction(void* data)
   }
   while(callbackData->times<0 || (callbackData->timesCalled < callbackData->times))
   {
-    Serial.print(callbackData->name);
-    Serial.println(callbackData->timesCalled);
-    //delay
-    Serial.print("delay: ");
-    Serial.println(callbackData->delay);
-    Serial.println();
     callbackData->callback();
     callbackData->timesCalled++;
     if((callbackData->timesCalled<callbackData->times) || callbackData->times<0)
@@ -52,14 +55,14 @@ void callBackFunction(void* data)
   delete callbackData;
 }
 
-TaskHandle_t AsyncHandler::registerCallback(const char* name ,unsigned long delayInMillis,uint32_t times, std::function<void()> callback,std::function<void(void)> onEnd, bool doDelayFirst)
+TaskHandle_t AsyncHandler::registerCallback(std::string name ,unsigned long delayInMillis,uint32_t times, std::function<void()> callback,std::function<void(void)> onEnd, bool doDelayFirst)
 {
   TaskHandle_t taskHandle;
   xTaskCreate(
     callBackFunction,
-    name,
+    name.c_str(),
     5000,
-    new callbackData(delayInMillis,times,callback,onEnd,doDelayFirst),
+    new callbackData(delayInMillis,times,callback,onEnd,doDelayFirst, name),
     1,
     &taskHandle
   );

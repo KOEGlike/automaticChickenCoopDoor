@@ -26,7 +26,7 @@ class ButtonManager_t {
                 std::vector<uint> linkIds;
                 int m_pin;
                 std::function<void()> m_longPress, m_press;
-                bool pressed = false, wasHighBefore=true;
+                bool pressed = false;
                 unsigned long millisForLongPress = 300, debounceInMillis = 10, pressedForMillis = 0, pressStartInMillies=0;
         };
 
