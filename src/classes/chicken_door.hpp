@@ -30,11 +30,12 @@ class ChickenDoor{
       std::shared_ptr<Esp32S3SleepHandler> sleepHandler;
     #endif
   protected:
-    DisplayUI displayUI;
+    std::shared_ptr<Motor> motor;
+    std::shared_ptr<TimesManager> timesManager;
     std::shared_ptr<MemoryManager> memoryManager;
+    std::shared_ptr<WiFiHandler> wifiHandler;
     std::shared_ptr<DisplayUiConfig> displayUiConfig;
     std::shared_ptr<MotorConfig> motorConfig;
     std::shared_ptr<WiFiConfig> wifiConfig;
-    const uint minutesToSleep=8, sleepCheckIntervalSec =30;
 };
 

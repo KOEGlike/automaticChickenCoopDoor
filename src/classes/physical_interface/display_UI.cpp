@@ -1,7 +1,36 @@
 #include "display_UI.hpp"
 #include <vector>
 #include <array>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
+void printTasks() {
+  TaskStatus_t stats[20];
+  uint8_t count = uxTaskGetSystemState(stats, 20, NULL);
+  for (uint8_t i = 0; i < count; i++) {
+    Serial.print("TaskNumber: ");
+    Serial.print(stats[i].xTaskNumber);
+    Serial.print(", ");
+    Serial.print("TaskName: ");
+    Serial.print(stats[i].pcTaskName);
+    Serial.print(", ");
+    Serial.print("TaskState: ");
+    Serial.print(stats[i].eCurrentState);
+    Serial.print(", ");
+    Serial.print("TaskPriority: ");
+    Serial.print(stats[i].uxCurrentPriority);
+    Serial.print(", ");
+    Serial.print("TaskBasePriority: ");
+    Serial.print(stats[i].uxBasePriority);
+    Serial.print(", ");
+    Serial.print("TaskRunTimeCounter: ");
+    Serial.print(stats[i].ulRunTimeCounter);
+    Serial.print(", ");
+    Serial.print("TaskStackHighWaterMark: ");
+    Serial.print(stats[i].usStackHighWaterMark);
+    Serial.println();
+  }
+}
 
 //lower txt
 const std::vector<uint8_t>LOWER_txt{
@@ -272,12 +301,16 @@ void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
 
 void DisplayUI::startCalibration()
 {
+  Serial.printf("before calibrating:\n");
+  printTasks();
   bool firstIsBottom=true;
   if(!isOn||!motor->calibrator.isCalibrating()||isEditing);
   motor->calibrator.start(firstIsBottom); 
   Async.disableCallBack(asyncIdForClock);
   customDisplay.stopAllActivities();
   customDisplay.scrollSegmentsAnAmount(LOWER_txt, 300, 1, [this](){Serial.println("low"); customDisplay.display.showNumberDec(motor->calibrator.getCurrentStep());});
+  Serial.printf("\n\n\n\nafter calibrating:\n");
+  printTasks();
 }
 
 void DisplayUI::switchDoorState()

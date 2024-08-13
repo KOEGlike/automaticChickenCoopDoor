@@ -28,7 +28,7 @@ void ChickenDoor::begin()
   timesManager->begin(idOpen, idClose);
   motor->begin();
   sleepHandler->begin();
-  displayUI.begin();
+  this->displayUI.begin();
   
 
   
@@ -36,7 +36,7 @@ void ChickenDoor::begin()
   Async.registerCallback("service alarms",1*1000, -1, [&](){Alarm.serviceAlarms();});
   Async.registerCallback(
     "sleep check",
-    sleepCheckIntervalSec*1000, 
+    this->sleepCheckIntervalSec*1000, 
     -1, 
     [&](){
       if(ButtonManager.timeFromLastPress()>=minutesToSleep*minutesToSleep*1000) 
