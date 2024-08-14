@@ -3,9 +3,11 @@
 #include "physical_interface/button.hpp"
 
 ChickenDoor::ChickenDoor(std::shared_ptr<DisplayUiConfig> displayUiConfig, std::shared_ptr<MotorConfig> motorConfig, std::shared_ptr<WiFiConfig> wifiConfig): 
-  wifiConfig(wifiConfig),
-  motorConfig(motorConfig),
   displayUiConfig(displayUiConfig),
+  motorConfig(motorConfig),
+  wifiConfig(wifiConfig),
+  
+  
   wifiHandler(std::make_shared<WiFiHandler>(wifiConfig)), 
   memoryManager(std::make_shared<MemoryManager>()),
   timesManager(std::make_shared<TimesManager>(wifiHandler,memoryManager)),
