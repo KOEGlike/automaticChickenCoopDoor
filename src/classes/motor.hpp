@@ -9,7 +9,7 @@
 class Motor;
 class MotorCalibrator{
   public:
-    MotorCalibrator(std::unique_ptr<Motor> motor);
+    MotorCalibrator(Motor* motor);
     void start( bool firstSetIsBottom=true);
     void turn(int amountOfSteps,bool isClockwise);
     void setFirstState();
@@ -20,7 +20,7 @@ class MotorCalibrator{
     bool firstIsSet();
     friend class Motor;
   protected:
-    std::unique_ptr<Motor> m_motor;    
+    Motor* m_motor;    
     int  m_currentStep=0, first;
     bool  m_firstSetIsBottom, m_isDone=true, m_firstIsSet=false;
 };

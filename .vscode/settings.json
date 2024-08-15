@@ -49,7 +49,17 @@
     "stdexcept": "cpp",
     "streambuf": "cpp",
     "cinttypes": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "chrono": "cpp",
+    "codecvt": "cpp",
+    "condition_variable": "cpp",
+    "csignal": "cpp",
+    "list": "cpp",
+    "ratio": "cpp",
+    "set": "cpp",
+    "future": "cpp",
+    "mutex": "cpp",
+    "thread": "cpp"
   },
   "idf.portWin": "COM3",
   "idf.adapterTargetName": "esp32s3",

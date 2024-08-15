@@ -2,6 +2,8 @@
 #include <vector>
 #include <array>
 
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
 //lower txt
 const std::vector<uint8_t>LOWER_txt{
@@ -67,10 +69,10 @@ DisplayUI::DisplayUI(
 	std::shared_ptr<DisplayUiConfig> config, 
 	std::shared_ptr<SleepHandler> sleepHandler
 ):
-  customDisplay(config->clkPin, config->dioPin),
+  times(timesManager->getTimeState().moveTimes),
   currentSelectedSegment(4), 
   currentChangingTime(3),
-  times(timesManager->getTimeState().moveTimes)
+  customDisplay(config->clkPin, config->dioPin)
 {
   this->motor=motor;
   this->timesManager=timesManager;
@@ -273,7 +275,8 @@ void DisplayUI::calibrationTurn(uint steps, bool isClockwise)
 void DisplayUI::startCalibration()
 {
   bool firstIsBottom=true;
-  if(!isOn||!motor->calibrator.isCalibrating()||isEditing);
+  if(!isOn||!motor->calibrator.isCalibrating()||isEditing)
+    return;
   motor->calibrator.start(firstIsBottom); 
   Async.disableCallBack(asyncIdForClock);
   customDisplay.stopAllActivities();
@@ -335,6 +338,10 @@ void DisplayUI::btn2ShortFunc()
     moveCursor(false);
     return;
   }
+  char txt[10000];
+
+  vTaskList(txt);
+  Serial.println(txt);
   startCalibration();
 }
 

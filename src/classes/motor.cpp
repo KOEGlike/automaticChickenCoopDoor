@@ -4,8 +4,8 @@
 #include <memory>
 
 Motor::Motor(std::shared_ptr<MemoryManager> memoryManager,std::shared_ptr<MotorConfig> config): 
-m_stepper{config->steps, config->dir, config->step, config->enable,config->m0, config->m1,config->m2},
-calibrator{std::unique_ptr<Motor>(this)}
+calibrator{this},
+m_stepper{config->steps, config->dir, config->step, config->enable,config->m0, config->m1,config->m2}
 {
   this->memoryManager=memoryManager;
   this->config=config;
@@ -69,8 +69,8 @@ MotorState Motor::getMotorState()
   return motorState;
 }
 
-MotorCalibrator::MotorCalibrator(std::unique_ptr<Motor>motor){
-  m_motor=std::move(motor);
+MotorCalibrator::MotorCalibrator(Motor* motor){
+  m_motor=motor;
 }
 
 /// @brief starts the calibration
