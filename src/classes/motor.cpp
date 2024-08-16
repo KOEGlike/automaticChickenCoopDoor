@@ -39,7 +39,6 @@ void Motor::begin()
 
 void Motor::moveSteps(long steps)
 {
-  int bottomStep=motorState.calibrationState.bottomStep, topStep=motorState.calibrationState.topStep, currentStep=motorState.currentStep;
   motorState.currentStep+=steps;
   m_stepper.move(steps);
   memoryManager-> saveMotorStateToMemory(motorState);
