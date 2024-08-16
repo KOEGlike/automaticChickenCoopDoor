@@ -7,10 +7,6 @@
 [submodule "components/TimeAlarms"]
 	path = components/TimeAlarms
 	url = https://github.com/KOEGlike/TimeAlarms
-[submodule "components/ArduinoJson"]
-	path = components/ArduinoJson
-	url = https://github.com/bblanchon/ArduinoJson
-	branch = v7.1.0
 
 [submodule "StepperMotor"]
 	path = components/StepperDriver
