@@ -1,3 +1,14 @@
 [submodule "cad/chicken-door-pcb"]
 	path = cad/chicken-door-pcb
 	url = https://github.com/KOEGlike/chicken-door-pcb
+[submodule "components/Time"]
+	path = components/Time
+	url = https://github.com/KOEGlike/Time
+[submodule "components/TimeAlarms"]
+	path = components/TimeAlarms
+	url = https://github.com/KOEGlike/TimeAlarms
+[submodule "components/ArduinoJson"]
+	path = components/ArduinoJson
+	url = https://github.com/bblanchon/ArduinoJson
+	branch = v7.1.0
+
