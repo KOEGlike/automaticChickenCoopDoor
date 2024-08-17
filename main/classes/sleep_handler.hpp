@@ -41,7 +41,7 @@ class SleepHandler
     }
 };
 
-#ifdef CONFIG_ESP32C3_BROWNOUT_DET
+//#ifdef CONFIG_ESP32C3_BROWNOUT_DET
 
 class Esp32C3SleepHandler :public SleepHandler {
   public:
@@ -51,12 +51,12 @@ class Esp32C3SleepHandler :public SleepHandler {
     void addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType=INPUT) override;
     
 };
-#elif defined(CONFIG_ESP32S3_BROWNOUT_DET)
-class Esp32S3SleepHandler :public SleepHandler {
-  public:
-    Esp32S3SleepHandler(std::shared_ptr<TimesManager> timesManager,std::shared_ptr<Motor> motor);
-    void sleepUntilNextAction() override;
-    void begin() override;
-    void addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType=INPUT) override;
-};
-#endif
+// #elif defined(CONFIG_ESP32S3_BROWNOUT_DET)
+// class Esp32S3SleepHandler :public SleepHandler {
+//   public:
+//     Esp32S3SleepHandler(std::shared_ptr<TimesManager> timesManager,std::shared_ptr<Motor> motor);
+//     void sleepUntilNextAction() override;
+//     void begin() override;
+//     void addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType=INPUT) override;
+// };
+// #endif

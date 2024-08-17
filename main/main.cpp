@@ -36,7 +36,7 @@ time_t syncFunc()
   return door.timesManager->getCurrentTime();
 }
 
-void setup() {
+extern "C" void app_main() {
   Serial.begin(115200);
   Serial.println("Starting...");
   door.begin();
@@ -45,8 +45,4 @@ void setup() {
   // the interval in seconds between each sync
   setSyncInterval(60);
   ButtonManager.begin();
-}
-
-void loop() 
-{
 }

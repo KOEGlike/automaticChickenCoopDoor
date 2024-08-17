@@ -17,52 +17,52 @@ void SleepHandler::setTimerWakeupReason() {
   }
 }
 
-#ifdef CONFIG_ESP32S3_BROWNOUT_DET
+// #ifdef CONFIG_ESP32S3_BROWNOUT_DET
 
-Esp32S3SleepHandler::Esp32S3SleepHandler(std::shared_ptr<TimesManager> timesManager,std::shared_ptr<Motor> motor ):
-SleepHandler(timesManager, motor) {
+// Esp32S3SleepHandler::Esp32S3SleepHandler(std::shared_ptr<TimesManager> timesManager,std::shared_ptr<Motor> motor ):
+// SleepHandler(timesManager, motor) {
   
-}
+// }
 
 
 
-void Esp32S3SleepHandler::sleepUntilNextAction () 
-{
-  Serial.println("Going to sleep");
-  gpio_num_t motorDriverEnablePin=motor->getConfig()->enable;
-  digitalWrite(motorDriverEnablePin, HIGH);
-  rtc_gpio_hold_en(motorDriverEnablePin);
+// void Esp32S3SleepHandler::sleepUntilNextAction () 
+// {
+//   Serial.println("Going to sleep");
+//   gpio_num_t motorDriverEnablePin=motor->getConfig()->enable;
+//   digitalWrite(motorDriverEnablePin, HIGH);
+//   rtc_gpio_hold_en(motorDriverEnablePin);
   
   
-  onGoingToSleep();
-  setTimerWakeupReason();
+//   onGoingToSleep();
+//   setTimerWakeupReason();
   
-  motor->disable();
+//   motor->disable();
   
-  Serial.flush();
-  esp_deep_sleep_start();
-}
+//   Serial.flush();
+//   esp_deep_sleep_start();
+// }
 
 
 
-void Esp32S3SleepHandler::addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType) {
-  addWakeupReason(
-    WakeupReason{
-      [&](){esp_sleep_enable_ext0_wakeup(gpio, gpioInputType);},
-      [gpio](){rtc_gpio_deinit(gpio);}
-    }
-  );
-}
+// void Esp32S3SleepHandler::addGPIOWakeupSource(gpio_num_t gpio, bool gpioInputType) {
+//   addWakeupReason(
+//     WakeupReason{
+//       [&](){esp_sleep_enable_ext0_wakeup(gpio, gpioInputType);},
+//       [gpio](){rtc_gpio_deinit(gpio);}
+//     }
+//   );
+// }
 
 
-void Esp32S3SleepHandler::begin() 
-{
-  onWakeup();
-  gpio_hold_dis(motor->getConfig()->enable);
+// void Esp32S3SleepHandler::begin() 
+// {
+//   onWakeup();
+//   gpio_hold_dis(motor->getConfig()->enable);
 
-}
+// }
 
-#elif defined(CONFIG_ESP32C3_BROWNOUT_DET)
+// #elif defined(CONFIG_ESP32C3_BROWNOUT_DET)
 
 Esp32C3SleepHandler::Esp32C3SleepHandler(std::shared_ptr<TimesManager> timesManager,std::shared_ptr<Motor> motor ):
 SleepHandler(timesManager, motor) {
@@ -102,4 +102,4 @@ void Esp32C3SleepHandler::begin()
   gpio_deep_sleep_hold_dis();
 }
 
-#endif
+//#endif

@@ -93,7 +93,7 @@ void ButtonManager_t::check()
                     {
                         lastPress=millis();
                         buttonLinks[linkId].onPress();
-                        for(auto button: buttonLinks[linkId].buttonIDs)
+                        for(auto id: buttonLinks[linkId].buttonIDs)
                         {
                             buttons[id]->pressed=false;
                             buttons[id]->pressedForMillis=0;

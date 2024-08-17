@@ -30,11 +30,11 @@ class ChickenDoor{
     std::shared_ptr<WiFiHandler> wifiHandler;
     std::shared_ptr<TimesManager> timesManager;
     std::shared_ptr<Motor> motor;
-    #ifdef CONFIG_ESP32C3_BROWNOUT_DET
+   // #ifdef CONFIG_ESP32C3_BROWNOUT_DET
       std::shared_ptr<Esp32C3SleepHandler> sleepHandler;
-    #elif defined(CONFIG_ESP32S3_BROWNOUT_DET)
-      std::shared_ptr<Esp32S3SleepHandler> sleepHandler;
-    #endif
+    //#elif defined(CONFIG_ESP32S3_BROWNOUT_DET)
+    //  std::shared_ptr<Esp32S3SleepHandler> sleepHandler;
+    //#endif
   protected:
     DisplayUI displayUI;
 };

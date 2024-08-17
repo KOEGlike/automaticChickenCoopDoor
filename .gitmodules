@@ -11,3 +11,7 @@
 [submodule "StepperMotor"]
 	path = components/StepperDriver
 	url = https://github.com/laurb9/StepperDriver
+[submodule "json3"]
+	path = components/ArduinoJson
+	url = https://github.com/bblanchon/ArduinoJson
+	branch = 7.x
