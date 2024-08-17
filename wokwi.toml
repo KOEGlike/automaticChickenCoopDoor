@@ -1,5 +1,5 @@
 [wokwi]
 version = 1
-firmware = '.pio\build\esp32-c3-devkitm-1\firmware.bin'
-elf = '.pio\build\esp32-c3-devkitm-1\firmware.elf'
+firmware = 'build\automaticChickenCoopDoor.bin'
+elf = 'build\automaticChickenCoopDoor.elf'
 gdbServerPort=3333
