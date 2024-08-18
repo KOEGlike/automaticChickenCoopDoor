@@ -17,18 +17,28 @@ WiFiHandler::WiFiHandler(std::shared_ptr<WiFiConfig> wifiConfig)
 
 void WiFiHandler::begin()
 {
-  WiFi.mode(WIFI_STA);
-  Serial.print("SSID: ");
-  Serial.println(wifiConfig->ssid);
-  WiFi.begin(wifiConfig->ssid, wifiConfig->password);
-  WiFi.setAutoReconnect(true);
+  int TryCount = 0;
+  Serial.println("Connecting...");
+  while (WiFi.status() != WL_CONNECTED) {
+    
+    WiFi.disconnect();
 
-  while (WiFi.status() != WL_CONNECTED)
-  {
-   
+    WiFi.mode(WIFI_STA);
+    WiFi.enableSTA(true);
+
+    WiFi.begin(wifiConfig->ssid, wifiConfig->password);
+    Serial.print(TryCount);
+    Serial.print(" ");
+    //Serial.print( "." );
+    delay(4000);
+    if (TryCount == 100) {
+      Serial.println("");
+      Serial.println("Restarting");
+      ESP.restart();
+    }
   }
+
   setLocation();
-  
 }
 
 MoveTimes WiFiHandler::sunsetTimes()
