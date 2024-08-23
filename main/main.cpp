@@ -1,6 +1,11 @@
 #include "classes/chicken_door.hpp"
 #include "classes/async_handler.hpp"
 #include "classes/interfaces.hpp"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
+#include "nvs_flash.h"
+#include "nvs.h"
 
 //Powered by SunriseSunset.io
 
@@ -40,6 +45,27 @@ extern "C" void app_main() {
   Serial.begin(115200);
   Serial.println("Starting...");
   door.begin();
+  esp_err_t err= nvs_flash_init();
+  switch (err) {
+    case ESP_OK:
+        printf("SP_OK: Storage was successfully initialized.\n");
+        break;
+    case ESP_ERR_NVS_NO_FREE_PAGES:
+        printf("ESP_ERR_NVS_NO_FREE_PAGES: The NVS storage contains no empty pages.\n");
+        break;
+    case ESP_ERR_NOT_FOUND:
+        printf("ESP_ERR_NOT_FOUND: No partition with label 'nvs' is found in the partition table.\n");
+        break;
+    case ESP_ERR_NO_MEM:
+        printf("ESP_ERR_NO_MEM: Memory could not be allocated for the internal structures.\n");
+        break;
+    // Add cases for other specific error codes from the underlying flash storage driver
+    // and from nvs_flash_read_security_cfg, nvs_flash_generate_keys, nvs_flash_secure_init_partition APIs
+    default:
+        printf("Unknown error: %d\n", err);
+        break;
+}
+  
   // sets the sync provider function, what time is it right now
   setSyncProvider(syncFunc);
   // the interval in seconds between each sync
