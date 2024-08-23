@@ -171,8 +171,13 @@ void DisplayUI::mutateCurrentSegment(int amount)
 
 void DisplayUI::onOffToggle()
 {
+  char txt[10000];
+  vTaskList(txt);
+  Serial.println(txt);
   if(motor->calibrator.isCalibrating()||isEditing)return;
-
+  Serial.println("onOffToggle");
+  vTaskList(txt);
+  Serial.println(txt);
   if(isOn)
   {
     isOn=false;
@@ -338,8 +343,8 @@ void DisplayUI::btn2ShortFunc()
     moveCursor(false);
     return;
   }
-  char txt[10000];
 
+  char txt[10000];
   vTaskList(txt);
   Serial.println(txt);
   startCalibration();

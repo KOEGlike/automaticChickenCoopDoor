@@ -16,7 +16,7 @@ ButtonManager_t::~ButtonManager_t()
 
 void ButtonManager_t::begin() 
 {
-    asyncId = Async.registerCallback("button check",5, -1, [&](){check();}, [](){Serial.println("button check ended");});
+    asyncId = Async.registerCallback("button check",5, -1, [&](){check();}, [](){Serial.println("button check ended");}, false, 7000);
 }
 
 void ButtonManager_t::link(std::vector<uint> buttonIDs, std::function<void()> onPress, int maxDelta)

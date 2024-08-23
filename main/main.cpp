@@ -42,9 +42,8 @@ time_t syncFunc()
 }
 
 extern "C" void app_main() {
-  Serial.begin(115200);
-  Serial.println("Starting...");
-  door.begin();
+  Serial.begin(115200); 
+  esp_log_level_set("*", ESP_LOG_NONE);
   esp_err_t err= nvs_flash_init();
   switch (err) {
     case ESP_OK:
@@ -65,6 +64,10 @@ extern "C" void app_main() {
         printf("Unknown error: %d\n", err);
         break;
 }
+
+  Serial.println("Starting...");
+  door.begin();
+  
   
   // sets the sync provider function, what time is it right now
   setSyncProvider(syncFunc);

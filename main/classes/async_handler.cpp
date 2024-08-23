@@ -56,13 +56,21 @@ void callBackFunction(void* data)
   delete callbackData;
 }
 
-TaskHandle_t AsyncHandler::registerCallback(const char* name ,unsigned long delayInMillis,uint32_t times, std::function<void()> callback,std::function<void(void)> onEnd, bool doDelayFirst)
+TaskHandle_t AsyncHandler::registerCallback(
+  const char* name,
+  unsigned long delayInMillis,
+  uint32_t times, 
+  std::function<void()> callback,
+  std::function<void(void)> onEnd, 
+  bool doDelayFirst,
+  uint32_t stackSize
+  )
 {
   TaskHandle_t taskHandle;
   xTaskCreate(
     callBackFunction,
     name,
-    5000,
+    stackSize,
     new callbackData(delayInMillis,times,callback,onEnd,doDelayFirst, name),
     1,
     &taskHandle

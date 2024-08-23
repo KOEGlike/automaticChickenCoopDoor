@@ -46,7 +46,7 @@ void CustomDisplayBehavior::blinkSegments(uint8_t segmentsToBlink, unsigned long
     "blinkSegmentsOnInitial",
     offTime, 
     1, 
-    [=](){
+    [=, this](){
         this->segmentsAsyncId.on = Async.registerCallback(
         "blinkSegmentsOn",
         offTime+onTime, 
@@ -76,7 +76,7 @@ void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsig
     "blinkDotsOff",
     offTime+onTime, 
     timesToBlink, 
-    [=](){
+    [=, this](){
       uint8_t beforeBlinkSegments[4];
       memcpy(beforeBlinkSegments, display.currentSegments, display.segmentsLength);
       uint8_t beforeBlinkDisplayedSegments[4];
@@ -94,7 +94,7 @@ void CustomDisplayBehavior::blinkDots(uint8_t dots, unsigned long offTime, unsig
     "blinkDotsOnInitial",
     onTime, 
     1, 
-    [=](){
+    [=, this](){
       this->dotsAsyncId.on = Async.registerCallback(
         "blinkDotsOn",
         offTime+onTime, 
@@ -126,7 +126,7 @@ void CustomDisplayBehavior::blinkDotsPeriodically(uint8_t dots, uint32_t periods
     "blinkDotsPeriodically",
     timesToBlinkInOnePeriod*(offTime+onTime)+timeBetween, 
     periods, 
-    [=](){
+    [=, this](){
       this->blinkDots(dots, offTime, onTime, timesToBlinkInOnePeriod);
     },
     onEnd
@@ -167,7 +167,7 @@ void CustomDisplayBehavior::scrollAsyncFunc() {
 
 void CustomDisplayBehavior::scrollAsyncOnEndFunc(unsigned long millisForOneMove) {
   Serial.println("scroll end: ");
-  TaskHandle_t id=  Async.registerCallback(
+  Async.registerCallback(
       "scrollAsyncOnEndFunc",
       millisForOneMove, 
       1,
